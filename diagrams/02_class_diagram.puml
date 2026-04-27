@@ -75,7 +75,7 @@ class Soucastka {
   snizMnozstvi(pocet: int)
   rezervovat(pocet: int)
   zrusitRezervaci(pocet: int)
-  overDostupnost()
+  overDostupnost(): boolean
 }
 
 ' ── Generalizace ──────────────────────────────────────────────────────────────

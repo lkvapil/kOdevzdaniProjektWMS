@@ -192,7 +192,7 @@ Stav součástky je řízen těmito metodami:
 
 \subsection{Scénář: Příjem na sklad (PrijemPohyb)}
 \begin{enumerate}
-  \item Uživatel zvolí typ pohybu \emph{příjem} a zadá součástku, množství a dodavatele.
+  \item Skladník zvolí typ pohybu příjem a zadá součástku, množství a dodavatele.
   \item Systém volá overitData() -- ověří existenci součástky a platnost cílové lokace.
   \item Pokud data OK $\rightarrow$ systém volá provestPohyb(), který interně volá Soucastka.zvysMnozstvi().
   \item Pohyb je potvrzen a zásoby jsou aktualizovány.
@@ -201,7 +201,7 @@ Stav součástky je řízen těmito metodami:
 
 \subsection{Scénář: Výdej ze skladu (VydejPohyb)}
 \begin{enumerate}
-  \item Uživatel zvolí typ pohybu \emph{výdej} a zadá součástku, množství a důvod výdeje.
+  \item Skladník zvolí typ pohybu výdej a zadá součástku, množství a důvod výdeje.
   \item Systém volá overitData() -- ověří existenci součástky a zda mnozstvi $\geq$ požadovanému množství.
   \item Pokud data OK $\rightarrow$ systém volá provestPohyb(), který interně volá Soucastka.snizMnozstvi().
   \item Pohyb je potvrzen a zásoby jsou sníženy.
@@ -210,7 +210,7 @@ Stav součástky je řízen těmito metodami:
 
 \subsection{Scénář: Přesun součástky (PresunutiPohyb)}
 \begin{enumerate}
-  \item Uživatel zvolí typ pohybu \emph{přesun} a zadá součástku, množství, zdrojovou a cílovou lokaci.
+  \item Skladník zvolí typ pohybu přesun a zadá součástku, množství, zdrojovou a cílovou lokaci.
   \item Systém volá overitData() -- ověří existenci součástky, dostatečné množství ve zdrojové lokaci a platnost cílové lokace.
   \item Pokud data OK $\rightarrow$ systém volá provestPohyb() a poté PresunutiPohyb.zmenLokaci().
   \item Pohyb je potvrzen; součástka je evidována v~cílové lokaci.
@@ -219,7 +219,7 @@ Stav součástky je řízen těmito metodami:
 
 \subsection{Scénář: Přiřazení součástky k~projektu}
 \begin{enumerate}
-  \item Uživatel vybere projekt a zadá součástku s~množstvím.
+  \item Vedoucí skladu vybere projekt a zadá součástku s~množstvím.
   \item Systém volá Soucastka.overDostupnost() -- ověří, zda mnozstvi $-$ rezervovaneMnozstvi $> 0$.
   \item Pokud je dostatek volných kusů $\rightarrow$ systém volá Projekt.priradSoucastku(), které interně zavolá Soucastka.rezervovat().
   \item Součástka je přiřazena k~projektu a rezervované množství je aktualizováno.
@@ -228,7 +228,7 @@ Stav součástky je řízen těmito metodami:
 
 \subsection{Scénář: Správa součástek}
 \begin{enumerate}
-  \item Uživatel přidá novou součástku nebo upraví existující.
+  \item Vedoucí skladu přidá novou součástku nebo upraví existující.
   \item Systém ověří validitu zadaných dat (název, počáteční množství, lokace).
   \item Pokud data OK $\rightarrow$ součástka je uložena; zásoby jsou aktualizovány.
   \item \textbf{Alternativní tok:} neplatná data $\rightarrow$ systém vrátí chybovou hlášku, součástka není uložena.
