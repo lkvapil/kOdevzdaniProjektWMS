@@ -23,7 +23,7 @@ a model interakcí (use case diagram, scénáře, sekvenční a aktivity diagram
 
 Skladová položka evidovaná v~systému WMS s~aktuálním množstvím na skladě. Atribut rezervovaneMnozstvi sleduje, kolik kusů je aktuálně blokováno pro projekty -- součástka tak může být Dostupna i s~částečnou rezervací zároveň. Součástka může nabývat stavů: Dostupna (k~dispozici, případně s~rezervovanou částí), Vydana (fyzicky vydána ze skladu) nebo Odepsana (trvale vyřazena z~evidence).
 
-\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item id: int\item nazev: String\item mnozstvi: int\item rezervovaneMnozstvi: int\item stav: String (Dostupna $|$ Vydana $|$ Odepsana)\end{itemize}
+\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item id: int\item nazev: String\item mnozstvi: int\item rezervovaneMnozstvi: int\item stav: String (Vytvoren $|$ Validovan $|$ Proveden $|$ Zamitnut)\end{itemize}
 
 \textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item zvysMnozstvi(pocet: int)\item snizMnozstvi(pocet: int)\item rezervovat(pocet: int)\item zrusitRezervaci(pocet: int)\item overDostupnost(): boolean\end{itemize}
 
@@ -39,7 +39,7 @@ Projekt, ke kterému jsou přiřazeny součástky pro sledování spotřeby.
 
 Abstraktní třída reprezentující pohyb součástek -- příjem, výdej nebo přesun. Každý pohyb prochází životním cyklem: vytvoření, validace dat a provedení pohybu.
 
-\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item id: int\item datum: Date\item stav: String (Dostupna $|$ Vydana $|$ Odepsana)\item typ: String (prijem $|$ vydej $|$ presun)\item mnozstvi: int\end{itemize}
+\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item id: int\item datum: Date\item stav: String (Vytvoren $|$ Validovan $|$ Proveden $|$ Zamitnut)\item typ: String (prijem $|$ vydej $|$ presun)\item mnozstvi: int\end{itemize}
 
 \textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item \{abstract\} vytvoritPohyb()\item overitData()\item provestPohyb()\end{itemize}
 
@@ -90,9 +90,9 @@ Osoba spravující součástky, pohyby, projekty a sklady v~systému.
 \newpage
 \chapter{Objektový model}
 
-Diagram zachycuje strukturu systému WMS a vztahy mezi jeho hlavními třídami.
-Součástky jsou přiřazovány k~projektům a fyzicky umístěny v~lokacích skladu.
-Třída Uzivatel reprezentuje uživatelskou roli v~systému. Vytvoření pohybu provádí voláním SkladovyPohyb.vytvoritPohyb() a přiřazení součástky k~projektu voláním Projekt.priradSoucastku().
+Class diagram ukazuje hlavní třídy systému WMS a jejich vztahy.
+Součástky jsou fyzicky uloženy v~lokacích a mohou být přiřazeny k~projektům.
+Nové pohyby vznikají přes SkladovyPohyb.vytvoritPohyb() a součástky se k~projektům přiřazují přes Projekt.priradSoucastku().
 
 Diagram využívá \textbf{generalizaci}: abstraktní třída SkladovyPohyb je základem pro tři konkrétní podtřídy
 PrijemPohyb (naskladnění), VydejPohyb (vyskladnění) a PresunutiPohyb (přesun mezi lokacemi),
@@ -109,7 +109,7 @@ Třída SkladovyPohyb zaznamenává každou změnu stavu zásob v~systému. Konk
 \begin{itemize}
   \item PrijemPohyb -- příjem součástek na sklad od dodavatele; zvyšuje množství dané součástky.
   \item VydejPohyb -- výdej součástek ze skladu na projekt; snižuje množství dané součástky.
-  \item PresunutiPohyb -- přemístnění součástek mezi lokácemi ve skladu; mění přiřazenou lokaci součástky.
+  \item PresunutiPohyb -- přemístnění součástek mezi lokacemi ve skladu; mění přiřazenou lokaci součástky.
 \end{itemize}
 Každý pohyb se váže na konkrétní součástku (vazba je součástí, multiplicita $* \rightarrow 1$)
 a mění stav jednoho skladu (vazba mění stav, multiplicita $* \rightarrow 1$).
@@ -236,7 +236,7 @@ Stav součástky je řízen těmito metodami:
 
 \section{Sekvenční diagram -- Vytvoření pohybu}
 
-Uživatel spustí vytvoření pohybu voláním vytvoritPohyb() na :SkladovyPohyb. Ten nejprve ověří platnost dat -- pokud data nesedí, vrátí zamítnutí. Při úspěšném ověření se zavolá provestPohyb(), které podle typu pohybu volá zvysMnozstvi(), snizMnozstvi() nebo overDostupnost() a zmenLokaci(). Uživatel dostane potvrzení po úspěšném dokončení.
+Skladník nebo Vedoucí skladu spustí vytvoření pohybu voláním vytvoritPohyb() na :SkladovyPohyb. Ten nejprve ověří platnost dat -- pokud data nesedí, vrátí zamítnutí. Při úspěšném ověření se zavolá provestPohyb(), které podle typu pohybu volá zvysMnozstvi(), snizMnozstvi() nebo overDostupnost() a zmenLokaci(). Po úspěšném dokončení přijde potvrzení pohybu.
 
 \begin{figure}[H]
   \centering
@@ -253,7 +253,7 @@ Pohyb prochází třemi fázemi řízenými metodami třídy SkladovyPohyb:
 \begin{itemize}
   \item vytvoritPohyb() -- uživatel zadá typ pohybu, součástku a množství; metoda inicializuje pohyb, přiřadí ID a datum vzniku.
   \item overitData() -- ověří platnost zadaných dat: existenci součástky, dostatečné množství na skladě a platnost lokací u~přesunu.
-  \item provestPohyb() -- fyzicky provede pohyb podle typu: příjem zavolá zvysMnozstvi(pocet), výdej snizMnozstvi(pocet), přesun zmenLokaci(). Pokud data nejsou platná, pohyb je zamítnut a uložena chyba.
+  \item provestPohyb() -- fyzicky provede pohyb podle typu: příjem zavolá zvysMnozstvi(pocet), výdej snizMnozstvi(pocet), přesun zmenLokaci(). Pokud data nejsou platná, pohyb je zamítnut.
 \end{itemize}
 
 \begin{figure}[H]
