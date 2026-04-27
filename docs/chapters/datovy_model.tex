@@ -231,10 +231,17 @@ Pohyb prochází třemi fázemi řízenými metodami třídy \texttt{SkladovyPoh
 \newpage
 \chapter{Závěr}
 
-Navržený datový model systému zachycuje strukturu, chování i interakce hlavních entit systému.
-Objektový model (class diagram) definuje třídy a jejich vztahy.
-Dynamický model (stavové diagramy) popisuje životní cyklus tříd \texttt{SkladovyPohyb} a \texttt{Soucastka}.
-Model interakcí (Use Case diagram, scénáře, sekvenční a aktivity diagram) zachycuje komunikaci mezi aktérem a systémem při klíčových operacích.
+Cílem projektu bylo navrhnout objektový model informačního systému pro správu skladu elektronických součástek pomocí metod objektového, dynamického a funkčního modelování v~jazyce UML.
+
+\textbf{Objektový model} (class diagram) zachycuje strukturu systému -- třídy, jejich atributy, metody a vzájemné vztahy. Diagram uplatňuje generalizaci (abstraktní třída \texttt{SkladovyPohyb} a její podtřídy), kvalifikovanou vazbu (přístup ke \texttt{Soucastka} přes kvalifikátor \texttt{id: int}), agregaci (\texttt{Sklad} obsahuje \texttt{Lokace}, \texttt{Lokace} ukládá \texttt{Soucastky}) a atribut spojení (\texttt{ProjektSoucastka} s~atributem \texttt{mnozstvi} na vazbě mezi \texttt{Projekt} a \texttt{Soucastka}).
+
+\textbf{Dynamický model} (stavové diagramy) popisuje chování dvou klíčových tříd. Stavový diagram třídy \texttt{SkladovyPohyb} zachycuje životní cyklus pohybu od vytvoření přes validaci až po provedení nebo zamítnutí. Stavový diagram třídy \texttt{Soucastka} popisuje přechody mezi stavy \textit{Dostupna}, \textit{Vydana} a \textit{Odepsana} v~závislosti na skladových operacích. Oba diagramy využívají akce \texttt{entry}, \texttt{do} a \texttt{exit} uvnitř stavů.
+
+\textbf{Model interakcí} zachycuje komunikaci mezi aktéry a systémem. Use Case diagram definuje případy užití a jejich vztahy (\texttt{<<include>>}, \texttt{<<extend>>}) pro dva aktéry -- Vedoucího skladu a Skladníka. Scénáře popisují průběh klíčových operací včetně alternativních toků. Sekvenční diagram ukazuje spolupráci objektů při vytvoření skladového pohybu se synchronními zprávami a alternativními větvemi (\texttt{alt}). Diagram aktivit zachycuje tok řízení s~podmínkovými větvemi a popisky v~hranatých závorkách.
+
+Jednotlivé modely se navzájem doplňují -- objektový model definuje třídy, na které odkazují stavové diagramy i~sekvenční diagram. Scénáře popisují stejné operace, které jsou graficky zachyceny v~sekvenčním diagramu a diagramu aktivit.
+
+Projekt pokrývá základní část systému -- správu součástek, skladových pohybů a projektů. Jako možné rozšíření by bylo vhodné doplnit správu dodavatelů a nákupních objednávek, modul pro inventuru skladu a systém automatických notifikací při podkročení minimálního stavu zásob.
 
 
 \appendix
