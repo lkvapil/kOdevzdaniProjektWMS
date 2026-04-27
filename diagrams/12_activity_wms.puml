@@ -10,27 +10,28 @@ skinparam ArrowColor #444444
 
 start
 
-:Uživatel zadá typ pohybu, součástku a množství;
+:Zadat typ pohybu, součástku a množství;
+:Inicializovat pohyb\n(SkladovyPohyb.vytvoritPohyb());
+:Ověřit data pohybu\n(SkladovyPohyb.overitData());
 
-:vytvoritPohyb()\ninicializuje pohyb, přiřadí ID a datum;
+if (Data platná?) then ([ano])
+  :Provést pohyb\n(SkladovyPohyb.provestPohyb());
 
-:overitData()\nověří existenci součástky,\ndostatečné množství a platnost lokací;
-
-if (Data platná?) then (ano)
-
-  if (typ == příjem?) then (ano)
-    :Soucastka.zvysMnozstvi(pocet);
-  elseif (typ == výdej?) then (ano)
-    :Soucastka.snizMnozstvi(pocet);
-  else (přesun)
-    :Soucastka.overDostupnost();
-    :Lokace.zmenLokaci\n(zdrojLokaceId, cilLokaceId);
+  if (typ == příjem?) then ([ano])
+    :Zvýšit množství na skladě\n(Soucastka.zvysMnozstvi(pocet));
+  else ([ne])
+    if (typ == výdej?) then ([ano])
+      :Snížit množství na skladě\n(Soucastka.snizMnozstvi(pocet));
+    else ([ne – přesun])
+      :Ověřit dostupnost\n(Soucastka.overDostupnost());
+      :Změnit lokaci součástky\n(PresunutiPohyb.zmenLokaci());
+    endif
   endif
 
-  :Pohyb potvrzen;
+  :Potvrdit pohyb uživateli;
 
-else (ne)
-  :Pohyb zamítnut;
+else ([ne])
+  :Zamítnout pohyb;
 endif
 
 stop
