@@ -1,0 +1,11 @@
+docs/images/*.png
+docs/*.aux
+docs/*.log
+docs/*.out
+docs/*.toc
+docs/*.bcf
+docs/*.blg
+docs/*.bbl
+docs/*.fls
+docs/*.fdb_latexmk
+docs/*_run.xml

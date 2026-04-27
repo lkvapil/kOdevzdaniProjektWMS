@@ -1,0 +1,41 @@
+@startuml
+skinparam defaultFontSize 13
+skinparam sequenceArrowThickness 1.5
+skinparam sequenceParticipantBorderThickness 1.5
+skinparam sequenceGroupBorderThickness 1.5
+skinparam sequenceBoxBorderColor #888888
+
+actor "Uživatel" as Uzivatel
+participant "SkladovyPohyb" as Pohyb
+participant "Soucastka" as Soucastka
+participant "Lokace" as Lokace
+
+Uzivatel -> Pohyb : vytvoritPohyb(typ, soucastka, mnozstvi)
+Pohyb -> Soucastka : overitData()
+Soucastka --> Pohyb : ok / chyba
+
+alt data nejsou platná
+    Pohyb --> Uzivatel : pohyb zamítnut
+end
+
+Pohyb -> Pohyb : provestPohyb()
+
+group typ == příjem
+    Pohyb -> Soucastka : zvysMnozstvi(pocet)
+    Soucastka --> Pohyb : ok
+end
+
+group typ == výdej
+    Pohyb -> Soucastka : snizMnozstvi(pocet)
+    Soucastka --> Pohyb : ok
+end
+
+group typ == přesun
+    Pohyb -> Soucastka : overDostupnost()
+    Soucastka --> Pohyb : ok
+    Pohyb -> Lokace : zmenLokaci(zdrojLokaceId, cilLokaceId)
+    Lokace --> Pohyb : ok
+end
+
+Pohyb --> Uzivatel : pohyb potvrzen
+@enduml

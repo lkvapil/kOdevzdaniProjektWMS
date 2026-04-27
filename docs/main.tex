@@ -1,0 +1,153 @@
+\documentclass[12pt, a4paper]{report}
+
+%% ── Kódování a jazyk ────────────────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[czech]{babel}
+
+%% ── Typografie ──────────────────────────────────────────────────────────────
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{setspace}
+\onehalfspacing
+
+%% ── Geometrie stránky ───────────────────────────────────────────────────────
+\usepackage[
+  top=25mm, bottom=25mm,
+  left=35mm, right=20mm,
+  headheight=15pt
+]{geometry}
+
+%% ── Záhlaví a zápatí ────────────────────────────────────────────────────────
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\nouppercase{\leftmark}}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+%% ── Grafika ─────────────────────────────────────────────────────────────────
+\usepackage{graphicx}
+\usepackage{rotating}
+\usepackage{pdflscape}
+\graphicspath{{./images/}}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+%% ── Barvy a zvýraznění ──────────────────────────────────────────────────────
+\usepackage[dvipsnames]{xcolor}
+\definecolor{wmsblue}{RGB}{0, 83, 156}
+\definecolor{wmsgray}{RGB}{100, 100, 100}
+\definecolor{wmsgreen}{RGB}{34, 139, 34}
+
+%% ── Tabulky ─────────────────────────────────────────────────────────────────
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+
+%% ── Výpisy kódu ─────────────────────────────────────────────────────────────
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  frame=single,
+  keepspaces=true,
+  showstringspaces=false,
+}
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  backgroundcolor=\color{gray!10},
+  keywordstyle=\color{wmsblue}\bfseries,
+  commentstyle=\color{wmsgray}\itshape,
+  stringstyle=\color{wmsgreen},
+  numbers=left,
+  numberstyle=\tiny\color{wmsgray},
+  numbersep=5pt,
+  extendedchars=true,
+  literate=
+    {á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{\i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+    {ě}{{\v{e}}}1 {š}{{\v{s}}}1 {č}{{\v{c}}}1 {ř}{{\v{r}}}1 {ž}{{\v{z}}}1
+    {ů}{{\r{u}}}1 {Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1
+    {Ú}{{\'{U}}}1 {Ě}{{\v{E}}}1 {Š}{{\v{S}}}1 {Č}{{\v{C}}}1 {Ř}{{\v{R}}}1
+    {Ž}{{\v{Z}}}1 {Ů}{{\r{U}}}1,
+}
+
+%% ── Matematika ───────────────────────────────────────────────────────────────
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+
+%% ── Hypertextové odkazy ──────────────────────────────────────────────────────
+\usepackage[
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black,
+  pdftitle={WMS – Elektronické součástky},
+  pdfauthor={Tomáš Simandl, Tomáš Szetei, Lukáš Kvapil},
+  pdfsubject={Warehouse Management System pro elektronické součástky}
+]{hyperref}
+
+%% ── Bibliografie ─────────────────────────────────────────────────────────────
+\usepackage[backend=biber, style=numeric, sorting=nyt]{biblatex}
+\addbibresource{literatura.bib}
+
+%% ── Tikz (volitelně pro jednoduché grafy inline) ─────────────────────────────
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows.meta, positioning, fit, calc}
+
+%% ── Vlastní příkazy ──────────────────────────────────────────────────────────
+\newcommand{\wms}{\textsc{WMS}}
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{TODO:} #1}}
+
+%% ── Formátování kapitol ──────────────────────────────────────────────────────
+\usepackage{titlesec}
+\titleformat{\chapter}[block]{\normalfont\huge\bfseries}{\thechapter.}{0.5em}{}
+\titlespacing*{\chapter}{0pt}{0pt}{20pt}
+
+%% ─────────────────────────────────────────────────────────────────────────────
+%%  DOKUMENT
+%% ─────────────────────────────────────────────────────────────────────────────
+\begin{document}
+
+%% ── Titulní strana ───────────────────────────────────────────────────────────
+\begin{titlepage}
+  \thispagestyle{empty}
+  \centering
+  \vspace*{1cm}
+
+  \includegraphics[height=3cm,keepaspectratio]{czu-tf-barva-rgb.png}
+
+  \vspace{1.5cm}
+
+  {\Huge\bfseries
+    Systém pro správu skladu\\[0.4em]
+    elektronických součástek
+  }
+
+  \vfill
+
+  \begin{tabular}{ll}
+    \textbf{Předmět:}  & Projektování IS     \\[4pt]
+    \textbf{Kód předmětu:} & EIT21E              \\[4pt]
+    \textbf{Autoři:}   & Tomáš Simandl  \\[4pt]
+                       & Tomáš Szetei    \\[4pt]
+                       & Lukáš Kvapil   \\[4pt]
+    \textbf{Datum:}    & \today                \\[4pt]
+  \end{tabular}
+
+\end{titlepage}
+
+%% ── Obsah ────────────────────────────────────────────────────────────────────
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+%% ── Kapitoly ─────────────────────────────────────────────────────────────────
+\input{chapters/datovy_model}
+
+\end{document}

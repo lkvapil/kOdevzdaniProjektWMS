@@ -1,0 +1,22 @@
+@startuml
+top to bottom direction
+
+
+[*] --> Dostupna : Přidána do systému
+
+Dostupna : do / sledovat stav zásob
+Dostupna : Naskladněno / zvysMnozstvi(pocet)
+Dostupna : Rezervována / rezervovat(pocet)
+Dostupna : Rezervace zrušena / zrusitRezervaci(pocet)
+Dostupna --> Vydana : Vydána ze skladu
+Dostupna --> Odepsana : Odepsána
+
+Vydana : entry / snizMnozstvi(pocet)
+Vydana : entry / evidovat spotřebu
+Vydana --> [*] : Vydána ze skladu
+
+Odepsana : entry / snizMnozstvi(pocet)
+Odepsana : entry / vyřazena z evidence
+Odepsana --> [*] : Součástka odepsána
+
+@enduml

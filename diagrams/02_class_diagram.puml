@@ -1,0 +1,107 @@
+@startuml
+top to bottom direction
+skinparam CircledCharacterRadius 0
+skinparam CircledCharacterFontSize 0
+skinparam defaultFontSize 14
+skinparam classFontSize 15
+skinparam classFontStyle bold
+skinparam ArrowFontSize 14
+skinparam ArrowFontStyle bold
+skinparam linetype ortho
+skinparam nodesep 142
+skinparam ranksep 100
+
+class Uzivatel {
+  id: int
+  jmeno: String
+  email: String
+}
+
+class Projekt {
+  id: int
+  nazev: String
+  priradSoucastku(s: Soucastka)
+  odeberSoucastku(s: Soucastka)
+}
+
+class Soucastka {
+  id: int
+  nazev: String
+  mnozstvi: int
+  rezervovaneMnozstvi: int
+  stav: String
+  zvysMnozstvi(pocet: int)
+  snizMnozstvi(pocet: int)
+  rezervovat(pocet: int)
+  zrusitRezervaci(pocet: int)
+  overDostupnost(): boolean
+}
+
+abstract class SkladovyPohyb {
+  id: int
+  datum: Date
+  stav: String
+  typ: String
+  mnozstvi: int
+  {abstract} vytvoritPohyb()
+  overitData()
+  provestPohyb()
+}
+
+class PrijemPohyb {
+  dodavatel: String
+  vytvoritPohyb()
+}
+
+class VydejPohyb {
+  duvod: String
+  vytvoritPohyb()
+}
+
+class PresunutiPohyb {
+  zdrojLokaceId: int
+  cilLokaceId: int
+  vytvoritPohyb()
+  zmenLokaci()
+}
+
+class Sklad {
+  id: int
+  nazev: String
+  najdiSoucastku(id: int): Soucastka
+}
+
+class Lokace {
+  id: int
+  oznaceni: String
+}
+
+' generalizace
+PrijemPohyb --|> SkladovyPohyb
+VydejPohyb --|> SkladovyPohyb
+PresunutiPohyb --|> SkladovyPohyb
+
+' kvalifikovana vazba
+Sklad "[id: int]" --> "1" Soucastka : najdiSoucastku
+
+' datove vztahy
+Projekt "1" --> "*" Soucastka : přiřazuje
+SkladovyPohyb "*" --> "1" Soucastka : je součástí
+Sklad "1" --> "*" Lokace : obsahuje
+Lokace "1" --> "*" Soucastka : ukládá
+SkladovyPohyb "*" --> "1" Sklad : mění stav
+
+' uzivatel
+Uzivatel "1" --> "*" SkladovyPohyb : vytváří
+Uzivatel "1" --> "*" Projekt : spravuje
+
+' layout - vlevo SkladovyPohyb/Sklad/Lokace, vpravo Uzivatel/Projekt/Soucastka
+PrijemPohyb -[hidden]right- VydejPohyb
+VydejPohyb -[hidden]right- PresunutiPohyb
+SkladovyPohyb -[hidden]down- Sklad
+Sklad -[hidden]down- Lokace
+VydejPohyb -[hidden]down- Uzivatel
+Uzivatel -[hidden]down- Projekt
+Projekt -[hidden]down- Soucastka
+
+@enduml

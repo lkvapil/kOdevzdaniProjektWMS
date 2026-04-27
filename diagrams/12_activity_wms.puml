@@ -1,0 +1,37 @@
+@startuml
+scale 1.5
+skinparam defaultFontSize 13
+skinparam ArrowThickness 1.5
+skinparam ActivityBorderThickness 1.5
+skinparam ActivityDiamondBorderThickness 1.5
+skinparam ActivityBorderColor #444444
+skinparam ActivityDiamondBorderColor #444444
+skinparam ArrowColor #444444
+
+start
+
+:Uživatel zadá typ pohybu, součástku a množství;
+
+:vytvoritPohyb()\ninicializuje pohyb, přiřadí ID a datum;
+
+:overitData()\nověří existenci součástky,\ndostatečné množství a platnost lokací;
+
+if (Data platná?) then (ano)
+
+  if (typ == příjem?) then (ano)
+    :Soucastka.zvysMnozstvi(pocet);
+  elseif (typ == výdej?) then (ano)
+    :Soucastka.snizMnozstvi(pocet);
+  else (přesun)
+    :Soucastka.overDostupnost();
+    :Lokace.zmenLokaci\n(zdrojLokaceId, cilLokaceId);
+  endif
+
+  :Pohyb potvrzen;
+
+else (ne)
+  :Pohyb zamítnut;
+endif
+
+stop
+@enduml

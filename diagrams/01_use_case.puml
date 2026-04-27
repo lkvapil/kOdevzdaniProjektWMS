@@ -1,0 +1,49 @@
+@startuml 01_use_case
+left to right direction
+
+actor "Uživatel" as Uzivatel
+
+rectangle "WMS – Elektronické součástky" {
+
+  package "Skladové pohyby" {
+    usecase "Vytvořit pohyb" as UC_POHYB
+    usecase "Ověřit data pohybu" as UC_OVERIT
+    usecase "Příjem na sklad" as UC_PRIJEM
+    usecase "Výdej ze skladu" as UC_VYDEJ
+    usecase "Přesun součástky" as UC_PRESUN
+  }
+
+  package "Součástky" {
+    usecase "Přidat součástku" as UC_ADD
+    usecase "Editovat součástku" as UC_EDIT
+    usecase "Zobrazit zásoby" as UC_ZASOBY
+    usecase "Ověřit dostupnost" as UC_DOSTUPNOST
+    UC_ADD -[hidden]down- UC_EDIT
+  }
+
+  package "Projekty" {
+    usecase "Spravovat projekt" as UC_PROJEKT
+    usecase "Přiřadit součástku\nk projektu" as UC_PRIRADIT
+    usecase "Odebrat součástku\nz projektu" as UC_ODEBRAT
+  }
+
+}
+
+Uzivatel --> UC_POHYB
+Uzivatel --> UC_ADD
+Uzivatel --> UC_EDIT
+Uzivatel --> UC_ZASOBY
+Uzivatel --> UC_PROJEKT
+Uzivatel --> UC_PRIRADIT
+Uzivatel --> UC_ODEBRAT
+
+' include: od zahrnujiciho k zahrnutemu (povinne)
+UC_POHYB    ..> UC_OVERIT     : <<include>>
+UC_PRIRADIT ..> UC_DOSTUPNOST : <<include>>
+
+' extend: od pridaneho k puvodnimu (specializace)
+UC_PRIJEM ..> UC_POHYB : <<extend>>
+UC_VYDEJ  ..> UC_POHYB : <<extend>>
+UC_PRESUN ..> UC_POHYB : <<extend>>
+
+@enduml
