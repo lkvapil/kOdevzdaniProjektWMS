@@ -1,10 +1,26 @@
 @startuml 01_use_case
 left to right direction
+skinparam actorStyle awesome
+skinparam nodesep 40
+skinparam ranksep 60
 
 actor "Vedoucí skladu" as Vedouci
 actor "Skladník" as Skladnik
 
 rectangle "WMS – Elektronické součástky" {
+
+  package "Projekty" {
+    usecase "Spravovat projekt" as UC_PROJEKT
+    usecase "Přiřadit součástku\nk projektu" as UC_PRIRADIT
+    usecase "Odebrat součástku\nz projektu" as UC_ODEBRAT
+    usecase "Ověřit dostupnost" as UC_DOSTUPNOST
+  }
+
+  package "Součástky" {
+    usecase "Přidat součástku" as UC_ADD
+    usecase "Editovat součástku" as UC_EDIT
+    usecase "Zobrazit zásoby" as UC_ZASOBY
+  }
 
   package "Skladové pohyby" {
     usecase "Vytvořit pohyb" as UC_POHYB
@@ -14,41 +30,28 @@ rectangle "WMS – Elektronické součástky" {
     usecase "Přesun součástky" as UC_PRESUN
   }
 
-  package "Součástky" {
-    usecase "Přidat součástku" as UC_ADD
-    usecase "Editovat součástku" as UC_EDIT
-    usecase "Zobrazit zásoby" as UC_ZASOBY
-    usecase "Ověřit dostupnost" as UC_DOSTUPNOST
-  }
-
-  package "Projekty" {
-    usecase "Spravovat projekt" as UC_PROJEKT
-    usecase "Přiřadit součástku\nk projektu" as UC_PRIRADIT
-    usecase "Odebrat součástku\nz projektu" as UC_ODEBRAT
-  }
-
 }
 
-' Vedoucí skladu – čára bez šipky
-Vedouci -- UC_POHYB
-Vedouci -- UC_ADD
-Vedouci -- UC_EDIT
-Vedouci -- UC_ZASOBY
+' Vedoucí skladu – horní aktér
 Vedouci -- UC_PROJEKT
 Vedouci -- UC_PRIRADIT
 Vedouci -- UC_ODEBRAT
+Vedouci -- UC_ADD
+Vedouci -- UC_EDIT
+Vedouci -- UC_ZASOBY
+Vedouci -- UC_POHYB
 
-' Skladník – čára bez šipky
+' Skladník – dolní aktér
 Skladnik -- UC_PRIJEM
 Skladnik -- UC_VYDEJ
 Skladnik -- UC_PRESUN
 Skladnik -- UC_ZASOBY
 
-' include: povinné zahrnutí
+' include
 UC_POHYB    ..> UC_OVERIT     : <<include>>
 UC_PRIRADIT ..> UC_DOSTUPNOST : <<include>>
 
-' extend: specializace pohybu
+' extend
 UC_PRIJEM ..> UC_POHYB : <<extend>>
 UC_VYDEJ  ..> UC_POHYB : <<extend>>
 UC_PRESUN ..> UC_POHYB : <<extend>>
