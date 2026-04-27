@@ -23,55 +23,55 @@ a model interakcí (use case diagram, scénáře, sekvenční a aktivity diagram
 
 Skladová položka evidovaná v~systému WMS s~aktuálním množstvím na skladě. Atribut \texttt{rezervovaneMnozstvi} sleduje, kolik kusů je aktuálně blokováno pro projekty -- součástka tak může být \textit{Dostupna} i s~částečnou rezervací zároveň. Součástka může nabývat stavů: \textit{Dostupna} (k~dispozici, případně s~rezervovanou částí), \textit{Vydana} (fyzicky vydána ze skladu) nebo \textit{Odepsana} (trvale vyřazena z~evidence).
 
-\textbf{Atributy:} id: int, nazev: String, mnozstvi: int, rezervovaneMnozstvi: int, stav: String
+\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item id: int\item nazev: String\item mnozstvi: int\item rezervovaneMnozstvi: int\item stav: String\end{itemize}
 
-\textbf{Metody:} zvysMnozstvi(pocet: int), snizMnozstvi(pocet: int), rezervovat(pocet: int), zrusitRezervaci(pocet: int), overDostupnost(): boolean
+\textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item zvysMnozstvi(pocet: int)\item snizMnozstvi(pocet: int)\item rezervovat(pocet: int)\item zrusitRezervaci(pocet: int)\item overDostupnost(): boolean\end{itemize}
 
 \section{Projekt}
 
 Projekt, ke kterému jsou přiřazeny součástky pro sledování spotřeby.
 
-\textbf{Atributy:} id: int, nazev: String
+\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item id: int\item nazev: String\end{itemize}
 
-\textbf{Metody:} priradSoucastku(Soucastka), odeberSoucastku(Soucastka)
+\textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item priradSoucastku(Soucastka)\item odeberSoucastku(Soucastka)\end{itemize}
 
 \section{SkladovyPohyb}
 
 Abstraktní třída reprezentující pohyb součástek -- příjem, výdej nebo přesun. Každý pohyb prochází životním cyklem: vytvoření, validace dat a provedení pohybu.
 
-\textbf{Atributy:} id: int, datum: Date, stav: String, typ: String, mnozstvi: int
+\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item id: int\item datum: Date\item stav: String\item typ: String\item mnozstvi: int\end{itemize}
 
-\textbf{Metody:} \{abstract\} vytvoritPohyb(), overitData(), provestPohyb()
+\textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item \{abstract\} vytvoritPohyb()\item overitData()\item provestPohyb()\end{itemize}
 
 \section{PrijemPohyb}
 
 Konkrétní pohyb typu příjem -- naskladnění součástek od dodavatele. Dědí ze \texttt{SkladovyPohyb}.
 
-\textbf{Atributy:} dodavatel: String (vlastní); dědí id, datum, stav, typ, mnozstvi
+\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item dodavatel: String (vlastní)\item dědí: id, datum, stav, typ, mnozstvi\end{itemize}
 
-\textbf{Metody:} vytvoritPohyb()
+\textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item vytvoritPohyb()\end{itemize}
 
 \section{VydejPohyb}
 
 Konkrétní pohyb typu výdej -- vyskladnění součástek ze skladu. Dědí ze \texttt{SkladovyPohyb}. Atribut \texttt{duvod} popisuje účel výdeje, např. \textit{použití v~projektu}, \textit{reklamace}, \textit{interní spotřeba} nebo \textit{oprava}.
 
-\textbf{Atributy:} duvod: String (vlastní); dědí id, datum, stav, typ, mnozstvi
+\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item duvod: String (vlastní)\item dědí: id, datum, stav, typ, mnozstvi\end{itemize}
 
-\textbf{Metody:} vytvoritPohyb()
+\textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item vytvoritPohyb()\end{itemize}
 
 \section{PresunutiPohyb}
 
 Konkrétní pohyb typu přesun -- přemístnění součástek mezi lokacemi ve skladu. Dědí ze \texttt{SkladovyPohyb}.
 
-\textbf{Atributy:} zdrojLokaceId: int, cilLokaceId: int (vlastní); dědí id, datum, stav, typ, mnozstvi
+\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item zdrojLokaceId: int (vlastní)\item cilLokaceId: int (vlastní)\item dědí: id, datum, stav, typ, mnozstvi\end{itemize}
 
-\textbf{Metody:} vytvoritPohyb(), zmenLokaci()
+\textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item vytvoritPohyb()\item zmenLokaci()\end{itemize}
 
 \section{Sklad}
 
 Fyzický sklad rozdělený na lokace, ve kterých jsou uloženy součástky.
 
-\textbf{Atributy:} id: int, nazev: String
+\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item id: int\item nazev: String\end{itemize}
 
 \textbf{Metody:} najdiSoucastku(id: int): Soucastka
 
@@ -79,13 +79,13 @@ Fyzický sklad rozdělený na lokace, ve kterých jsou uloženy součástky.
 
 Konkrétní místo v~skladu identifikované označením (např. A-01-03).
 
-\textbf{Atributy:} id: int, oznaceni: String
+\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item id: int\item oznaceni: String\end{itemize}
 
 \section{Uzivatel}
 
 Osoba spravující součástky, pohyby, projekty a sklady v~systému.
 
-\textbf{Atributy:} id: int, jmeno: String, email: String
+\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item id: int\item jmeno: String\item email: String\end{itemize}
 
 \newpage
 \chapter{Objektový model}
