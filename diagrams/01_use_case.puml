@@ -49,6 +49,7 @@ Skladnik -- UC_PRIJEM
 Skladnik -- UC_VYDEJ
 Skladnik -- UC_PRESUN
 Skladnik -- UC_ZASOBY
+Skladnik -- UC_POHYB
 
 ' include
 UC_POHYB    ..> UC_OVERIT     : <<include>>
