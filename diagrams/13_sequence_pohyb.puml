@@ -9,9 +9,6 @@ skinparam sequenceGroupBorderThickness 1.5
 
 actor ":Uživatel" as Uzivatel
 participant ":PrijemPohyb" as Pohyb
-note over Pohyb
-  instance konkrétní podtřídy\n(:PrijemPohyb, :VydejPohyb\nnebo :PresunutiPohyb)
-end note
 participant ":Soucastka" as Soucastka
 participant ":Lokace" as Lokace
 
