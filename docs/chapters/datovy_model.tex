@@ -266,23 +266,15 @@ Pohyb prochází třemi fázemi řízenými metodami třídy SkladovyPohyb:
 \newpage
 \chapter{Závěr}
 
-Cílem projektu bylo navrhnout objektový model informačního systému pro správu skladu elektronických součástek pomocí metod objektového, dynamického a funkčního modelování v~jazyce UML.
-
-\textbf{Objektový model} (class diagram) zachycuje strukturu systému -- třídy, jejich atributy, metody a vzájemné vztahy. Diagram uplatňuje generalizaci (abstraktní třída SkladovyPohyb a její podtřídy), kvalifikovanou vazbu (přístup ke Soucastka přes kvalifikátor id: int), agregaci (Sklad obsahuje Lokace, Lokace ukládá Soucastky) a atribut spojení (ProjektSoucastka s~atributem mnozstvi na vazbě mezi Projekt a Soucastka).
-
-\textbf{Dynamický model} (stavové diagramy) ukazuje chování dvou tříd. U SkladovyPohyb jde pohyb od vytvoření přes ověření dat až po provedení nebo zamítnutí. U Soucastka se mění stavy Dostupna, Vydana a Odepsana podle toho co se se součástkou děje. Oba diagramy používají entry, do a exit akce.
-
-\textbf{Model interakcí} ukazuje jak aktéři se systémem pracují. Use Case diagram rozděluje funkce mezi Vedoucího skladu a Skladníka pomocí vztahů <<include>> a <<extend>>. Scénáře popisují jednotlivé operace včetně chybových stavů. Sekvenční diagram ukazuje volání metod při vytváření pohybu. Diagram aktivit rozebírá větvení podle typu pohybu.
-
-Modely na sebe navazují -- třídy z class diagramu se objevují ve stavových diagramech i sekvenčním diagramu. Scénáře a diagramy popisují stejné operace, jen z různých pohledů.
-
-Projekt pokrývá základní část systému -- správu součástek, skladových pohybů a projektů. Jako možné rozšíření by bylo vhodné doplnit správu dodavatelů a nákupních objednávek, modul pro inventuru skladu a systém automatických notifikací při podkročení minimálního stavu zásob.
+Projekt se zaměřil na návrh informačního systému pro správu skladu elektronických součástek pomocí UML diagramů.
+Výsledkem je class diagram s generalizací, kvalifikovanou vazbou, agregací a atributem spojení, dva stavové diagramy a model interakcí zahrnující Use Case, scénáře, sekvenční diagram a diagram aktivit.
+Jednotlivé modely na sebe navazují a popisují stejný systém z různých pohledů.
+Projekt pokrývá základní část systému -- evidenci součástek, pohybů a projektů -- a může být rozšířen o správu objednávek nebo inventurní modul.
+Umělá inteligence (Claude) pomohla s formátováním a sazbou dokumentu v LaTeXu, urychlila tvorbu PlantUML diagramů a pomohla upřesnit finální podobu dokumentu.
 
 
 \appendix
 \chapter{Zdrojové kódy PlantUML diagramů}
-
-Tato příloha obsahuje zdrojové kódy všech UML diagramů vygenerovaných nástrojem PlantUML.
 
 \section{Use Case diagram}
 \lstinputlisting[language={}, basicstyle=\ttfamily\scriptsize, breaklines=true, frame=single, lineskip=-1pt]{../diagrams/01_use_case.puml}
