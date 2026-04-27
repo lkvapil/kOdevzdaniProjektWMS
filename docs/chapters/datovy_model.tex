@@ -23,7 +23,7 @@ a model interakcí (use case diagram, scénáře, sekvenční a aktivity diagram
 
 Skladová položka evidovaná v~systému WMS s~aktuálním množstvím na skladě. Atribut \texttt{rezervovaneMnozstvi} sleduje, kolik kusů je aktuálně blokováno pro projekty -- součástka tak může být \textit{Dostupna} i s~částečnou rezervací zároveň. Součástka může nabývat stavů: \textit{Dostupna} (k~dispozici, případně s~rezervovanou částí), \textit{Vydana} (fyzicky vydána ze skladu) nebo \textit{Odepsana} (trvale vyřazena z~evidence).
 
-\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item id: int\item nazev: String\item mnozstvi: int\item rezervovaneMnozstvi: int\item stav: String\end{itemize}
+\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item id: int\item nazev: String\item mnozstvi: int\item rezervovaneMnozstvi: int\item stav: String \textit{(Dostupna $|$ Vydana $|$ Odepsana)}\end{itemize}
 
 \textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item zvysMnozstvi(pocet: int)\item snizMnozstvi(pocet: int)\item rezervovat(pocet: int)\item zrusitRezervaci(pocet: int)\item overDostupnost(): boolean\end{itemize}
 
@@ -39,7 +39,7 @@ Projekt, ke kterému jsou přiřazeny součástky pro sledování spotřeby.
 
 Abstraktní třída reprezentující pohyb součástek -- příjem, výdej nebo přesun. Každý pohyb prochází životním cyklem: vytvoření, validace dat a provedení pohybu.
 
-\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item id: int\item datum: Date\item stav: String\item typ: String\item mnozstvi: int\end{itemize}
+\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item id: int\item datum: Date\item stav: String \textit{(Dostupna $|$ Vydana $|$ Odepsana)}\item typ: String \textit{(prijem $|$ vydej $|$ presun)}\item mnozstvi: int\end{itemize}
 
 \textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item \{abstract\} vytvoritPohyb()\item overitData()\item provestPohyb()\end{itemize}
 
@@ -47,7 +47,7 @@ Abstraktní třída reprezentující pohyb součástek -- příjem, výdej nebo 
 
 Konkrétní pohyb typu příjem -- naskladnění součástek od dodavatele. Dědí ze \texttt{SkladovyPohyb}.
 
-\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item dodavatel: String (vlastní)\item dědí: id, datum, stav, typ, mnozstvi\end{itemize}
+\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item dodavatel: String \textit{– název dodavatele součástek}\item dědí ze \texttt{SkladovyPohyb}: id, datum, stav, typ, mnozstvi\end{itemize}
 
 \textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item vytvoritPohyb()\end{itemize}
 
@@ -55,7 +55,7 @@ Konkrétní pohyb typu příjem -- naskladnění součástek od dodavatele. Děd
 
 Konkrétní pohyb typu výdej -- vyskladnění součástek ze skladu. Dědí ze \texttt{SkladovyPohyb}. Atribut \texttt{duvod} popisuje účel výdeje, např. \textit{použití v~projektu}, \textit{reklamace}, \textit{interní spotřeba} nebo \textit{oprava}.
 
-\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item duvod: String (vlastní)\item dědí: id, datum, stav, typ, mnozstvi\end{itemize}
+\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item duvod: String \textit{– účel výdeje (projekt, reklamace, interní spotřeba, oprava)}\item dědí ze \texttt{SkladovyPohyb}: id, datum, stav, typ, mnozstvi\end{itemize}
 
 \textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item vytvoritPohyb()\end{itemize}
 
@@ -63,7 +63,7 @@ Konkrétní pohyb typu výdej -- vyskladnění součástek ze skladu. Dědí ze 
 
 Konkrétní pohyb typu přesun -- přemístnění součástek mezi lokacemi ve skladu. Dědí ze \texttt{SkladovyPohyb}.
 
-\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item zdrojLokaceId: int (vlastní)\item cilLokaceId: int (vlastní)\item dědí: id, datum, stav, typ, mnozstvi\end{itemize}
+\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item zdrojLokaceId: int \textit{– ID zdrojové lokace}\item cilLokaceId: int \textit{– ID cílové lokace}\item dědí ze \texttt{SkladovyPohyb}: id, datum, stav, typ, mnozstvi\end{itemize}
 
 \textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item vytvoritPohyb()\item zmenLokaci()\end{itemize}
 
