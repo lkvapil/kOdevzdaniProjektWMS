@@ -2,14 +2,12 @@
 top to bottom direction
 skinparam CircledCharacterRadius 0
 skinparam CircledCharacterFontSize 0
-skinparam defaultFontSize 14
-skinparam classFontSize 15
+skinparam defaultFontSize 13
+skinparam classFontSize 14
 skinparam classFontStyle bold
-skinparam ArrowFontSize 14
-skinparam ArrowFontStyle bold
-skinparam linetype ortho
-skinparam nodesep 142
-skinparam ranksep 100
+skinparam ArrowFontSize 12
+skinparam nodesep 50
+skinparam ranksep 60
 
 class Uzivatel {
   id: int
@@ -17,24 +15,21 @@ class Uzivatel {
   email: String
 }
 
-class Projekt {
-  id: int
-  nazev: String
-  priradSoucastku(s: Soucastka)
-  odeberSoucastku(s: Soucastka)
+class PrijemPohyb {
+  dodavatel: String
+  vytvoritPohyb(): void
 }
 
-class Soucastka {
-  id: int
-  nazev: String
-  mnozstvi: int
-  rezervovaneMnozstvi: int
-  stav: String
-  zvysMnozstvi(pocet: int)
-  snizMnozstvi(pocet: int)
-  rezervovat(pocet: int)
-  zrusitRezervaci(pocet: int)
-  overDostupnost(): boolean
+class VydejPohyb {
+  duvod: String
+  vytvoritPohyb(): void
+}
+
+class PresunutiPohyb {
+  zdrojLokaceId: int
+  cilLokaceId: int
+  vytvoritPohyb(): void
+  zmenLokaci(): void
 }
 
 abstract class SkladovyPohyb {
@@ -43,26 +38,20 @@ abstract class SkladovyPohyb {
   stav: String
   typ: String
   mnozstvi: int
-  {abstract} vytvoritPohyb()
-  overitData()
-  provestPohyb()
+  {abstract} vytvoritPohyb(): void
+  overitData(): boolean
+  provestPohyb(): void
 }
 
-class PrijemPohyb {
-  dodavatel: String
-  vytvoritPohyb()
+class Projekt {
+  id: int
+  nazev: String
+  priradSoucastku(s: Soucastka): void
+  odeberSoucastku(s: Soucastka): void
 }
 
-class VydejPohyb {
-  duvod: String
-  vytvoritPohyb()
-}
-
-class PresunutiPohyb {
-  zdrojLokaceId: int
-  cilLokaceId: int
-  vytvoritPohyb()
-  zmenLokaci()
+class ProjektSoucastka {
+  mnozstvi: int
 }
 
 class Sklad {
@@ -76,32 +65,42 @@ class Lokace {
   oznaceni: String
 }
 
-' generalizace
-PrijemPohyb --|> SkladovyPohyb
-VydejPohyb --|> SkladovyPohyb
+class Soucastka {
+  id: int
+  nazev: String
+  mnozstvi: int
+  rezervovaneMnozstvi: int
+  stav: String
+  zvysMnozstvi(pocet: int): void
+  snizMnozstvi(pocet: int): void
+  rezervovat(pocet: int): void
+  zrusitRezervaci(pocet: int): void
+  overDostupnost(): boolean
+}
+
+' ── Generalizace ──────────────────────────────────────────────────────────────
+PrijemPohyb    --|> SkladovyPohyb
+VydejPohyb     --|> SkladovyPohyb
 PresunutiPohyb --|> SkladovyPohyb
 
-' kvalifikovana vazba
+' ── Atribut spojení ───────────────────────────────────────────────────────────
+(Projekt, Soucastka) .. ProjektSoucastka
+Projekt -[hidden]left- ProjektSoucastka
+
+' ── Kvalifikovaná vazba ───────────────────────────────────────────────────────
 Sklad "[id: int]" --> "1" Soucastka : najdiSoucastku
 
-' datove vztahy
-Projekt "1" --> "*" Soucastka : přiřazuje
-SkladovyPohyb "*" --> "1" Soucastka : je součástí
-Sklad "1" --> "*" Lokace : obsahuje
-Lokace "1" --> "*" Soucastka : ukládá
-SkladovyPohyb "*" --> "1" Sklad : mění stav
+' ── Asociace ──────────────────────────────────────────────────────────────────
+SkladovyPohyb "*" --> "1" Soucastka     : je součástí
+Sklad         "1" *-- "*" Lokace        : obsahuje
+Lokace        "1" o-- "*" Soucastka     : ukládá
+SkladovyPohyb "*" --> "1" Sklad         : mění stav
+Uzivatel      "1" --> "*" SkladovyPohyb : vytváří
+Uzivatel      "1" --> "*" Projekt       : spravuje
 
-' uzivatel
-Uzivatel "1" --> "*" SkladovyPohyb : vytváří
-Uzivatel "1" --> "*" Projekt : spravuje
-
-' layout - vlevo SkladovyPohyb/Sklad/Lokace, vpravo Uzivatel/Projekt/Soucastka
+' ── Layout ────────────────────────────────────────────────────────────────────
+Uzivatel    -[hidden]right- PrijemPohyb
 PrijemPohyb -[hidden]right- VydejPohyb
-VydejPohyb -[hidden]right- PresunutiPohyb
-SkladovyPohyb -[hidden]down- Sklad
-Sklad -[hidden]down- Lokace
-VydejPohyb -[hidden]down- Uzivatel
-Uzivatel -[hidden]down- Projekt
-Projekt -[hidden]down- Soucastka
+VydejPohyb  -[hidden]right- PresunutiPohyb
 
 @enduml
