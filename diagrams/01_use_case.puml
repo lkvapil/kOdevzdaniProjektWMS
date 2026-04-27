@@ -1,7 +1,8 @@
 @startuml 01_use_case
 left to right direction
 
-actor "Uživatel" as Uzivatel
+actor "Vedoucí skladu" as Vedouci
+actor "Skladník" as Skladnik
 
 rectangle "WMS – Elektronické součástky" {
 
@@ -18,7 +19,6 @@ rectangle "WMS – Elektronické součástky" {
     usecase "Editovat součástku" as UC_EDIT
     usecase "Zobrazit zásoby" as UC_ZASOBY
     usecase "Ověřit dostupnost" as UC_DOSTUPNOST
-    UC_ADD -[hidden]down- UC_EDIT
   }
 
   package "Projekty" {
@@ -29,19 +29,26 @@ rectangle "WMS – Elektronické součástky" {
 
 }
 
-Uzivatel --> UC_POHYB
-Uzivatel --> UC_ADD
-Uzivatel --> UC_EDIT
-Uzivatel --> UC_ZASOBY
-Uzivatel --> UC_PROJEKT
-Uzivatel --> UC_PRIRADIT
-Uzivatel --> UC_ODEBRAT
+' Vedoucí skladu – čára bez šipky
+Vedouci -- UC_POHYB
+Vedouci -- UC_ADD
+Vedouci -- UC_EDIT
+Vedouci -- UC_ZASOBY
+Vedouci -- UC_PROJEKT
+Vedouci -- UC_PRIRADIT
+Vedouci -- UC_ODEBRAT
 
-' include: od zahrnujiciho k zahrnutemu (povinne)
+' Skladník – čára bez šipky
+Skladnik -- UC_PRIJEM
+Skladnik -- UC_VYDEJ
+Skladnik -- UC_PRESUN
+Skladnik -- UC_ZASOBY
+
+' include: povinné zahrnutí
 UC_POHYB    ..> UC_OVERIT     : <<include>>
 UC_PRIRADIT ..> UC_DOSTUPNOST : <<include>>
 
-' extend: od pridaneho k puvodnimu (specializace)
+' extend: specializace pohybu
 UC_PRIJEM ..> UC_POHYB : <<extend>>
 UC_VYDEJ  ..> UC_POHYB : <<extend>>
 UC_PRESUN ..> UC_POHYB : <<extend>>
