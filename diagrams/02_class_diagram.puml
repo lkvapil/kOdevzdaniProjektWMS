@@ -46,8 +46,8 @@ abstract class SkladovyPohyb {
 class Projekt {
   id: int
   nazev: String
-  priradSoucastku(s: Soucastka): void
-  odeberSoucastku(s: Soucastka): void
+  priradSoucastku(Soucastka): void
+  odeberSoucastku(Soucastka): void
 }
 
 class ProjektSoucastka {
