@@ -8,9 +8,6 @@ skinparam ActivityBorderColor #444444
 skinparam ActivityDiamondBorderColor #444444
 skinparam ArrowColor #444444
 
-' Bod 5: polymorfismus – odstraněno větvení dle typu
-' provestPohyb() se chová dle konkrétní podtřídy automaticky
-
 start
 
 :Zadat součástku a množství;
@@ -19,11 +16,18 @@ start
 
 if (Data platná?) then ([ano])
   :Provést pohyb\n(provestPohyb());
-  note right
-    Polymorfně – dle podtřídy:
-    PrijemPohyb, VydejPohyb
-    nebo PresunutiPohyb
-  end note
+
+  if (typ == příjem?) then ([ano])
+    :Zvýšit množství na skladě\n(Soucastka.zvysMnozstvi(pocet));
+  else ([ne])
+    if (typ == výdej?) then ([ano])
+      :Snížit množství na skladě\n(Soucastka.snizMnozstvi(pocet));
+    else ([ne – přesun])
+      :Ověřit dostupnost\n(Soucastka.overDostupnost());
+      :Změnit lokaci součástky\n(PresunutiPohyb.zmenLokaci());
+    endif
+  endif
+
   :Potvrdit pohyb uživateli;
 
 else ([ne])
