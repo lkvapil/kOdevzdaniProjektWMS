@@ -1,8 +1,9 @@
 @startuml 01_use_case
-left to right direction
+top to bottom direction
 skinparam actorStyle awesome
 skinparam nodesep 50
-skinparam ranksep 80
+skinparam ranksep 50
+skinparam packagePadding 10
 
 actor "Vedoucí skladu" as Vedouci
 actor "Skladník" as Skladnik
@@ -32,16 +33,16 @@ rectangle "WMS – Elektronické součástky" {
 
 }
 
-' Vedoucí skladu
-Vedouci -- UC_POHYB
+' Vedoucí skladu vlevo nahoře
 Vedouci -- UC_ADD
 Vedouci -- UC_EDIT
 Vedouci -- UC_ZASOBY
 Vedouci -- UC_PROJEKT
 Vedouci -- UC_PRIRADIT
 Vedouci -- UC_ODEBRAT
+Vedouci -- UC_POHYB
 
-' Skladník
+' Skladník vlevo dole
 Skladnik -- UC_PRIJEM
 Skladnik -- UC_VYDEJ
 Skladnik -- UC_PRESUN
