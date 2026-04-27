@@ -15,6 +15,7 @@ start
 :Ověřit data pohybu\n(SkladovyPohyb.overitData());
 
 if (Data platná?) then ([ano])
+  :Provést pohyb\n(SkladovyPohyb.provestPohyb());
 
   fork
     if (typ == příjem?) then ([ano])
@@ -27,8 +28,6 @@ if (Data platná?) then ([ano])
         :Změnit lokaci součástky\n(PresunutiPohyb.zmenLokaci());
       endif
     endif
-  fork again
-    :Zapsat záznam do audit logu;
   end fork
 
   :Potvrdit pohyb uživateli;
