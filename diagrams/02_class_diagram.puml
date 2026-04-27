@@ -17,19 +17,19 @@ class Uzivatel {
 
 class PrijemPohyb {
   dodavatel: String
-  vytvoritPohyb(): void
+  vytvoritPohyb()
 }
 
 class VydejPohyb {
   duvod: String
-  vytvoritPohyb(): void
+  vytvoritPohyb()
 }
 
 class PresunutiPohyb {
   zdrojLokaceId: int
   cilLokaceId: int
-  vytvoritPohyb(): void
-  zmenLokaci(): void
+  vytvoritPohyb()
+  zmenLokaci()
 }
 
 abstract class SkladovyPohyb {
@@ -38,16 +38,16 @@ abstract class SkladovyPohyb {
   stav: String
   typ: String
   mnozstvi: int
-  {abstract} vytvoritPohyb(): void
-  overitData(): boolean
-  provestPohyb(): void
+  {abstract} vytvoritPohyb()
+  overitData()
+  provestPohyb()
 }
 
 class Projekt {
   id: int
   nazev: String
-  priradSoucastku(Soucastka): void
-  odeberSoucastku(Soucastka): void
+  priradSoucastku(Soucastka)
+  odeberSoucastku(Soucastka)
 }
 
 class ProjektSoucastka {
@@ -57,7 +57,7 @@ class ProjektSoucastka {
 class Sklad {
   id: int
   nazev: String
-  najdiSoucastku(id: int): Soucastka
+  najdiSoucastku(id: int)
 }
 
 class Lokace {
@@ -71,11 +71,11 @@ class Soucastka {
   mnozstvi: int
   rezervovaneMnozstvi: int
   stav: String
-  zvysMnozstvi(pocet: int): void
-  snizMnozstvi(pocet: int): void
-  rezervovat(pocet: int): void
-  zrusitRezervaci(pocet: int): void
-  overDostupnost(): boolean
+  zvysMnozstvi(pocet: int)
+  snizMnozstvi(pocet: int)
+  rezervovat(pocet: int)
+  zrusitRezervaci(pocet: int)
+  overDostupnost()
 }
 
 ' ── Generalizace ──────────────────────────────────────────────────────────────
