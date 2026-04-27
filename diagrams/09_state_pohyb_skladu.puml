@@ -1,9 +1,9 @@
 @startuml
 top to bottom direction
 
-[*] --> Vytvoren : / vytvoritPohyb()
+[*] --> Vytvoren
 
-Vytvoren : entry / přiřadit ID a datum
+Vytvoren : entry / vytvoritPohyb()
 Vytvoren : do / čekat na odeslání
 Vytvoren : exit / uložit pohyb
 Vytvoren --> Validovan : Pohyb odeslán

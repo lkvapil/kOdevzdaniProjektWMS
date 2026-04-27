@@ -6,7 +6,6 @@ skinparam sequenceGroupBorderThickness 1.5
 
 ' ->    plná čára, plná šipka    = synchronní zpráva (odesílatel čeká)
 ' -->   přerušovaná čára         = odpověď / návratová hodnota
-' ->>   plná čára, prázdná šipka = asynchronní zpráva (odesílatel NEČEKÁ)
 
 actor ":Uživatel" as Uzivatel
 participant ":SkladovyPohyb" as Pohyb
@@ -16,10 +15,8 @@ participant ":Lokace" as Lokace
 Uzivatel -> Pohyb : vytvoritPohyb(typ, soucastka, mnozstvi)
 activate Pohyb
 
-Pohyb -> Soucastka : overitData()
-activate Soucastka
-Soucastka --> Pohyb : ok / chyba
-deactivate Soucastka
+' overitData() je metoda SkladovyPohyb – volá se na sobě
+Pohyb -> Pohyb : overitData()
 
 alt [data nejsou platná]
     Pohyb --> Uzivatel : pohyb zamítnut
