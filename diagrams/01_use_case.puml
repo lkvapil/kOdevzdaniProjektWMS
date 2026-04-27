@@ -13,13 +13,13 @@ rectangle "WMS – Elektronické součástky" {
     usecase "Spravovat projekt" as UC_PROJEKT
     usecase "Přiřadit součástku\nk projektu" as UC_PRIRADIT
     usecase "Odebrat součástku\nz projektu" as UC_ODEBRAT
-    usecase "Ověřit dostupnost" as UC_DOSTUPNOST
   }
 
   package "Součástky" {
     usecase "Přidat součástku" as UC_ADD
     usecase "Editovat součástku" as UC_EDIT
     usecase "Zobrazit zásoby" as UC_ZASOBY
+    usecase "Ověřit dostupnost" as UC_DOSTUPNOST
   }
 
   package "Skladové pohyby" {
