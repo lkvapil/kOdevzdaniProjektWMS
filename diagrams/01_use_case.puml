@@ -1,21 +1,21 @@
 @startuml 01_use_case
-top to bottom direction
+left to right direction
 skinparam actorStyle awesome
 skinparam nodesep 50
-skinparam ranksep 50
+skinparam ranksep 60
 skinparam packagePadding 10
 
 actor "Vedoucí skladu" as Vedouci
 actor "Skladník" as Skladnik
 
+Vedouci -[hidden]down- Skladnik
+
 rectangle "WMS – Elektronické součástky" {
 
-  package "Skladové pohyby" {
-    usecase "Příjem na sklad" as UC_PRIJEM
-    usecase "Výdej ze skladu" as UC_VYDEJ
-    usecase "Přesun součástky" as UC_PRESUN
-    usecase "Vytvořit pohyb" as UC_POHYB
-    usecase "Ověřit data pohybu" as UC_OVERIT
+  package "Projekty" {
+    usecase "Spravovat projekt" as UC_PROJEKT
+    usecase "Přiřadit součástku\nk projektu" as UC_PRIRADIT
+    usecase "Odebrat součástku\nz projektu" as UC_ODEBRAT
   }
 
   package "Součástky" {
@@ -25,24 +25,26 @@ rectangle "WMS – Elektronické součástky" {
     usecase "Ověřit dostupnost" as UC_DOSTUPNOST
   }
 
-  package "Projekty" {
-    usecase "Spravovat projekt" as UC_PROJEKT
-    usecase "Přiřadit součástku\nk projektu" as UC_PRIRADIT
-    usecase "Odebrat součástku\nz projektu" as UC_ODEBRAT
+  package "Skladové pohyby" {
+    usecase "Příjem na sklad" as UC_PRIJEM
+    usecase "Výdej ze skladu" as UC_VYDEJ
+    usecase "Přesun součástky" as UC_PRESUN
+    usecase "Vytvořit pohyb" as UC_POHYB
+    usecase "Ověřit data pohybu" as UC_OVERIT
   }
 
 }
 
-' Vedoucí skladu vlevo nahoře
-Vedouci -- UC_ADD
-Vedouci -- UC_EDIT
-Vedouci -- UC_ZASOBY
+' Vedoucí skladu – nahoře
 Vedouci -- UC_PROJEKT
 Vedouci -- UC_PRIRADIT
 Vedouci -- UC_ODEBRAT
+Vedouci -- UC_ADD
+Vedouci -- UC_EDIT
+Vedouci -- UC_ZASOBY
 Vedouci -- UC_POHYB
 
-' Skladník vlevo dole
+' Skladník – dole
 Skladnik -- UC_PRIJEM
 Skladnik -- UC_VYDEJ
 Skladnik -- UC_PRESUN
