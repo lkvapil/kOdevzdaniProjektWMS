@@ -3,10 +3,12 @@ top to bottom direction
 
 [*] --> Dostupna : Přidána do systému
 
+Dostupna : entry / přidat do evidence
 Dostupna : do / sledovat stav zásob
 Dostupna : do / zvysMnozstvi() při naskladnění
 Dostupna : do / rezervovat() při rezervaci
 Dostupna : do / zrusitRezervaci() při zrušení rezervace
+Dostupna : exit / uložit změnu stavu
 Dostupna --> Vydana   : Vydána ze skladu [mnozstvi > 0]
 Dostupna --> Odepsana : Odepsána [poškozena / zastaralá]
 
