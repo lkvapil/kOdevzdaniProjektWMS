@@ -3,39 +3,56 @@ skinparam defaultFontSize 13
 skinparam sequenceArrowThickness 1.5
 skinparam sequenceParticipantBorderThickness 1.5
 skinparam sequenceGroupBorderThickness 1.5
-skinparam sequenceBoxBorderColor #888888
 
-actor "Uživatel" as Uzivatel
-participant "SkladovyPohyb" as Pohyb
-participant "Soucastka" as Soucastka
-participant "Lokace" as Lokace
+' ->    plná čára, plná šipka    = synchronní zpráva (odesílatel čeká)
+' -->   přerušovaná čára         = odpověď / návratová hodnota
+' ->>   plná čára, prázdná šipka = asynchronní zpráva (odesílatel NEČEKÁ)
+
+actor ":Uživatel" as Uzivatel
+participant ":SkladovyPohyb" as Pohyb
+participant ":Soucastka" as Soucastka
+participant ":Lokace" as Lokace
 
 Uzivatel -> Pohyb : vytvoritPohyb(typ, soucastka, mnozstvi)
+activate Pohyb
+
 Pohyb -> Soucastka : overitData()
+activate Soucastka
 Soucastka --> Pohyb : ok / chyba
+deactivate Soucastka
 
-alt data nejsou platná
+alt [data nejsou platná]
     Pohyb --> Uzivatel : pohyb zamítnut
+
+else [data jsou platná]
+    Pohyb -> Pohyb : provestPohyb()
+
+    alt [typ == příjem]
+        Pohyb -> Soucastka : zvysMnozstvi(pocet)
+        activate Soucastka
+        Soucastka --> Pohyb : ok
+        deactivate Soucastka
+
+    else [typ == výdej]
+        Pohyb -> Soucastka : snizMnozstvi(pocet)
+        activate Soucastka
+        Soucastka --> Pohyb : ok
+        deactivate Soucastka
+
+    else [typ == přesun]
+        Pohyb -> Soucastka : overDostupnost()
+        activate Soucastka
+        Soucastka --> Pohyb : ok
+        deactivate Soucastka
+        Pohyb -> Lokace : zmenLokaci(zdrojLokaceId, cilLokaceId)
+        activate Lokace
+        Lokace --> Pohyb : ok
+        deactivate Lokace
+    end
+
+    Pohyb --> Uzivatel : pohyb potvrzen
 end
 
-Pohyb -> Pohyb : provestPohyb()
+deactivate Pohyb
 
-group typ == příjem
-    Pohyb -> Soucastka : zvysMnozstvi(pocet)
-    Soucastka --> Pohyb : ok
-end
-
-group typ == výdej
-    Pohyb -> Soucastka : snizMnozstvi(pocet)
-    Soucastka --> Pohyb : ok
-end
-
-group typ == přesun
-    Pohyb -> Soucastka : overDostupnost()
-    Soucastka --> Pohyb : ok
-    Pohyb -> Lokace : zmenLokaci(zdrojLokaceId, cilLokaceId)
-    Lokace --> Pohyb : ok
-end
-
-Pohyb --> Uzivatel : pohyb potvrzen
 @enduml
