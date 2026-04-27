@@ -26,16 +26,15 @@ rectangle "WMS – Elektronické součástky" {
   }
 
   package "Skladové pohyby" {
+    usecase "Vytvořit pohyb" as UC_POHYB
+    usecase "Ověřit data pohybu" as UC_OVERIT
     usecase "Příjem na sklad" as UC_PRIJEM
     usecase "Výdej ze skladu" as UC_VYDEJ
     usecase "Přesun součástky" as UC_PRESUN
-    usecase "Vytvořit pohyb" as UC_POHYB
-    usecase "Ověřit data pohybu" as UC_OVERIT
   }
 
 }
 
-' Vedoucí skladu – nahoře
 Vedouci -- UC_PROJEKT
 Vedouci -- UC_PRIRADIT
 Vedouci -- UC_ODEBRAT
@@ -44,7 +43,6 @@ Vedouci -- UC_EDIT
 Vedouci -- UC_ZASOBY
 Vedouci -- UC_POHYB
 
-' Skladník – dole
 Skladnik -- UC_PRIJEM
 Skladnik -- UC_VYDEJ
 Skladnik -- UC_PRESUN
@@ -55,9 +53,9 @@ Skladnik -- UC_POHYB
 UC_POHYB    ..> UC_OVERIT     : <<include>>
 UC_PRIRADIT ..> UC_DOSTUPNOST : <<include>>
 
-' extend
-UC_PRIJEM ..> UC_POHYB : <<extend>>
-UC_VYDEJ  ..> UC_POHYB : <<extend>>
-UC_PRESUN ..> UC_POHYB : <<extend>>
+' generalizace místo extend – specifické varianty pohybu
+UC_PRIJEM --|> UC_POHYB
+UC_VYDEJ  --|> UC_POHYB
+UC_PRESUN --|> UC_POHYB
 
 @enduml

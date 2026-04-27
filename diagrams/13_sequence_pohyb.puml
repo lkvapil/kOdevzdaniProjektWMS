@@ -4,49 +4,39 @@ skinparam sequenceArrowThickness 1.5
 skinparam sequenceParticipantBorderThickness 1.5
 skinparam sequenceGroupBorderThickness 1.5
 
-' ->    plná čára, plná šipka    = synchronní zpráva (odesílatel čeká)
-' -->   přerušovaná čára         = odpověď / návratová hodnota
+' Bod 5: instance konkrétní podtřídy místo abstraktní :SkladovyPohyb
+' Bod 5: polymorfismus – provestPohyb() se chová dle podtřídy
 
 actor ":Uživatel" as Uzivatel
-participant ":SkladovyPohyb" as Pohyb
+participant ":PrijemPohyb" as Pohyb
 participant ":Soucastka" as Soucastka
 participant ":Lokace" as Lokace
 
-Uzivatel -> Pohyb : vytvoritPohyb(typ, soucastka, mnozstvi)
+note over Pohyb
+  Konkrétní instance může být
+  :PrijemPohyb, :VydejPohyb
+  nebo :PresunutiPohyb
+end note
+
+Uzivatel -> Pohyb : vytvoritPohyb(soucastka, mnozstvi)
 activate Pohyb
 
-' overitData() je metoda SkladovyPohyb – volá se na sobě
 Pohyb -> Pohyb : overitData()
 
 alt [data nejsou platná]
     Pohyb --> Uzivatel : pohyb zamítnut
 
 else [data jsou platná]
+    ' polymorfismus – provestPohyb() se chová dle konkrétní podtřídy
     Pohyb -> Pohyb : provestPohyb()
+    activate Pohyb
 
-    alt [typ == příjem]
-        Pohyb -> Soucastka : zvysMnozstvi(pocet)
-        activate Soucastka
-        Soucastka --> Pohyb : ok
-        deactivate Soucastka
+    Pohyb -> Soucastka : zvysMnozstvi(pocet)
+    activate Soucastka
+    Soucastka --> Pohyb : ok
+    deactivate Soucastka
 
-    else [typ == výdej]
-        Pohyb -> Soucastka : snizMnozstvi(pocet)
-        activate Soucastka
-        Soucastka --> Pohyb : ok
-        deactivate Soucastka
-
-    else [typ == přesun]
-        Pohyb -> Soucastka : overDostupnost()
-        activate Soucastka
-        Soucastka --> Pohyb : ok
-        deactivate Soucastka
-        Pohyb -> Lokace : zmenLokaci(zdrojLokaceId, cilLokaceId)
-        activate Lokace
-        Lokace --> Pohyb : ok
-        deactivate Lokace
-    end
-
+    deactivate Pohyb
     Pohyb --> Uzivatel : pohyb potvrzen
 end
 

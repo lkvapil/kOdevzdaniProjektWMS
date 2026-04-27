@@ -1,25 +1,29 @@
 @startuml
 top to bottom direction
 
+' Bod 2: vnitřní přechody místo do/ pro jednorázové akce
+' Bod 7: entry místo do pro evidovat spotřebu a vyřadit z evidence
+
 [*] --> Dostupna : Přidána do systému
 
 Dostupna : entry / přidat do evidence
 Dostupna : do / sledovat stav zásob
-Dostupna : do / zvysMnozstvi() při naskladnění
-Dostupna : do / rezervovat() při rezervaci
-Dostupna : do / zrusitRezervaci() při zrušení rezervace
 Dostupna : exit / uložit změnu stavu
+' vnitřní přechody – jednorázové akce jako reakce na událost
+Dostupna : naskladněno / zvysMnozstvi(pocet)
+Dostupna : rezervace přijata / rezervovat(pocet)
+Dostupna : rezervace zrušena / zrusitRezervaci(pocet)
 Dostupna --> Vydana   : Vydána ze skladu [mnozstvi > 0]
 Dostupna --> Odepsana : Odepsána [poškozena / zastaralá]
 
 Vydana : entry / snizMnozstvi(pocet)
-Vydana : do / evidovat spotřebu na projekt
+Vydana : entry / evidovat spotřebu na projekt
 Vydana : exit / uložit záznam výdeje
-Vydana --> [*] : Vydání evidováno
+Vydana --> [*]
 
 Odepsana : entry / snizMnozstvi(pocet)
-Odepsana : do / vyřadit z evidence
+Odepsana : entry / vyřadit z evidence
 Odepsana : exit / uložit záznam odpisu
-Odepsana --> [*] : Součástka odepsána
+Odepsana --> [*]
 
 @enduml

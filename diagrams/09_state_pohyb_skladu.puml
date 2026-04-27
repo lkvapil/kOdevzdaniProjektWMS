@@ -1,6 +1,9 @@
 @startuml
 top to bottom direction
 
+' Bod 6: míchání stavů podtříd do nadtřídy - pouze jeden stav Proveden
+' Bod 3: zakončovací přechody bez názvu události
+
 [*] --> Vytvoren
 
 Vytvoren : entry / vytvoritPohyb()
@@ -11,31 +14,21 @@ Vytvoren --> Validovan : Pohyb odeslán
 Validovan : entry / overitData()
 Validovan : do / kontrolovat data
 Validovan : exit / potvrdit výsledek
-Validovan --> Proveden_Prijem : Pohyb schválen [typ == příjem]
-Validovan --> Proveden_Vydej  : Pohyb schválen [typ == výdej]
-Validovan --> Proveden_Presun : Pohyb schválen [typ == přesun]
-Validovan --> Zamitnut        : Chyba ověření [neplatná data]
-Validovan --> Zamitnut        : Chyba ověření [nedostatečné množství]
+Validovan --> Proveden  : Pohyb schválen
+Validovan --> Zamitnut  : Chyba ověření [neplatná data]
+Validovan --> Zamitnut  : Chyba ověření [nedostatečné množství]
 
 Zamitnut : entry / zaznamenat chybu
 Zamitnut : do / čekat na notifikaci
 Zamitnut : exit / notifikovat uživatele
 
-Proveden_Prijem : entry / soucastka.zvysMnozstvi()
-Proveden_Prijem : do / aktualizovat zásoby
-Proveden_Prijem : exit / uložit záznam
+' Proveden – polymorfně spustí provestPohyb() konkrétní podtřídy
+Proveden : entry / provestPohyb()
+Proveden : do / aktualizovat zásoby
+Proveden : exit / uložit záznam
 
-Proveden_Vydej : entry / soucastka.snizMnozstvi()
-Proveden_Vydej : do / aktualizovat zásoby
-Proveden_Vydej : exit / uložit záznam
-
-Proveden_Presun : entry / zmenLokaci()
-Proveden_Presun : do / aktualizovat lokaci
-Proveden_Presun : exit / uložit záznam
-
-Proveden_Prijem --> [*] : Pohyb dokončen
-Proveden_Vydej  --> [*] : Pohyb dokončen
-Proveden_Presun --> [*] : Pohyb dokončen
-Zamitnut        --> [*] : Pohyb zamítnut
+' zakončovací přechody bez názvu události
+Proveden --> [*]
+Zamitnut --> [*]
 
 @enduml
