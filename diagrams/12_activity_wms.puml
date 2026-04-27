@@ -17,22 +17,16 @@ start
 if (Data platná?) then ([ano])
   :Provést pohyb\n(SkladovyPohyb.provestPohyb());
 
-  ' split = rozdělení do větví s tlustou čárou (fork)
-  split
-    ' Větev 1 – příjem
-    -> [typ == příjem];
+  if (typ == příjem?) then ([ano])
     :Zvýšit množství na skladě\n(Soucastka.zvysMnozstvi(pocet));
-  split again
-    ' Větev 2 – výdej
-    -> [typ == výdej];
-    :Snížit množství na skladě\n(Soucastka.snizMnozstvi(pocet));
-  split again
-    ' Větev 3 – přesun
-    -> [typ == přesun];
-    :Ověřit dostupnost\n(Soucastka.overDostupnost());
-    :Změnit lokaci součástky\n(PresunutiPohyb.zmenLokaci());
-  end split
-  ' end split = sloučení (join) – tlusté čáry
+  else ([ne])
+    if (typ == výdej?) then ([ano])
+      :Snížit množství na skladě\n(Soucastka.snizMnozstvi(pocet));
+    else ([ne – přesun])
+      :Ověřit dostupnost\n(Soucastka.overDostupnost());
+      :Změnit lokaci součástky\n(PresunutiPohyb.zmenLokaci());
+    endif
+  endif
 
   :Potvrdit pohyb uživateli;
 
