@@ -691,4 +691,108 @@ Reakce na událost která nezmění stav. Součástka zůstane Dostupna ale při
 \textbf{„Proč máte v datovém slovníku různé hodnoty pro stav Soucastka a SkladovyPohyb?"}\\
 Protože jsou to různé třídy s různým životním cyklem. Soucastka má stavy Dostupna, Vydana, Odepsana -- popisují fyzický stav součástky. SkladovyPohyb má stavy Vytvoren, Validovan, Proveden, Zamitnut -- popisují průběh zpracování pohybu v systému.
 
+
+%% ── Pojmy ze zkouškových materiálů ─────────────────────────────────────────
+\section{Pojmy ze zkouškových materiálů -- přesné definice}
+
+Tato sekce obsahuje přesné definice z materiálů ke zkoušce. Učitel může vyžadovat přesnou formulaci.
+
+\subsection{Rozdíl akce vs aktivita}
+
+Toto je velmi častá otázka u zkoušky!
+
+\textbf{Aktivita} -- operace která má časové trvání. Je přiřazena ke stavu (\texttt{do/}). Obsahuje spojité operace (trvají bez omezení) a sekvenční operace (po určité době samy skončí). Může ji přerušit událost.
+
+\textbf{Akce} -- okamžiková operace bez časového trvání. Je přiřazena k události nebo ke vstupu/výstupu stavu (\texttt{entry/}, \texttt{exit/}). Proběhne okamžitě.
+
+V projektu: \texttt{do/čekat na odeslání} je aktivita (trvá v čase). \texttt{entry/overitData()} je akce (proběhne okamžitě při vstupu do stavu).
+
+\subsection{Rozdíl vazba vs spojení}
+
+\textbf{Vazba (association)} -- popisuje skupinu spojení se stejnou strukturou a sémantikou. Je to třída-úroveň. Každá vazba v diagramu tříd odpovídá souboru spojení v diagramu výskytů -- stejně jako třída odpovídá souboru objektů. Vazba je svou podstatou dvousměrná.
+
+\textbf{Spojení (link)} -- fyzická nebo konceptuální souvislost mezi konkrétními instancemi objektů. Je to instance-úroveň. Například: ``Jan Malý pracuje na ČZU'' -- to je konkrétní spojení. Spojení je výskytem vazby.
+
+Analogie: Třída : Objekt = Vazba : Spojení.
+
+\subsection{Rozdíl multiplicita vs kardinalita}
+
+\textbf{Multiplicita} -- omezení rozsahu souboru objektů. Říká kolik výskytů jedné třídy MŮŽE mít vztah k jednomu výskytu přiřazené třídy. Je to pravidlo, omezení.
+
+\textbf{Kardinalita} -- současný (aktuální) počet objektů v souboru. Je to konkrétní číslo v daném okamžiku.
+
+Příklad: Multiplicita ``1..*'' říká že musí být alespoň jeden. Kardinalita je pak konkrétní číslo -- třeba právě teď je to 5.
+
+\subsection{Rozdíl podmínka vs změnová událost}
+
+\textbf{Podmínka} -- booleovský výraz který se testuje jednou, v okamžiku příchodu události. Platí v časovém intervalu. Pokud je podmínka splněna až poté co přišla událost, přechod se NEODPÁLÍ.
+
+\textbf{Změnová událost} -- nepřetržitě monitoruje booleovský výraz a událost nastane přesně v okamžiku kdy se hodnota změní z FALSE na TRUE. Notace: \texttt{when(výraz)}.
+
+Klíčový rozdíl: podmínka se testuje jednou, změnová událost nepřetržitě.
+
+\subsection{Signatura operace}
+
+Signatura definuje interface operace -- počet, pořadí a typy argumentů a typ výsledku. Když operace má metody na několika třídách (polymorfismus), všechny metody musí mít stejnou signaturu. Nelze potlačit signaturu -- lze jen překrýt implementaci (metodu).
+
+\subsection{Čtyři základní vztahy mezi objekty}
+
+Podle přednášek rozlišujeme čtyři základní vztahy:
+\begin{enumerate}
+  \item \textbf{Užití} -- volání metody, zaslání zprávy
+  \item \textbf{Agregace} -- obsažení (součást-celek)
+  \item \textbf{Dědičnost} -- vztahy generalizace a specializace
+  \item \textbf{Asociace} -- obecný strukturální vztah
+\end{enumerate}
+
+\subsection{Generalizace jako vztah ``JE''}
+
+Generalizace je vztahem typu ``JE'' -- každý výskyt podtřídy JE současně i výskytem všech svých nadtříd. Například: PrijemPohyb JE SkladovyPohyb. Díky tomu lze použít PrijemPohyb všude kde se očekává SkladovyPohyb.
+
+Naproti tomu agregace je vztah ``MÁ'' nebo ``OBSAHUJE'' -- Sklad MÁ Lokace.
+
+\subsection{Generalizace stavů -- vztah NEBO}
+
+Generalizace ve stavovém diagramu je vztah ``NEBO''. Objekt v jistém stavu ve vrcholovém SD musí být přesně v jednom stavu ve vnořených SD -- buď v prvním NEBO v druhém NEBO v dalším.
+
+Naproti tomu agregace ve stavovém diagramu je vztah ``A'' -- agregovaný stav je jeden stav z prvního SD A stav z druhého SD A stav z každého dalšího SD. Objekt může být zároveň v několika stavech různých složek.
+
+\subsection{Generalizace událostí}
+
+Události lze uspořádat do generalizační hierarchie s děděním atributů. Každá skutečná událost je listem tohoto stromu. Například: ``Přistání letu 321'' a ``Přistání letu 576'' jsou výskyty nadřazené třídy událostí ``Přistání letu''.
+
+\subsection{Datastore}
+
+Datastore je logický soubor -- uložiště dat. Obstarává asynchronní přenos dat a vyrovnává nesynchronnost procesů. Má jeden vstupní a jeden výstupní tok. Datastore bez vstupního toku obsahuje konstanty (neměnná data).
+
+\subsection{Exploze a dekompozice}
+
+\textbf{Exploze} -- zpodrobnění (rozložení) návrhu pomocí jiného mechanismu. Například: use case je explodován do sekvenčního diagramu.
+
+\textbf{Dekompozice} -- zpodrobnění návrhu pomocí stejného mechanismu. Například: stavový diagram je dekomponován do vnořených stavových diagramů (substroj).
+
+\subsection{Pupeční šňůra v sekvenčním diagramu}
+
+Svislá čára v sekvenčním diagramu reprezentující aktéra nebo systém se nazývá ``pupeční šňůra'' (lifeline). Čas postupuje shora dolů -- vyjadřujeme pořadí zpráv, nikoliv přesné časy.
+
+\subsection{Kdy je objektový model základní}
+
+Objektový model je základní ze tří modelů, protože je nutné popsat CO se mění, dříve než KDY (dynamický model) a JAK (model interakcí). Atributy a operace jsou v objektovém modelu druhotné -- hlavní jsou třídy, vazby a zobecnění.
+
+\subsection{Jak funkční model určuje pořadí operací}
+
+Pořadí operací v systému je určeno jejich datovými závislostmi. Operace může proběhnout teprve když jsou k dispozici její vstupní data. To se graficky zobrazuje diagramem aktivit (tok dat a řízení).
+
+\subsection{Čemu odpovídají procesy v objektovém modelu}
+
+Každý proces (funkce, transformace) je implementován jako metoda na určitém objektu. Procesy v DFD (diagram datových toků) se implementují jako metody operací na třídách objektů.
+
+\subsection{Přesná definice stavového diagramu}
+
+Stavový diagram ukazuje vztah událostí a stavů: když nastane událost, další stav závisí na této události a současném stavu. Uzly jsou stavy, směrové souvislosti (šipky) jsou přechody označené názvy události. SD popisuje chování jediné třídy objektů -- všechny instance sdílejí stejný SD.
+
+\subsection{Irelevantní třídy}
+
+Irelevantní třídy jsou třídy které mají málo nebo nic společného s řešeným problémem. Příklad: při modelování bankomatu je třída ``Cena'' irelevantní -- bankomat s cenami přímo nepracuje. Takové třídy při identifikaci vyloučíme.
+
 \end{document}
