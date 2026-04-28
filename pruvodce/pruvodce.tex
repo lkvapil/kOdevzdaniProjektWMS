@@ -1,0 +1,211 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[czech]{babel}
+\usepackage[top=25mm, bottom=25mm, left=25mm, right=25mm]{geometry}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\nouppercase{\leftmark}}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{\textbf{Průvodce projektem}\\[0.5em]
+\large Systém pro správu skladu elektronických součástek\\[0.3em]
+\normalsize Jak to funguje a jak to obhájit}
+\author{Tomáš Simandl, Tomáš Szetei, Lukáš Kvapil}
+\date{2026}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\tableofcontents
+\newpage
+
+%% ── 1. O čem projekt je ──────────────────────────────────────────────────────
+\section{O čem projekt je}
+
+Navrhujeme informační systém pro sklad elektronických součástek -- resistory, kondenzátory, obvody a podobně. Sklad má fyzická místa (lokace), součástky se naskladňují, vydávají a přesouvají. Navíc lze součástky přiřazovat k projektům a sledovat kolik kusů daný projekt spotřebuje.
+
+Celý projekt je \textbf{analytický návrh} -- ne implementace. Kreslíme UML diagramy které popisují strukturu a chování systému. Kód neexistuje.
+
+%% ── 2. Jak modely na sebe navazují ───────────────────────────────────────────
+\section{Jak modely na sebe navazují}
+
+Toto je klíčová otázka u zkoušky. Vyučující se určitě zeptá: \textit{„Jak spolu vaše diagramy souvisí?"}
+
+\begin{itemize}
+  \item \textbf{Class diagram} definuje třídy -- \texttt{Soucastka}, \texttt{SkladovyPohyb}, \texttt{Projekt} atd. Všechny ostatní diagramy na tyto třídy odkazují.
+  \item \textbf{Stavové diagramy} popisují životní cykly dvou tříd z class diagramu -- \texttt{SkladovyPohyb} a \texttt{Soucastka}. Metody ve stavovém diagramu (\texttt{vytvoritPohyb()}, \texttt{overitData()}, \texttt{provestPohyb()}) jsou přesně ty metody co jsou definované v class diagramu.
+  \item \textbf{Use Case diagram} ukazuje co systém umí z pohledu uživatelů. Případy užití odpovídají operacím které třídy nabízejí.
+  \item \textbf{Sekvenční diagram} ukazuje konkrétní volání metod při vytvoření pohybu -- opět stejné metody z class diagramu.
+  \item \textbf{Diagram aktivit} ukazuje tok řízení při stejné operaci -- je to jiný pohled na to samé co sekvenční diagram.
+\end{itemize}
+
+%% ── 3. Class diagram ─────────────────────────────────────────────────────────
+\section{Class diagram -- Objektový model}
+
+\subsection{Co diagram říká}
+
+Class diagram ukazuje všechny třídy systému a jejich vztahy. Máme 10 tříd.
+
+\subsection{Proč generalizace}
+
+\texttt{SkladovyPohyb} je abstraktní třída -- nelze z ní vytvořit instanci. Má tři konkrétní podtřídy:
+\begin{itemize}
+  \item \texttt{PrijemPohyb} -- naskladnění od dodavatele
+  \item \texttt{VydejPohyb} -- výdej ze skladu
+  \item \texttt{PresunutiPohyb} -- přesun mezi lokacemi
+\end{itemize}
+
+Všechny tři dědí společné atributy (\texttt{id}, \texttt{datum}, \texttt{stav}, \texttt{mnozstvi}) a každá přidává vlastní (\texttt{dodavatel}, \texttt{duvod}, \texttt{zdrojLokaceId/cilLokaceId}). Metoda \texttt{vytvoritPohyb()} je abstraktní -- každá podtřída ji implementuje po svém. Toto je \textbf{polymorfismus}.
+
+\textit{Proč to tak děláme?} Protože příjem, výdej a přesun sdílejí 90\% chování -- bylo by zbytečné kopírovat atributy do tří samostatných tříd.
+
+\subsection{Proč kvalifikovaná vazba}
+
+Vazba \texttt{Sklad --> Soucastka} je kvalifikovaná přes \texttt{id: int}. Znamená to, že sklad přistupuje ke konkrétní součástce pomocí jejího ID -- ne k celé kolekci najednou. Je to jako klíč v databázi.
+
+\subsection{Proč agregace a kompozice}
+
+\begin{itemize}
+  \item \texttt{Sklad *-- Lokace} -- kompozice. Lokace bez skladu nemůže existovat. Pokud zrušíme sklad, zaniknou i všechny jeho lokace.
+  \item \texttt{Lokace o-- Soucastka} -- agregace. Součástka může existovat i bez přiřazené lokace (třeba při příjmu před zařazením).
+\end{itemize}
+
+\subsection{Proč ProjektSoucastka -- atribut spojení}
+
+Vazba mezi \texttt{Projekt} a \texttt{Soucastka} má atribut \texttt{mnozstvi}. Toto množství nepatří ani Projektu ani Součástce -- patří konkrétní vazbě mezi nimi. Projekt může potřebovat 10 kusů rezistoru R1, jiný projekt 5 kusů stejného rezistoru. Proto je \texttt{ProjektSoucastka} asociační třída.
+
+%% ── 4. Stavové diagramy ──────────────────────────────────────────────────────
+\section{Stavové diagramy -- Dynamický model}
+
+\subsection{SkladovyPohyb}
+
+Pohyb prochází čtyřmi stavy:
+
+\begin{enumerate}
+  \item \textbf{Vytvoren} -- pohyb byl inicializován, čeká na odeslání
+  \item \textbf{Validovan} -- data se ověřují (\texttt{overitData()})
+  \item \textbf{Proveden} -- pohyb byl úspěšně proveden (\texttt{provestPohyb()})
+  \item \textbf{Zamitnut} -- data byla neplatná nebo množství nedostatečné
+\end{enumerate}
+
+Každý stav má \texttt{entry/} (akce při vstupu), \texttt{do/} (průběžná aktivita) a \texttt{exit/} (akce při odchodu). Přechody ze stavů \textit{Proveden} a \textit{Zamitnut} do koncového stavu jsou \textbf{zakončovací} -- bez názvu události, protože stav jen provede své akce a automaticky skončí.
+
+\subsection{Soucastka}
+
+Součástka má tři stavy:
+
+\begin{enumerate}
+  \item \textbf{Dostupna} -- hlavní pracovní stav. Součástka tu může být i s nulovým množstvím (čeká na naskladnění). Vnitřní přechody reagují na události -- \textit{naskladněno} zavolá \texttt{zvysMnozstvi()}, \textit{rezervace přijata} zavolá \texttt{rezervovat()}.
+  \item \textbf{Vydana} -- fyzicky vydána ze skladu. Terminální stav.
+  \item \textbf{Odepsana} -- trvale vyřazena z evidence. Terminální stav.
+\end{enumerate}
+
+\textit{Proč vnitřní přechody?} Akce jako \texttt{zvysMnozstvi()} jsou okamžité -- nemají časové trvání. Proto nejdou do \texttt{do/} (která je pro průběžné aktivity), ale jako vnitřní přechody ve tvaru \textit{událost / akce}.
+
+%% ── 5. Use Case diagram ──────────────────────────────────────────────────────
+\section{Use Case diagram -- Model interakcí}
+
+\subsection{Aktéři}
+
+Máme dva aktéry:
+\begin{itemize}
+  \item \textbf{Vedoucí skladu} -- spravuje součástky, projekty, přiřazuje součástky k projektům
+  \item \textbf{Skladník} -- fyzicky provádí příjem, výdej a přesun součástek
+\end{itemize}
+
+\subsection{Proč generalizace místo extend}
+
+Příjem, výdej a přesun jsou specifické varianty abstraktního případu užití \textit{Vytvořit pohyb}. Nejde o rozšíření (extend se používá pro volitelnou funkcionalitu), ale o specializaci. Proto používáme \textbf{generalizaci} -- prázdný trojúhelník směřující k nadřazenému UC.
+
+Tím zároveň ladíme Use Case diagram s class diagramem, kde stejný vztah (generalizace) používáme mezi \texttt{SkladovyPohyb} a jeho podtřídami.
+
+\subsection{Include}
+
+\begin{itemize}
+  \item \textit{Vytvořit pohyb} vždy zahrnuje \textit{Ověřit data pohybu} -- povinné zahrnutí
+  \item \textit{Přiřadit součástku k projektu} vždy zahrnuje \textit{Ověřit dostupnost}
+\end{itemize}
+
+%% ── 6. Sekvenční diagram ─────────────────────────────────────────────────────
+\section{Sekvenční diagram}
+
+\subsection{Co diagram říká}
+
+Ukazuje konkrétní volání metod při vytvoření pohybu. Účastníci jsou \texttt{:SkladovyPohyb}, \texttt{:Soucastka} a \texttt{:Lokace} -- přesně třídy z class diagramu.
+
+\subsection{Typy šipek}
+
+\begin{itemize}
+  \item \textbf{Plná šipka} (\texttt{->}) -- synchronní zpráva, odesílatel čeká na odpověď
+  \item \textbf{Přerušovaná šipka} (\texttt{-->}) -- odpověď / návratová hodnota
+\end{itemize}
+
+\subsection{Activation boxy}
+
+Šedé obdélníky na čarách života ukazují kdy je objekt aktivní -- kdy zpracovává zprávu. \texttt{:SkladovyPohyb} je aktivní po celou dobu, \texttt{:Soucastka} jen při volání konkrétní metody.
+
+\subsection{Alt blok}
+
+Blok \texttt{alt} ukazuje alternativní toky:
+\begin{itemize}
+  \item Pokud data nejsou platná -- pohyb zamítnut
+  \item Pokud data jsou platná -- pohyb proveden dle typu
+\end{itemize}
+
+\subsection{Proč větvení dle typu}
+
+I když máme polymorfismus v class diagramu, sekvenční diagram větvení ukazuje záměrně -- aby bylo vidět co se reálně děje uvnitř \texttt{provestPohyb()} pro každý typ pohybu. Je to didaktické rozhodnutí.
+
+%% ── 7. Diagram aktivit ───────────────────────────────────────────────────────
+\section{Diagram aktivit}
+
+Diagram ukazuje tok řízení při vytvoření pohybu -- stejnou operaci jako sekvenční diagram, ale z pohledu kroků a větvení.
+
+\begin{enumerate}
+  \item Zadat součástku a množství
+  \item \texttt{vytvoritPohyb()} -- inicializace
+  \item \texttt{overitData()} -- ověření
+  \item Větvení: data platná / neplatná
+  \item \texttt{provestPohyb()} -- provedení
+  \item Větvení dle typu: příjem / výdej / přesun
+  \item Potvrzení nebo zamítnutí
+\end{enumerate}
+
+Podmínky jsou v hranatých závorkách \texttt{[ano]}, \texttt{[ne]} -- standardní UML notace pro guardy.
+
+%% ── 8. Typické otázky u zkoušky ──────────────────────────────────────────────
+\section{Typické otázky u zkoušky}
+
+\textbf{„Jak spolu vaše diagramy souvisí?"}\\
+Třídy z class diagramu se objevují ve stavových diagramech (životní cykly), sekvenčním diagramu (volání metod) i diagramu aktivit. Scénáře a diagramy popisují stejné operace z různých pohledů.
+
+\textbf{„Proč je SkladovyPohyb abstraktní?"}\\
+Protože pohyb jako takový neexistuje -- vždy je to buď příjem, výdej nebo přesun. Abstraktní třída zajišťuje sdílení společných atributů a deklaruje metody které podtřídy musí implementovat.
+
+\textbf{„Co je to kvalifikovaná vazba?"}\\
+Sklad přistupuje ke konkrétní součástce pomocí jejího ID. Je to způsob jak vyjádřit přístup přes klíč -- podobně jako v databázi.
+
+\textbf{„Proč máte asociační třídu ProjektSoucastka?"}\\
+Atribut \texttt{mnozstvi} nepatří ani Projektu ani Součástce -- patří konkrétní vazbě mezi nimi. Projekt A potřebuje 10 kusů, Projekt B potřebuje 5 kusů stejné součástky.
+
+\textbf{„Co znamená entry/do/exit ve stavovém diagramu?"}\\
+\texttt{entry/} se provede při vstupu do stavu, \texttt{do/} probíhá po celou dobu pobytu ve stavu, \texttt{exit/} se provede při odchodu.
+
+\textbf{„Proč zakončovací přechody bez názvu?"}\\
+Stavy Proveden a Zamitnut jen provedou své akce a automaticky skončí -- nečekají na žádnou událost. Proto přechod do koncového stavu nemá název.
+
+\textbf{„Proč generalizace v Use Case místo extend?"}\\
+Příjem, výdej a přesun jsou specializace pohybu -- ne volitelná rozšíření. Extend by znamenalo že základní UC dává smysl i bez nich. Generalizace vyjadřuje vztah rodič-potomek, stejně jako v class diagramu.
+
+\end{document}
