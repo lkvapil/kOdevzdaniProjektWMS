@@ -4,9 +4,6 @@ skinparam sequenceArrowThickness 1.5
 skinparam sequenceParticipantBorderThickness 1.5
 skinparam sequenceGroupBorderThickness 1.5
 
-' Sekvenční diagram ukazuje příjem jako příklad scénáře
-' SkladovyPohyb je abstraktní – konkrétní chování zajistí podtřída
-
 actor ":Uživatel" as Uzivatel
 participant ":SkladovyPohyb" as Pohyb
 participant ":Soucastka" as Soucastka
@@ -22,15 +19,30 @@ alt [data nejsou platná]
 
 else [data jsou platná]
     Pohyb -> Pohyb : provestPohyb()
-    activate Pohyb
 
-    ' příklad scénáře příjmu – konkrétní podtřída PrijemPohyb
-    Pohyb -> Soucastka : zvysMnozstvi(pocet)
-    activate Soucastka
-    Soucastka --> Pohyb : ok
-    deactivate Soucastka
+    alt [typ == příjem]
+        Pohyb -> Soucastka : zvysMnozstvi(pocet)
+        activate Soucastka
+        Soucastka --> Pohyb : ok
+        deactivate Soucastka
 
-    deactivate Pohyb
+    else [typ == výdej]
+        Pohyb -> Soucastka : snizMnozstvi(pocet)
+        activate Soucastka
+        Soucastka --> Pohyb : ok
+        deactivate Soucastka
+
+    else [typ == přesun]
+        Pohyb -> Soucastka : overDostupnost()
+        activate Soucastka
+        Soucastka --> Pohyb : ok
+        deactivate Soucastka
+        Pohyb -> Lokace : zmenLokaci(zdrojLokaceId, cilLokaceId)
+        activate Lokace
+        Lokace --> Pohyb : ok
+        deactivate Lokace
+    end
+
     Pohyb --> Uzivatel : pohyb potvrzen
 end
 
