@@ -1,0 +1,56 @@
+Pojem,Definice,Kategorie
+Třída,"Šablona popisující skupinu objektů se stejnými atributy, chováním a vztahy. Např. třída Soucastka popisuje všechny součástky v systému.",Základní pojmy
+Objekt,"Konkrétní instance (výskyt) třídy. Např. Rezistor 10k ohm 50ks je instance třídy Soucastka. Každý objekt má vlastní identitu.",Základní pojmy
+Atribut,"Datová vlastnost objektu. Např. mnozstvi: int = počet kusů na skladě. Typ oddělen dvojtečkou, počáteční hodnota rovnítkem.",Základní pojmy
+Operace,"Funkce nebo transformace prováděná objektem. Všechny objekty ve třídě sdílejí stejné operace. Např. zvysMnozstvi(pocet).",Základní pojmy
+Metoda,"Specifická implementace operace pro danou třídu. Díky polymorfismu může mít jedna operace více metod v různých třídách.",Základní pojmy
+Identita,"Každý objekt má vlastní identitu – dva objekty jsou rozdílné i když mají stejné hodnoty atributů.",Základní pojmy
+Klasifikace,"Objekty se stejnými atributy a chováním jsou seskupeny do tříd. Každý objekt je instancí (výskytem) své třídy.",Základní pojmy
+Zapouzdření,"Oddělení vnějších hledisek objektu (co umí) od implementačních detailů (jak to dělá). Uživatel objektu nemusí vědět jak je implementován.",Základní pojmy
+Abstrakce,"Důraz na podstatná hlediska aplikace a ignorování detailů. Nástroj proti složitosti systému.",Základní pojmy
+Signatura,"Definuje interface operace – počet, pořadí a typy argumentů a typ výsledku. Při polymorfismu musí mít všechny metody stejnou signaturu.",Základní pojmy
+Asociace (vazba),"Strukturální vztah mezi třídami. Popisuje skupinu spojení se stejnou strukturou. Je svou podstatou dvousměrná. V projektu: Uzivatel vytváří SkladovyPohyb.",Vztahy
+Spojení (link),"Konkrétní instance vazby mezi objekty. Např. Jan pracuje na ČZU. Spojení : Vazba = Objekt : Třída.",Vztahy
+Kardinalita,"Současný (aktuální) počet objektů v souboru. Liší se od multiplicity která je omezení rozsahu.",Vztahy
+Multiplicita,"Omezení rozsahu – kolik výskytů jedné třídy může mít vztah k jednomu výskytu druhé třídy. Zapisuje se na konci čáry (1, *, 0..1).",Vztahy
+Agregace,"Vztah součást-celek. Vztah A. Tranzitivní a antisymetrická. Části mohou existovat bez celku. Symbol: prázdný diamant. V projektu: Lokace o-- Soucastka.",Vztahy
+Kompozice,"Silnější agregace. Části nemohou existovat bez celku – zanikem celku zanikají i části. Část patří pouze jednomu celku. Symbol: plný diamant. V projektu: Sklad *-- Lokace.",Vztahy
+Generalizace (dědičnost),"Vztah JE mezi nadtřídou a podtřídami. Podtřída dědí vše z nadtřídy a přidává vlastní. V projektu: PrijemPohyb JE SkladovyPohyb.",Vztahy
+Kvalifikace,"Kvalifikovaná vazba snižuje násobnost (např. z 1:N na 1:1) pomocí kvalifikátoru. V projektu: Sklad [id:int] --> Soucastka.",Vztahy
+Kvalifikátor,"Zvláštní atribut na vazbě který rozlišuje objekty na konci mnoho. Kreslí se jako rámeček. V projektu: id:int u vazby Sklad-Soucastka.",Vztahy
+Vazební (asociační) třída,"Třída patřící vazbě mezi dvěma třídami. Vznikne jen když existuje konkrétní vazba. V projektu: ProjektSoucastka s atributem mnozstvi.",Vztahy
+Role,"Jeden konec vazby. Binární vazba má dvě role. Nutné pro vazbu objektu téže třídy – např. OSOBA zaměstnává OSOBA (role: zaměstnanec/zaměstnavatel).",Vztahy
+Diskriminátor,"Název vedle trojúhelníku generalizace. Určuje podle jaké vlastnosti zobecňujeme. V každém okamžiku lze zobecnit pouze podle jedné vlastnosti.",Vztahy
+Polymorfismus,"Stejná operace se chová odlišně v různých třídách. V projektu: provestPohyb() volá zvysMnozstvi/snizMnozstvi/zmenLokaci podle podtřídy.",Objektový model
+Abstraktní třída,"Třída ze které nelze vytvořit instanci. V projektu: SkladovyPohyb – v reálu nikdy nevznikne obecný pohyb vždy jen příjem/výdej/přesun.",Objektový model
+Tři modely UML,"1. Objektový model (OM) – CO. 2. Dynamický model (DM) – KDY. 3. Model interakcí (IM) – JAK. OM je základní – popíšeme CO se mění dříve než KDY a JAK.",Objektový model
+Datový slovník,"Přesný popis každé třídy odstavcem textu – rozsah v aplikaci, předpoklady, omezení, atributy, metody, vazby.",Objektový model
+Stav,"Soubor hodnot atributů a spojení objektu v daném okamžiku. Udává odezvu na vnější události. Má časové trvání (na rozdíl od události).",Stavové diagramy
+Událost,"Podnět od jednoho objektu k druhému. Nastane v časovém okamžiku bez trvání. Druhy: signálová, změnová, časová.",Stavové diagramy
+Přechod,"Změna stavu způsobená událostí. Modeluje se šipkou se jménem události.",Stavové diagramy
+Podmínka na přechodu,"Booleovský výraz v závorce. Platí v časovém intervalu. Přechod se odpálí jen pokud podmínka splněna V OKAMŽIKU příchodu události – pokud splněna až poté NEODPÁLÍ se.",Stavové diagramy
+Změnová událost,"Nastane přesně v okamžiku kdy se booleovský výraz změní z FALSE na TRUE. Notace: when(výraz). Na rozdíl od podmínky testuje NEPŘETRŽITĚ.",Stavové diagramy
+Signálová událost,"Explicitní jednosměrný přenos informace od jednoho objektu k druhému. Má jedinečný výskyt ale sdružujeme je do tříd.",Stavové diagramy
+Časová událost,"Nastane dosažením absolutního času nebo vypršením intervalu. Notace: when(datum) nebo after(interval).",Stavové diagramy
+Aktivita (do/),"Operace s časovým trváním přiřazená stavu. Trvá po celou dobu pobytu ve stavu. Může ji přerušit událost. V projektu: do/čekat na odeslání.",Stavové diagramy
+Akce (entry/exit/),"Okamžiková operace bez trvání přiřazená ke vstupu nebo výstupu ze stavu. V projektu: entry/overitData() – zavolá se okamžitě při vstupu.",Stavové diagramy
+Vnitřní přechod,"Reakce na událost která NEZMĚNÍ stav – objekt zůstane ve stejném stavu ale provede akci. V projektu: součástka zůstane Dostupna ale zvýší množství.",Stavové diagramy
+Zakončovací přechod,"Přechod do dalšího stavu bez čekání na událost – stav provede akce a automaticky skončí. V diagramu bez popisku. V projektu: Proveden --> [*].",Stavové diagramy
+Dualita stav/událost,"Události a stavy jsou v duálním vztahu: událost odděluje dva stavy, stav odděluje dvě události.",Stavové diagramy
+Pořadí aktivit ve stavu,"1. Aktivity na vstupním přechodu. 2. entry/. 3. do/. 4. exit/. 5. Aktivity na výstupním přechodu.",Stavové diagramy
+Use Case,"Ucelená část funkčnosti systému při komunikaci s aktorem. Spojuje normální chování, variace, chybové podmínky i rušení.",Model interakcí
+Aktor,"Vnější uživatel systému který s ním přímo komunikuje ale není jeho součástí. V projektu: Vedoucí skladu a Skladník.",Model interakcí
+Include,"Povinné zahrnutí – jeden UC vždy zahrnuje jiný. Bez zahrnutí by UC nebyl kompletní. V projektu: Vytvořit pohyb vždy zahrnuje Ověřit data pohybu.",Model interakcí
+Extend,"Volitelné rozšíření – UC může (ale nemusí) rozšířit jiný UC. Základní UC dává smysl i bez rozšíření. Šipka jde od rozšiřujícího k základnímu.",Model interakcí
+Generalizace v UC,"Specializace – jeden UC je speciálním typem jiného. V projektu: Příjem/Výdej/Přesun jsou specializace pohybu (ne volitelná rozšíření). Proto generalizace, ne extend.",Model interakcí
+Scénář,"Posloupnost událostí při určitém použití systému. Forma: seznam textových výroků. Lze znázornit sekvenčním diagramem.",Model interakcí
+Sekvenční diagram,"Ukazuje účastníky a zprávy mezi nimi. Svislé čáry (pupeční šňůry) = účastníci. Čas plyne shora dolů – vyjadřuje pořadí zpráv ne přesné časy.",Model interakcí
+Activation box,"Obdélník na čáře života sekvenčního diagramu – ukazuje kdy je objekt aktivní (zpracovává zprávu).",Model interakcí
+Diagram aktivit,"Ukazuje tok řízení mezi výpočetními kroky. Datové i řídící toky. Podmínky v hranatých závorkách. Může modelovat i paralelní toky.",Model interakcí
+Fork/Join (štěpení/spojování),"Tlusté příčky v diagramu aktivit pro paralelní toky. Fork = rozdělení do paralelních větví. Join = sloučení – čeká na dokončení VŠECH vstupů.",Model interakcí
+Exploze,"Zpodrobnění návrhu pomocí JINÉHO mechanismu. Např. use case explodován do sekvenčního diagramu.",Různé
+Dekompozice,"Zpodrobnění návrhu pomocí STEJNÉHO mechanismu. Např. stavový diagram do vnořeného stavového diagramu.",Různé
+Datastore,"Logický soubor – uložiště dat. Asynchronní přenos dat. Jeden vstup a jeden výstup. Bez vstupního toku = obsahuje konstanty.",Různé
+Životní cyklus IS,"1. Koncepce. 2. Analýza (CO – ne JAK). 3. Návrh systému. 4. Návrh objektů. 5. Implementace.",Různé
+Doménový model,"Objekty reálného světa – součástky, sklady, projekty. Část analytického modelu.",Různé
+Model aplikace,"Počítačová hlediska viditelná uživatelům – UI, ovladače. Druhá část analytického modelu.",Různé
