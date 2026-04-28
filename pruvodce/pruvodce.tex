@@ -393,6 +393,112 @@ Toto je klíčová otázka u zkoušky. Máme tři modely (podle přednášek: ob
 \end{itemize}
 
 %% ── 6. Typické otázky u zkoušky ──────────────────────────────────────────────
+
+%% ── Pojmy které nejsou v projektu ───────────────────────────────────────────
+\section{Pojmy z přednášek které nejsou v projektu}
+
+Tato sekce pokrývá pojmy z přednášek které jsme v projektu nepoužili, ale učitel se na ně může zeptat.
+
+\subsection{Konkurence ve stavových diagramech}
+
+Konkurence znamená že více objektů může nezávisle měnit stav ve stejnou dobu. Každý objekt má svůj stavový diagram a tyto diagramy běží paralelně.
+
+Agregace ve stavovém diagramu umožňuje stavu být rozložen do orthogonálních (nezávislých) složek. Agregovaný stav je kombinací stavů všech složek -- je to vztah ``A'': objekt je v stavu A1 A zároveň v stavu B1.
+
+Naproti tomu generalizace ve stavovém diagramu je vztah ``NEBO'': objekt je buď v stavu A nebo v stavu B.
+
+Příklad: Tiskárna může zároveň tisknout (stav Tisk) a ohřívat (stav Ohřev) -- to je konkurence. Ale nemůže být zároveň v stavu Tisk a v stavu Klid -- to jsou alternativní stavy.
+
+\subsection{Posílání signálů}
+
+Objekt může jako aktivitu poslat signál jinému objektu. Aktivita \texttt{send cíl.Signál(atributy)} posílá signál cílovému objektu. Pokud je cílem množina objektů, každý dostane samostatnou kopii a reaguje nezávisle.
+
+Nutno předcházet nežádoucím souběhům -- současný výskyt dvou událostí v praxi nikdy nemá smysl a může vést k nepředvídatelnému chování.
+
+\subsection{Diskriminátor}
+
+Název uvedený vedle trojúhelníku generalizace je diskriminátor -- určuje podle jaké vlastnosti zobecňujeme. V každém okamžiku lze zobecnit pouze podle jedné vlastnosti.
+
+Příklad: Vozidlo lze zobecnit podle pohonu (elektrické/spalovací) nebo podle prostředí (pozemní/vodní/vzdušné) -- ale v jednom diagramu pouze podle jednoho kritéria.
+
+\subsection{Potlačení vlastnosti v dědičnosti}
+
+Podtřída může potlačit vlastnost nadtřídy tím, že definuje vlastnost se stejným názvem. Lze potlačit počáteční hodnoty atributů a metody operací. Nelze ale potlačit signaturu (počet a typ argumentů).
+
+Příklad: Operace OTOČ je standardní pro geometrické obrazce. U třídy KRUH může být nulovou operací -- kruh po otočení vypadá stejně.
+
+\subsection{Reflexivní vazba (vazba téže třídy)}
+
+Vazba může spojovat objekt se sebou samým nebo objekt s jiným objektem stejné třídy. V takovém případě jsou povinné názvy rolí pro rozlišení konců vazby.
+
+Příklad: OSOBA zaměstnává OSOBA. Role: ``zaměstnavatel'' a ``zaměstnanec''. Bez rolí by nebylo jasné kdo koho zaměstnává.
+
+\subsection{Odvozené atributy a třídy}
+
+Odvozené atributy jsou atributy jejichž hodnota lze vypočítat z jiných atributů. Označují se lomítkem před názvem: \texttt{/věk}. Věk je odvozen z data narození a dnešního data -- nepotřebujeme ho ukládat zvlášť.
+
+Odvozené třídy jsou třídy které lze definovat pomocí jiných tříd. Označují se lomítkem: \texttt{/Prarodič} je odvozen z opakování vazby \texttt{Rodič}.
+
+\subsection{Ternární vazby}
+
+Většina vazeb je binárních (mezi dvěma třídami). Ale existují i ternární vazby -- mezi třemi třídami. Většinu ternárních vazeb lze rozložit na binární, což je přehlednější.
+
+\subsection{Hranice systému a hraniční třídy}
+
+Hranice systému určuje co je uvnitř a co vně systému. Lidé jsou aktoři -- interagují se systémem ale nejsou jeho součástí.
+
+Hraniční třídy oddělují vnitřek systému od vnějšího světa. Sbírají informace z vnějších zdrojů a předávají je dovnitř, aniž by vnější zdroj ovlivňoval vnitřní strukturu. Příklad: třída pro komunikaci s bankou v systému bankomatu.
+
+\subsection{Ovladače (Controllers)}
+
+Ovladač je aktivní objekt který zajišťuje řízení uvnitř aplikace. Přijímá signály z vnitřku i vnějšku, reaguje na ně a vyvolává operace. Ovladače se navrhují zejména pomocí stavových diagramů. Typicky mají výraznější dynamické chování než ostatní objekty.
+
+\subsection{Vrstvy a partitions -- architektura systému}
+
+Systém lze rozložit na subsystémy dvěma způsoby:
+
+\textbf{Vrstvy} -- horizontální dělení. Každá vrstva poskytuje základ pro vyšší vrstvy. Znalost je jednosměrná -- vyšší vrstva zná nižší, ne naopak. Vztah client-supplier. Příklad: operační systém -- grafická vrstva -- aplikace.
+
+\textbf{Partitions} -- vertikální dělení na nezávislé části se stejnou úrovní abstrakce. Mají vztah peer-to-peer.
+
+\subsection{Nit řízení (Thread of control)}
+
+Nit řízení je průchod přes soubor stavových diagramů při kterém v každém okamžiku může být aktivní pouze jediný objekt. V počítačových systémech se implementuje jako úloha (task). Systém může mít více nitů řízení běžících paralelně.
+
+\subsection{Zapouzdření}
+
+Zapouzdření odděluje vnější hlediska objektu (co umí, jaké má rozhraní) od implementačních detailů (jak to dělá uvnitř). Uživatel objektu nemusí vědět jak je implementován -- stačí znát jeho rozhraní. Umožňuje měnit vnitřní implementaci bez ovlivnění ostatních objektů.
+
+\subsection{Abstrakce}
+
+Abstrakce je důraz na podstatná hlediska aplikace a ignorování detailů. Je nástrojem proti složitosti. Model je abstrakcí reality -- ignoruje nepodstatné detaily aby bylo možné realitu pochopit a zvládnout.
+
+\subsection{Vzory (Design Patterns)}
+
+Vzor je ověřené řešení k obecnému problému. Existují vzory pro analýzu, architekturu, návrh i implementaci. Byly důkladně ověřeny jinými projektanty. Vzor je obvykle malý počet tříd a vazeb -- na rozdíl od rámce který pokrývá celý subsystém.
+
+\subsection{Životní cyklus vývoje SW}
+
+Podle přednášek UML podporuje celý životní cyklus:
+\begin{enumerate}
+  \item \textbf{Koncepce systému} -- od počátečního nápadu po případovou studii
+  \item \textbf{Analýza} -- CO se má udělat (ne JAK). Výsledkem jsou tři modely: OM, DM, IM
+  \item \textbf{Návrh systému} -- celková architektura, rozložení na subsystémy
+  \item \textbf{Návrh objektů} -- detaily algoritmů a datových struktur
+  \item \textbf{Implementace} -- psaní kódu
+  \item \textbf{Testování, zaškolení, provoz a údržba}
+\end{enumerate}
+
+Klíčový princip: analýza určuje CO, návrh určuje JAK. Tyto dvě fáze nesmíme míchat.
+
+\subsection{Doménový vs aplikační model}
+
+\textbf{Doménový model} popisuje objekty reálného světa -- součástky, sklady, projekty. Operace v něm obvykle nejsou významné. Zaměřuje se na statickou strukturu.
+
+\textbf{Aplikační model} přidává počítačová hlediska viditelná uživatelům -- jak aplikace vypadá zvenku, uživatelské rozhraní, ovladače. Třídy aplikace jsou obvykle počítačově orientované.
+
+V našem projektu: Soucastka, Sklad, Lokace jsou doménové třídy. Kdyby existovalo uživatelské rozhraní, bylo by to aplikační třídou.
+
 \section{Typické otázky u zkoušky}
 
 \textbf{„Jak spolu vaše diagramy souvisí?"}\\
