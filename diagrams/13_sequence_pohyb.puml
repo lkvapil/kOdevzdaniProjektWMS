@@ -9,7 +9,7 @@ participant ":SkladovyPohyb" as Pohyb
 participant ":Soucastka" as Soucastka
 participant ":Lokace" as Lokace
 
-Uzivatel -> Pohyb : vytvoritPohyb(soucastka, mnozstvi)
+Uzivatel -> Pohyb : vytvoritPohyb()
 activate Pohyb
 
 Pohyb -> Pohyb : overitData()
