@@ -380,6 +380,154 @@ Scénář je posloupnost událostí mezi množinou interagujících objektů. Pr
 
 Logická správnost závisí na posloupnosti (pořadí) interakcí a nikoliv na přesném časování.
 
+
+%% ── Zkušební otázky a odpovědi ───────────────────────────────────────────────
+\section{Zkušební otázky a přesné odpovědi}
+
+Tato sekce obsahuje přesné otázky a odpovědi ve stylu zkušebních otázek.
+
+\subsection{Základní pojmy}
+
+\textbf{Co je model?}\\
+Nástroj pro pochopení a popis reality. Je abstrakcí reality -- ignoruje nepodstatné detaily. Je cestou ke zvládnutí složitosti.
+
+\textbf{Co je objekt?}\\
+Předmět našeho zájmu v systému. Jeden objekt = jeden výskyt (instance). Má vlastnosti: atributy, operace a metody. Charakteristiky: identita, klasifikace, polymorfismus, dědičnost.
+
+\textbf{Co je třída?}\\
+Popisuje skupinu objektů s podobnými vlastnostmi (atributy), společným chováním (operace) a stejnými vztahy k jiným objektům. Třída je množina jednotlivých objektů, každý objekt je instancí své třídy.
+
+\textbf{Co jsou irelevantní třídy?}\\
+Třídy které mají málo nebo nic společného s problémem. Příklad: v systému bankomatu je třída ``cena'' irelevantní.
+
+\textbf{Co je atribut?}\\
+Popisuje datové vlastnosti objektu. Každý název atributu může být následován typem (oddělen dvojtečkou) a počáteční hodnotou (oddělena rovnítkem).
+
+\textbf{Co je operace?}\\
+Funkce nebo transformace prováděna objektem nebo na objektu ve třídě. Všechny objekty ve třídě sdílejí stejné operace. Každá operace má cílový objekt jako implicitní argument. Operace může mít argumenty navíc k cílovému objektu.
+
+\textbf{Co je metoda?}\\
+Specifická implementace operace nad určitou třídou. Následkem polymorfismu stejná operace může platit pro mnoho různých tříd kde může mít různé podoby.
+
+\textbf{Co je signatura?}\\
+Definuje interface operace -- počet, pořadí a typy argumentů a typ výsledku. Když operace má metody na několika třídách, všechny metody musí mít stejnou signaturu. Vlastnost nelze nikdy potlačit tak, aby byla nekonzistentní se signaturou.
+
+\textbf{Co je identita?}\\
+Data jsou kvantována do rozlišitelných entit (objektů) a každý objekt má svou vlastní identitu. Dva objekty jsou různé přesto, že hodnoty jejich atributů jsou identické.
+
+\textbf{Co je klasifikace?}\\
+Objekty se stejnou datovou strukturou (atributy) a stejným chováním (operacemi) jsou seskupeny do tříd. Třída je množina jednotlivých objektů, každý je instancí své třídy.
+
+\subsection{Vazby a spojení}
+
+\textbf{Co je vazba a co je spojení? Jaký je mezi nimi rozdíl?}\\
+Spojení je fyzická nebo konceptuální souvislost mezi konkrétními instancemi objektů. Příklad: ``Jan Malý pracuje na ČZU'' je spojení. Spojení je výskytem vazby.
+
+Vazba je dvousměrná a popisuje skupinu spojení se stejnou strukturou a sémantikou. Vazba v diagramu tříd odpovídá souboru spojení v diagramu výskytů -- stejně jako třída odpovídá souboru objektů.
+
+\textbf{Jaké jsou základní vztahy mezi objekty a třídami?}\\
+Čtyři základní vztahy: užití (volání metody, zaslání zprávy), agregace (obsažení), dědičnost (generalizace a specializace), asociace.
+
+\textbf{Co je vazební (asociační) třída?}\\
+Vazební třída je vazbou a současně třídou. Popisuje vlastnost vazby -- podobně jako atribut popisuje vlastnost objektu. Má opodstatnění hlavně u vazeb mnoho-mnoho kde atribut nelze přiřadit k žádnému z objektů.
+
+\textbf{Co je kardinalita a co je multiplicita? Jaký je rozdíl?}\\
+Multiplicita je omezení rozsahu souboru objektů -- říká kolik jich MŮŽE být. Kardinalita je současný počet objektů v souboru -- říká kolik jich JE. V praxi se pojmy často zaměňují. V UML se multiplicita vyznačuje na koncích čáry vazby.
+
+\textbf{Co je role a kdy potřebujeme názvy rolí?}\\
+Role je jeden konec vazby. Binární vazba má dvě role, každá může být pojmenována. Názvy rolí jsou nutné pro vazbu dvou objektů stejné třídy -- například OSOBA zaměstnává OSOBA potřebuje role ``zaměstnavatel'' a ``zaměstnanec''. Jsou užitečné i pro rozlišení dvou vazeb mezi stejnou dvojicí tříd.
+
+\textbf{Co je kvalifikace a co je kvalifikátor?}\\
+Kvalifikovaná vazba dává do vztahu dvě třídy objektů a kvalifikátor. Kvalifikátor je zvláštní atribut který účinně zmenšuje násobnost vazby -- například z 1:mnoho na 1:1. Kreslí se jako rámeček na konci vazby který kvalifikuje. Zlepšuje sémantickou přesnost vazby.
+
+\subsection{Agregace, kompozice, generalizace}
+
+\textbf{Co je agregace? Jakého je typu?}\\
+Zvláštní typ vazby -- vztah objektů ``součást-celek'' (skládá se z, je součástí). Je vztahem ``A'' -- agregovaný stav je kombinací stavů všech složek. Je tranzitivní a antisymetrická. Vlastnosti se šíří z celku na součást, ne obráceně. Symbolem je čára s diamantem na straně celku.
+
+\textbf{Je agregace vztahem A nebo NEBO? Proč?}\\
+Je vztahem ``A'', protože agregovaný stav odpovídá kombinaci stavů VŠECH složek. Objekt musí být ve stavu složky A a zároveň ve stavu složky B.
+
+\textbf{Co je kompozice?}\\
+Zvláštní případ agregace s dvěma omezeními: součást může patřit pouze jednomu celku, a zánikem celku zaniká i součást. Grafická značka je plný diamant.
+
+\textbf{Co je zobecnění (generalizace)?}\\
+Vztah mezi nadtřídou a jejími zvláštními případy -- podtřídami. Je vztahem typu ``JE'' -- každý výskyt podtřídy JE současně výskytem všech svých nadtříd. Notací je trojúhelník spojující nadtřídu s podtřídami. Zobecnění je ve stavovém diagramu vztah ``NEBO'' -- objekt je přesně v jednom ze stavů.
+
+\textbf{Co je dědičnost?}\\
+Sdílení atributů a operací mezi třídami na hierarchickém principu. Nadtřída obsahuje obecné informace, podtřídy je upřesňují. Podtřída přebírá (dědí) všechny vlastnosti nadtřídy a přidává své unikátní vlastnosti.
+
+\textbf{Jakého typu je vazba generalizace?}\\
+Generalizace je vazba ``je'' -- každý výskyt podtřídy JE současně výskytem nadtřídy. PrijemPohyb JE SkladovyPohyb.
+
+\textbf{Co je diskriminátor?}\\
+Název uvedený (volitelně) vedle trojúhelníku zobecnění. Určuje která vlastnost objektu je předmětem abstrakce. V každém okamžiku lze zobecnit pouze podle jedné vlastnosti. Příklad: Vozidlo lze zobecnit podle pohonu (elektrické/spalovací) nebo prostředí (pozemní/vodní) -- ale v jednom diagramu jen podle jednoho kritéria.
+
+\textbf{Co je exploze a dekompozice?}\\
+Exploze je zpodrobnění návrhu pomocí jiného (jiného diagramu, jiné abstrakce). Dekompozice je zpodrobnění návrhu pomocí stejného (stejného typu diagramu, jen podrobnějšího).
+
+\subsection{Dynamický model}
+
+\textbf{Co je dynamický model a z čeho se skládá?}\\
+Vyjadřuje změnu aspektů systému během času. Skládá se z: stavových diagramů (vztah událostí a stavů, jeden pro každou třídu), stavů (soubor hodnot atributů a spojení v daném okamžiku, časový interval) a událostí (podnět od jednoho objektu k druhému, nemá trvání).
+
+\textbf{Co je stav objektu? Na čem závisí?}\\
+Stav je soubor hodnot atributů a spojení objektu v daném okamžiku. Udává odezvu objektu na vnější události. Závisí na předchozí posloupnosti událostí. Má časové trvání -- proto se k němu přiřazují do-aktivity.
+
+\textbf{Co je událost?}\\
+Podnět od jednoho objektu k druhému. Nemá časové trvání. Dvě události které nejsou vzájemně podmíněny se nazývají konkurenční. Druhy: signálová, změnová, časová.
+
+\textbf{Co je přechod? Co způsobí změnu na přechodu?}\\
+Přechod je změna stavu způsobená událostí. Šipka, nápis u šipky je název události. Změnu způsobí událost. Přechod se zobrazuje jako šipka z výchozího do cílového stavu.
+
+\textbf{Co je podmínka na přechodu? Čím se liší od změnové události?}\\
+Podmínka je booleovská funkce hodnot objektu. Platí v časovém intervalu. Přechod se odpálí jen pokud je podmínka splněna V OKAMŽIKU příchodu události -- pokud je splněna až později, přechod se neodpálí. Podmínka se testuje JEDNOU, změnová událost nepřetržitě.
+
+\textbf{Jaký je rozdíl mezi akcí a aktivitou?}\\
+Aktivita je operace s časovým trváním -- přiřazena ke stavu, obsahuje spojité a sekvenční operace (\texttt{do/}). Akce je okamžitá operace bez časového trvání -- přiřazena k události (\texttt{entry/}, \texttt{exit/}).
+
+\textbf{Co je stavový diagram a k čemu slouží?}\\
+Ukazuje vztah událostí a stavů -- když nastane událost, další stav závisí na události a současném stavu. Uzly jsou stavy, šipky jsou přechody. Popisuje chování jedné třídy objektů. Dynamický model sestává z mnoha stavových diagramů, jeden pro každou třídu.
+
+\subsection{Model interakcí}
+
+\textbf{Vypište modely UML a jaké jsou v nich diagramy.}
+\begin{enumerate}
+  \item \textbf{Model tříd (objektový model)} -- statická struktura objektů a jejich vztahů. Diagram tříd: objekty = uzly, vztahy = souvislosti. Je základní -- musíme popsat CO se mění dříve než KDY a JAK.
+  \item \textbf{Stavový model (dynamický)} -- změna aspektů systému během času. Stavový diagram: stavy = uzly, události = souvislosti.
+  \item \textbf{Model interakcí} -- spolupráce objektů v systému. Diagramy: Use Case, Sekvenční, Aktivit.
+\end{enumerate}
+
+\textbf{Co je scénář?}\\
+Posloupnost událostí které se vyskytnou v průběhu určitého použití systému (use case). Mají formu seznamu textových výroků. Obsahují zprávy mezi objekty a aktivity objektem prováděné. Každá zpráva předává informaci od jednoho objektu druhému.
+
+\textbf{Jaký je vztah mezi scénářem a sekvenčním diagramem?}\\
+Scénář je posloupnost událostí při jednom použití systému. Scénář lze graficky znázornit sekvenčním diagramem (diagramem sledu událostí).
+
+\textbf{Co je sekvenční diagram?}\\
+Ukazuje účastníky interakce a zprávy mezi nimi. Každý aktor je reprezentován sloupcem (čárou zvanou ``pupeční šňůra'') a každá zpráva je horizontální šipka. Čas postupuje shora dolů -- vyjadřuje pořadí zpráv, ne přesné časy.
+
+\textbf{Co je Use Case diagram?}\\
+Formálně znázorňuje strukturu funkčnosti systému z pohledu komunikace s aktory. Zobrazuje dynamickou (funkční) strukturu z pohledu uživatele. Je primárně určen k definici chování systému aniž by odhaloval jeho vnitřní strukturu. Use Case je ucelená část funkčnosti kterou systém poskytuje při komunikaci s aktorem.
+
+\textbf{Co je diagram aktivit?}\\
+Ukazuje tok řízení mezi výpočetními kroky. Ukazuje datové i řídící toky. Může modelovat i konkurenční toky řízení. Konsoliduje všechno chování a ukazuje větvení a sdružování. Podmínky v hranatých závorkách se testují po dokončení aktivity.
+
+\textbf{Co je životní cyklus IS?}
+\begin{enumerate}
+  \item \textbf{Koncepce systému} -- vývoj začíná formulací problému
+  \item \textbf{Analýza} -- budování modelu reálného světa. CO se má udělat, ne JAK. Nesmí obsahovat implementační rozhodnutí. Výsledek: doménový model + model aplikace.
+  \item \textbf{Návrh systému} -- celková architektura, rozdělení do subsystémů
+  \item \textbf{Návrh objektů} -- implementační detaily, datové struktury a algoritmy
+  \item \textbf{Implementace} -- převod tříd do programovacího jazyka, databáze nebo HW
+\end{enumerate}
+
+\textbf{Co vyjadřuje objektový model?}\\
+Statickou strukturu objektů v systému -- hlavně třídy, vazby a zobecnění. Atributy a operace jsou druhotné. Každý proces je implementován jako metoda na určitém objektu.
+
+\textbf{Co je datastore?}\\
+Logický soubor, uložiště dat. Obstarává asynchronní přenos dat a vyrovnává nesynchronnost procesů. Má jeden vstupní a jeden výstupní tok. Datastore bez vstupního toku obsahuje konstanty.
+
 \section{Jak modely na sebe navazují}
 
 Toto je klíčová otázka u zkoušky. Máme tři modely (podle přednášek: objektový, dynamický, interakcí) které se navzájem doplňují:
