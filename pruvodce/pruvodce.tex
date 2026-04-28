@@ -232,11 +232,26 @@ Podle přednášek: aktor je vnější uživatel systému, který se systémem p
 V projektu: Vedoucí skladu a Skladník jsou aktéři. Každý má jiné use cases protože mají jiný účel -- Vedoucí spravuje, Skladník fyzicky provádí operace.
 
 Vztahy mezi UC:
-\begin{itemize}
-  \item \textbf{include} -- povinné zahrnutí. ``Vytvořit pohyb'' vždy zahrnuje ``Ověřit data pohybu''.
-  \item \textbf{extend} -- volitelné rozšíření. Základní UC dává smysl i bez rozšíření.
-  \item \textbf{generalizace} -- specializace. Příjem/výdej/přesun jsou specializace pohybu, ne volitelná rozšíření -- proto generalizace a ne extend. Tím ladíme Use Case s class diagramem.
-\end{itemize}
+
+\textbf{Include -- povinné zahrnutí}
+
+Include znamená že jeden UC vždy a povinně zahrnuje jiný UC. Bez tohoto zahrnutí by základní UC nebyl kompletní. Šipka jde od základního UC k zahrnutému.
+
+V projektu: ``Vytvořit pohyb'' vždy zahrnuje ``Ověřit data pohybu'' -- bez ověření dat by pohyb nikdy neproběhl. Vždy když někdo vytváří pohyb, systém automaticky ověří data. Není to volitelné.
+
+Dalším příkladem: ``Přiřadit součástku k projektu'' vždy zahrnuje ``Ověřit dostupnost'' -- systém musí vždy zkontrolovat jestli je součástka dostupná než ji přiřadí.
+
+Include se používá když chceme sdílet část funkcionality mezi více UC -- místo opisování stejného chování do každého UC to napíšeme jednou a ostatní UC to zahrnou.
+
+\textbf{Extend -- volitelné rozšíření}
+
+Extend znamená že jeden UC může (ale nemusí) rozšířit jiný UC o dodatečné chování. Základní UC dává smysl i sám o sobě bez rozšíření. Šipka jde od rozšiřujícího UC k základnímu.
+
+Příklad ze života: UC ``Výběr z bankomatu'' může být rozšířen o UC ``Tisk potvrzení'' -- výběr proběhne normálně i bez tisku. Tisk je volitelný.
+
+Proč v projektu nepoužíváme extend pro pohyby? Protože ``Vytvořit pohyb'' bez příjmu, výdeje nebo přesunu nedává smysl -- vždy musí jít o konkrétní typ. Nejde o volitelné rozšíření, ale o specializaci. Proto používáme generalizaci.
+
+\textbf{Generalizace} -- specializace. Příjem/výdej/přesun jsou specializace pohybu, ne volitelná rozšíření -- proto generalizace a ne extend. Tím ladíme Use Case s class diagramem kde stejný vztah (generalizace) používáme mezi SkladovyPohyb a jeho podtřídami.
 
 \subsection{Sekvenční diagram}
 
