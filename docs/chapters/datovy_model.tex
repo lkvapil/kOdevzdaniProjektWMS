@@ -23,7 +23,7 @@ a model interakcí (use case diagram, scénáře, sekvenční a aktivity diagram
 
 Skladová položka evidovaná v~systému WMS s~aktuálním množstvím na skladě. Atribut rezervovaneMnozstvi sleduje, kolik kusů je aktuálně blokováno pro projekty -- součástka tak může být Dostupna i s~částečnou rezervací zároveň. Součástka může nabývat stavů: Dostupna (k~dispozici, případně s~rezervovanou částí), Vydana (fyzicky vydána ze skladu) nebo Odepsana (trvale vyřazena z~evidence).
 
-\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item id: int\item nazev: String\item mnozstvi: int\item rezervovaneMnozstvi: int\item stav: String (Vytvoren $|$ Validovan $|$ Proveden $|$ Zamitnut)\end{itemize}
+\textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item id: int\item nazev: String\item mnozstvi: int\item rezervovaneMnozstvi: int\item stav: String (Dostupna $|$ Vydana $|$ Odepsana)\end{itemize}
 
 \textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item zvysMnozstvi(pocet: int)\item snizMnozstvi(pocet: int)\item rezervovat(pocet: int)\item zrusitRezervaci(pocet: int)\item overDostupnost(): boolean\end{itemize}
 
