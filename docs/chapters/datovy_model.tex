@@ -41,7 +41,7 @@ Abstraktní třída reprezentující pohyb součástek -- příjem, výdej nebo 
 
 \textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item id: int\item datum: Date\item stav: String (Vytvoren $|$ Validovan $|$ Proveden $|$ Zamitnut)\item mnozstvi: int\end{itemize}
 
-\textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item vytvoritPohyb()\item overitData()\item provestPohyb()\end{itemize}
+\textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item vytvoritPohyb(soucastka, mnozstvi)\item overitData()\item provestPohyb()\end{itemize}
 
 \section{PrijemPohyb}
 
@@ -49,7 +49,7 @@ Konkrétní pohyb typu příjem -- naskladnění součástek od dodavatele. Děd
 
 \textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item dodavatel: String – název dodavatele součástek\item dědí ze SkladovyPohyb: id, datum, stav, mnozstvi\end{itemize}
 
-\textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item vytvoritPohyb()\end{itemize}
+\textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item vytvoritPohyb(soucastka, mnozstvi)\end{itemize}
 
 \section{VydejPohyb}
 
@@ -57,7 +57,7 @@ Konkrétní pohyb typu výdej -- vyskladnění součástek ze skladu. Dědí ze 
 
 \textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item duvod: String – účel výdeje (projekt, reklamace, interní spotřeba, oprava)\item dědí ze SkladovyPohyb: id, datum, stav, mnozstvi\end{itemize}
 
-\textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item vytvoritPohyb()\end{itemize}
+\textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item vytvoritPohyb(soucastka, mnozstvi)\end{itemize}
 
 \section{PresunutiPohyb}
 
@@ -65,7 +65,7 @@ Konkrétní pohyb typu přesun -- přemístnění součástek mezi lokacemi ve s
 
 \textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item zdrojLokaceId: int – ID zdrojové lokace\item cilLokaceId: int – ID cílové lokace\item dědí ze SkladovyPohyb: id, datum, stav, mnozstvi\end{itemize}
 
-\textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item vytvoritPohyb()\item zmenLokaci()\end{itemize}
+\textbf{Metody:}\begin{itemize}[noitemsep,topsep=2pt]\item vytvoritPohyb(soucastka, mnozstvi)\item zmenLokaci()\end{itemize}
 
 \section{Sklad}
 
@@ -134,7 +134,7 @@ součástce prostřednictvím kvalifikátoru id: int.
 Třída SkladovyPohyb reprezentuje obecný skladový pohyb -- tedy jakoukoli změnu stavu zásob součástek
 v systému. Každý pohyb prochází životním cyklem řízeným třemi metodami:
 \begin{itemize}
-  \item vytvoritPohyb() -- inicializuje nový pohyb: přiřadí ID, nastaví datum vzniku, typ pohybu a vazbu na součástku;
+  \item vytvoritPohyb(soucastka, mnozstvi) -- inicializuje nový pohyb: přiřadí ID, nastaví datum vzniku, typ pohybu a vazbu na součástku;
   \item overitData() -- ověří platnost zadaných dat: existenci součástky, vyplnění povinných polí,
         dostatečné množství na skladě (příjem/výdej) nebo platnost lokací (přesun);
   \item provestPohyb() -- fyzicky provede pohyb podle typu:
@@ -251,7 +251,7 @@ Skladník nebo Vedoucí skladu spustí vytvoření pohybu voláním vytvoritPohy
 Diagram zachycuje průběh vytvoření skladového pohybu v~systému.
 Pohyb prochází třemi fázemi řízenými metodami třídy SkladovyPohyb:
 \begin{itemize}
-  \item vytvoritPohyb() -- uživatel zadá typ pohybu, součástku a množství; metoda inicializuje pohyb, přiřadí ID a datum vzniku.
+  \item vytvoritPohyb(soucastka, mnozstvi) -- uživatel zadá typ pohybu, součástku a množství; metoda inicializuje pohyb, přiřadí ID a datum vzniku.
   \item overitData() -- ověří platnost zadaných dat: existenci součástky, dostatečné množství na skladě a platnost lokací u~přesunu.
   \item provestPohyb() -- fyzicky provede pohyb podle typu: příjem zavolá zvysMnozstvi(pocet), výdej snizMnozstvi(pocet), přesun zmenLokaci(). Pokud data nejsou platná, pohyb je zamítnut.
 \end{itemize}

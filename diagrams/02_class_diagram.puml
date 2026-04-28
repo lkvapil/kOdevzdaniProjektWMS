@@ -17,18 +17,18 @@ class Uzivatel {
 
 class PrijemPohyb {
   dodavatel: String
-  vytvoritPohyb()
+  vytvoritPohyb(soucastka, mnozstvi)
 }
 
 class VydejPohyb {
   duvod: String
-  vytvoritPohyb()
+  vytvoritPohyb(soucastka, mnozstvi)
 }
 
 class PresunutiPohyb {
   zdrojLokaceId: int
   cilLokaceId: int
-  vytvoritPohyb()
+  vytvoritPohyb(soucastka, mnozstvi)
   zmenLokaci()
 }
 
@@ -37,7 +37,7 @@ abstract class SkladovyPohyb {
   datum: Date
   stav: String
   mnozstvi: int
-  {abstract} vytvoritPohyb()
+  {abstract} vytvoritPohyb(soucastka, mnozstvi)
   overitData()
   provestPohyb()
 }
