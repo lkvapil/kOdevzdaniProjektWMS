@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UML Kvíz – Projektování IS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
+
+  :root {
+    --bg: #0f0f13;
+    --card: #17171f;
+    --border: #2a2a38;
+    --accent: #6ee7b7;
+    --accent2: #f59e0b;
+    --wrong: #ef4444;
+    --text: #e8e8f0;
+    --muted: #6b6b8a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+    text-align: center;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .progress-bar {
+    width: 100%;
+    max-width: 700px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .stats {
+    display: flex;
+    gap: 2rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+  }
+
+  .stats span { color: var(--accent); font-weight: 700; }
+
+  .card {
+    width: 100%;
+    max-width: 700px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    animation: slideIn 0.3s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .category-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent2);
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.2);
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+    display: inline-block;
+  }
+
+  .question {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .hint {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 1.5rem;
+  }
+
+  .input-wrapper {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+
+  textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    padding: 1rem;
+    resize: vertical;
+    min-height: 80px;
+    outline: none;
+    transition: border-color 0.2s;
+    line-height: 1.5;
+  }
+
+  textarea:focus { border-color: var(--accent); }
+
+  .btn-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  button {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.6rem 1.4rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-check {
+    background: var(--accent);
+    color: #000;
+  }
+  .btn-check:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+  .btn-skip {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .btn-skip:hover { color: var(--text); border-color: var(--text); }
+
+  .btn-show {
+    background: transparent;
+    color: var(--accent2);
+    border: 1px solid rgba(245,158,11,0.3);
+  }
+  .btn-show:hover { background: rgba(245,158,11,0.1); }
+
+  .answer-box {
+    margin-top: 1.2rem;
+    padding: 1rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    display: none;
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+
+  .answer-correct {
+    background: rgba(110,231,183,0.08);
+    border: 1px solid rgba(110,231,183,0.2);
+    color: var(--accent);
+  }
+
+  .answer-show {
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.2);
+    color: var(--text);
+  }
+
+  .answer-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+  }
+
+  .self-eval {
+    display: none;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-yes {
+    background: rgba(110,231,183,0.15);
+    color: var(--accent);
+    border: 1px solid rgba(110,231,183,0.3);
+  }
+  .btn-yes:hover { background: rgba(110,231,183,0.25); }
+
+  .btn-no {
+    background: rgba(239,68,68,0.15);
+    color: var(--wrong);
+    border: 1px solid rgba(239,68,68,0.3);
+  }
+  .btn-no:hover { background: rgba(239,68,68,0.25); }
+
+  .result-screen {
+    display: none;
+    text-align: center;
+    padding: 3rem 2rem;
+    width: 100%;
+    max-width: 700px;
+  }
+
+  .result-screen h2 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  .result-screen p {
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 2rem;
+  }
+
+  .score-big {
+    font-size: 5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 1rem 0;
+  }
+
+  .btn-restart {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #000;
+    font-size: 1rem;
+    padding: 0.8rem 2rem;
+    border-radius: 10px;
+  }
+
+  .filter-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    max-width: 700px;
+    width: 100%;
+  }
+
+  .filter-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn.active {
+    background: rgba(110,231,183,0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<h1>UML Kvíz</h1>
+<p class="subtitle">Projektování IS · EIT21E · WMS systém</p>
+
+<div class="filter-row" id="filters"></div>
+
+<div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+<div class="stats">
+  <div>Otázka <span id="qnum">1</span> / <span id="qtotal">0</span></div>
+  <div>✓ <span id="score-correct">0</span> správně</div>
+  <div>✗ <span id="score-wrong">0</span> špatně</div>
+</div>
+
+<div class="card" id="quiz-card">
+  <div class="category-tag" id="cat-tag"></div>
+  <div class="question" id="question"></div>
+  <div class="hint" id="hint"></div>
+  <div class="input-wrapper">
+    <textarea id="answer-input" placeholder="Napiš definici vlastními slovy..."></textarea>
+  </div>
+  <div class="btn-row">
+    <button class="btn-check" onclick="checkAnswer()">Zkontrolovat</button>
+    <button class="btn-show" onclick="showAnswer()">Zobrazit odpověď</button>
+    <button class="btn-skip" onclick="nextQuestion()">Přeskočit →</button>
+  </div>
+  <div class="answer-box" id="answer-box"></div>
+  <div class="self-eval" id="self-eval">
+    <button class="btn-yes" onclick="markResult(true)">✓ Věděl jsem to</button>
+    <button class="btn-no" onclick="markResult(false)">✗ Nevěděl jsem</button>
+  </div>
+</div>
+
+<div class="result-screen" id="result-screen">
+  <h2>Hotovo!</h2>
+  <div class="score-big" id="final-score"></div>
+  <p id="final-msg"></p>
+  <button class="btn-restart" onclick="restart()">Znovu 🔄</button>
+</div>
+
+<script>
+const ALL_CARDS = [
+  {p:"Třída",d:"Šablona popisující skupinu objektů se stejnými atributy, chováním a vztahy. Příklad: třída Soucastka popisuje že každá součástka má název, množství a stav.",k:"Základní pojmy"},
+  {p:"Objekt / Instance",d:"Konkrétní výskyt třídy. Například Rezistor 10k ohm s 50 kusy je konkrétní objekt třídy Soucastka. Každý objekt má vlastní identitu -- dva objekty jsou různé i když mají stejné hodnoty atributů.",k:"Základní pojmy"},
+  {p:"Atribut",d:"Datová vlastnost objektu. Typ je oddělen dvojtečkou (mnozstvi: int), počáteční hodnota rovnítkem.",k:"Základní pojmy"},
+  {p:"Operace",d:"Funkce nebo transformace prováděná objektem. Všechny objekty ve třídě sdílejí stejné operace. Každá operace má cílový objekt jako implicitní argument.",k:"Základní pojmy"},
+  {p:"Metoda",d:"Specifická implementace operace pro danou třídu. Díky polymorfismu může mít jedna operace více metod.",k:"Základní pojmy"},
+  {p:"Signatura",d:"Definuje interface operace -- počet, pořadí a typy argumentů. Při polymorfismu musí mít všechny metody stejnou signaturu.",k:"Základní pojmy"},
+  {p:"Vazba (association)",d:"Strukturální souvislost dvou nebo více tříd. Popisuje skupinu spojení se stejnou sémantikou. Je dvousměrná. Analogie: Vazba : Spojení = Třída : Objekt.",k:"Vazby"},
+  {p:"Spojení (link)",d:"Fyzická nebo konceptuální souvislost mezi konkrétními instancemi objektů. Například: Jan Malý pracuje na ČZU. Spojení je výskytem vazby.",k:"Vazby"},
+  {p:"Rozdíl vazba vs spojení",d:"Vazba je třída-úroveň (popisuje skupinu spojení). Spojení je instance-úroveň (konkrétní vztah mezi objekty). Vazba : Spojení = Třída : Objekt.",k:"Vazby"},
+  {p:"Kardinalita",d:"Současný (aktuální) počet objektů v souboru. Liší se od multiplicity která je pravidlo/omezení.",k:"Vazby"},
+  {p:"Multiplicita",d:"Omezení rozsahu -- kolik výskytů jedné třídy může mít vztah k jednomu výskytu druhé. Píše se na koncích čáry vazby (1, *, 0..1, 1.*).",k:"Vazby"},
+  {p:"Rozdíl multiplicita vs kardinalita",d:"Multiplicita = pravidlo, omezení rozsahu. Kardinalita = aktuální počet v daném okamžiku.",k:"Vazby"},
+  {p:"Role",d:"Jeden konec vazby. Binární vazba má dvě role. Nutné pro vazbu dvou objektů stejné třídy (OSOBA zaměstnává OSOBA -- role: zaměstnavatel a zaměstnanec).",k:"Vazby"},
+  {p:"Agregace",d:"Zvláštní typ vazby -- vztah součást-celek. Vztah A. Tranzitivní a antisymetrická. Symbol: prázdný diamant na straně celku. Části MOHOU existovat bez celku.",k:"Vazby"},
+  {p:"Kompozice",d:"Zvláštní případ agregace. Součást patří pouze jednomu celku. Zánikem celku zaniká i součást. Symbol: plný diamant. V projektu: Sklad a Lokace.",k:"Vazby"},
+  {p:"Rozdíl agregace vs kompozice",d:"Agregace: části přežijí bez celku (součástka bez lokace). Kompozice: části zaniknou se celkem (lokace zanikne se skladem).",k:"Vazby"},
+  {p:"Je agregace vztah A nebo NEBO?",d:"Vztah A -- agregovaný stav odpovídá kombinaci stavů všech složek. Objekt je v jednom stavu prvního SD A jednom stavu druhého SD.",k:"Vazby"},
+  {p:"Kvalifikace",d:"Kvalifikovaná vazba dává do vztahu dvě třídy a kvalifikátor. Snižuje násobnost z 1:M na 1:1. V projektu: Sklad [id: int] --> Soucastka.",k:"Vazby"},
+  {p:"Kvalifikátor",d:"Zvláštní atribut na vazbě který zmenšuje násobnost. Rozlišuje mezi objekty na konci mnoho vazby. Kreslí se jako rámeček na konci vazby.",k:"Vazby"},
+  {p:"Vazební (asociační) třída",d:"Vazbou a současně třídou. Popisuje vlastnost vazby -- ne objektu. V projektu: ProjektSoucastka s atributem mnozstvi.",k:"Vazby"},
+  {p:"Kdy použít vazební třídu?",d:"Když samotná vazba potřebuje vlastní atributy. Projekt A potřebuje 10 kusů rezistoru, Projekt B 5 kusů. Množství nepatří ani Projektu ani Součástce.",k:"Vazby"},
+  {p:"Generalizace (zobecnění)",d:"Vztah typu JE -- každý výskyt podtřídy JE výskytem nadtřídy. Notace: prázdný trojúhelník. V projektu: PrijemPohyb JE SkladovyPohyb.",k:"Zobecnění"},
+  {p:"Dědičnost",d:"Sdílení atributů a operací mezi třídami na hierarchickém principu. Podtřída dědí vše od nadtřídy a přidává vlastní specifické věci.",k:"Zobecnění"},
+  {p:"Diskriminátor",d:"Název vedle trojúhelníku generalizace. Určuje podle jaké vlastnosti zobecňujeme. V jednom diagramu lze zobecnit pouze podle jedné vlastnosti.",k:"Zobecnění"},
+  {p:"Abstraktní třída",d:"Třída ze které nelze vytvořit instanci. V projektu: SkladovyPohyb -- nikdy nevznikne obecný pohyb, vždy příjem, výdej nebo přesun.",k:"Zobecnění"},
+  {p:"Polymorfismus",d:"Stejná operace se chová odlišně v různých třídách. V projektu: provestPohyb() zvýší množství u příjmu, sníží u výdeje, změní lokaci u přesunu.",k:"Zobecnění"},
+  {p:"Generalizace stavů -- vztah NEBO nebo A?",d:"Vztah NEBO -- objekt musí být přesně v jednom ze stavů vnořeného SD. Naproti tomu agregace stavů je vztah A.",k:"Zobecnění"},
+  {p:"Stav",d:"Soubor hodnot atributů a spojení objektu v daném okamžiku. Představuje časový interval. Je v duálním vztahu s událostí.",k:"Dynamický model"},
+  {p:"Událost",d:"Podnět od jednoho objektu k druhému. Nastane v časovém okamžiku, nemá žádné trvání. Druhy: signálová, změnová, časová.",k:"Dynamický model"},
+  {p:"Přechod",d:"Změna stavu způsobená událostí. Šipka v diagramu, u šipky je název události.",k:"Dynamický model"},
+  {p:"Podmínka na přechodu",d:"Booleovský výraz v hranatých závorkách. Platí v časovém intervalu. Přechod se odpálí jen pokud je podmínka splněna V OKAMŽIKU příchodu události.",k:"Dynamický model"},
+  {p:"Rozdíl podmínka vs změnová událost",d:"Podmínka se testuje jednou -- v okamžiku příchodu události. Změnová událost testuje nepřetržitě a nastane přesně když se změní z FALSE na TRUE.",k:"Dynamický model"},
+  {p:"Akce",d:"Okamžiková operace bez časového trvání. Přiřazena k události nebo entry/exit stavu. Například entry/overitData().",k:"Dynamický model"},
+  {p:"Aktivita (do/)",d:"Operace s časovým trváním. Přiřazena ke stavu (do/). Může ji přerušit událost. Například do/čekat na odeslání.",k:"Dynamický model"},
+  {p:"Rozdíl akce vs aktivita",d:"Aktivita má časové trvání (do/). Akce je okamžiková bez trvání (entry/, exit/ nebo na přechodu). Okamžité akce nesmí být v do/.",k:"Dynamický model"},
+  {p:"entry/",d:"Akce která se provede při vstupu do stavu. Okamžitá, bez trvání. Například entry/overitData() při vstupu do stavu Validovan.",k:"Dynamický model"},
+  {p:"exit/",d:"Akce která se provede při odchodu ze stavu. Provede se před přechodem do dalšího stavu.",k:"Dynamický model"},
+  {p:"Vnitřní přechod",d:"Reakce na událost která NEZMĚNÍ stav. Objekt zůstane ve stejném stavu ale provede okamžitou akci. V projektu: naskladněno/zvysMnozstvi() -- součástka zůstane Dostupna.",k:"Dynamický model"},
+  {p:"Zakončovací přechod",d:"Přechod do dalšího stavu bez čekání na událost. Stav provede akce a automaticky skončí. V diagramu nemá popisek události.",k:"Dynamický model"},
+  {p:"Pořadí aktivit ve stavu",d:"1. Aktivity na vstupním přechodu 2. entry/ 3. do/ 4. exit/ 5. Aktivity na výstupním přechodu.",k:"Dynamický model"},
+  {p:"Use Case",d:"Ucelená část funkčnosti systému při komunikaci s aktorem. Spojuje normální chování, variace, chybové podmínky a rušení.",k:"Model interakcí"},
+  {p:"Aktor",d:"Vnější uživatel systému který s ním komunikuje ale není jeho součástí. V projektu: Vedoucí skladu a Skladník.",k:"Model interakcí"},
+  {p:"Include",d:"Povinné zahrnutí -- základní UC vždy zahrnuje jiný UC. Bez tohoto zahrnutí by základní UC nebyl kompletní. V projektu: Vytvořit pohyb zahrnuje Ověřit data.",k:"Model interakcí"},
+  {p:"Extend",d:"Volitelné rozšíření -- základní UC dává smysl i bez rozšíření. Základní UC může (ale nemusí) být rozšířen o dodatečné chování.",k:"Model interakcí"},
+  {p:"Rozdíl include vs extend",d:"Include: povinné, vždy se zahrne, základní UC bez něj není kompletní. Extend: volitelné, základní UC funguje i bez rozšíření.",k:"Model interakcí"},
+  {p:"Scénář",d:"Posloupnost událostí při jednom konkrétním použití systému. Forma: seznam textových výroků. Graficky: sekvenční diagram.",k:"Model interakcí"},
+  {p:"Sekvenční diagram",d:"Ukazuje účastníky interakce a zprávy mezi nimi. Každý aktor je sloupec (pupeční šňůra). Čas plyne shora dolů -- vyjadřuje pořadí zpráv ne přesné časy.",k:"Model interakcí"},
+  {p:"Diagram aktivit",d:"Ukazuje tok řízení mezi výpočetními kroky. Modeluje sekvenční i konkurenční toky. Podmínky v hranatých závorkách. Fork/join pro paralelní větve.",k:"Model interakcí"},
+  {p:"Tři modely UML -- vyjmenuj je",d:"1. Objektový model (OM) -- statická struktura, class diagram. 2. Dynamický model (DM) -- změna v čase, stavové diagramy. 3. Model interakcí (IM) -- spolupráce, UC/sekvenční/aktivit.",k:"Tři modely"},
+  {p:"Proč je objektový model základní?",d:"Protože je nutné popsat CO se mění, dříve než KDY (dynamický model) a JAK (model interakcí). Atributy a operace jsou druhotné -- hlavní jsou třídy, vazby a zobecnění.",k:"Tři modely"},
+  {p:"Zapouzdření",d:"Oddělení vnějších hledisek objektu od implementačních detailů. Uživatel vidí jen rozhraní, ne implementaci.",k:"OO principy"},
+  {p:"Abstrakce",d:"Důraz na podstatná hlediska a ignorování detailů. Nástroj proti složitosti.",k:"OO principy"},
+  {p:"Identita",d:"Každý objekt má svou vlastní identitu. Dva objekty jsou různé i když mají stejné hodnoty atributů.",k:"OO principy"},
+  {p:"Klasifikace",d:"Objekty se stejnými atributy a chováním jsou seskupeny do tříd. Každý objekt je instancí třídy.",k:"OO principy"},
+  {p:"Životní cyklus IS -- fáze",d:"1. Koncepce 2. Analýza (CO, ne JAK) 3. Návrh systému (architektura) 4. Návrh objektů (detaily) 5. Implementace.",k:"Životní cyklus"},
+  {p:"Analýza vs návrh",d:"Analýza určuje CO se má udělat -- nesmí obsahovat implementační rozhodnutí. Návrh přidává detaily o tom JAK.",k:"Životní cyklus"},
+  {p:"Datastore",d:"Logický soubor -- uložiště dat. Obstarává asynchronní přenos dat. Jeden vstupní a jeden výstupní tok. Bez vstupního toku obsahuje konstanty.",k:"Ostatní"},
+  {p:"Exploze vs dekompozice",d:"Exploze: zpodrobnění pomocí jiného mechanismu (UC -> sekvenční diagram). Dekompozice: zpodrobnění pomocí stejného mechanismu (SD -> vnořený SD).",k:"Ostatní"},
+];
+
+let cards = [...ALL_CARDS];
+let idx = 0;
+let correct = 0;
+let wrong = 0;
+let revealed = false;
+let activeFilter = 'Vše';
+
+const categories = ['Vše', ...new Set(ALL_CARDS.map(c => c.k))];
+
+function renderFilters() {
+  const row = document.getElementById('filters');
+  categories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (cat === activeFilter ? ' active' : '');
+    btn.textContent = cat;
+    btn.onclick = () => {
+      activeFilter = cat;
+      cards = cat === 'Vše' ? [...ALL_CARDS] : ALL_CARDS.filter(c => c.k === cat);
+      shuffle(cards);
+      idx = 0; correct = 0; wrong = 0; revealed = false;
+      document.getElementById('result-screen').style.display = 'none';
+      document.getElementById('quiz-card').style.display = 'block';
+      renderFilters();
+      renderCard();
+    };
+    row.appendChild(btn);
+  });
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+function renderCard() {
+  if (idx >= cards.length) { showResult(); return; }
+  const c = cards[idx];
+  document.getElementById('cat-tag').textContent = c.k;
+  document.getElementById('question').textContent = c.p;
+  document.getElementById('hint').textContent = `Definuj pojme vlastními slovy`;
+  document.getElementById('answer-input').value = '';
+  document.getElementById('answer-box').style.display = 'none';
+  document.getElementById('self-eval').style.display = 'none';
+  document.getElementById('answer-input').disabled = false;
+  revealed = false;
+
+  const total = cards.length;
+  document.getElementById('qnum').textContent = idx + 1;
+  document.getElementById('qtotal').textContent = total;
+  document.getElementById('progress').style.width = (idx / total * 100) + '%';
+  document.getElementById('score-correct').textContent = correct;
+  document.getElementById('score-wrong').textContent = wrong;
+}
+
+function showAnswer() {
+  const c = cards[idx];
+  const box = document.getElementById('answer-box');
+  box.className = 'answer-box answer-show';
+  box.innerHTML = `<div class="answer-label">Správná odpověď</div>${c.d}`;
+  box.style.display = 'block';
+  document.getElementById('self-eval').style.display = 'flex';
+  document.getElementById('answer-input').disabled = true;
+  revealed = true;
+}
+
+function checkAnswer() {
+  if (revealed) { nextQuestion(); return; }
+  const input = document.getElementById('answer-input').value.trim();
+  if (!input) { showAnswer(); return; }
+  showAnswer();
+}
+
+function markResult(knew) {
+  if (knew) correct++; else wrong++;
+  nextQuestion();
+}
+
+function nextQuestion() {
+  if (!revealed) { idx++; renderCard(); return; }
+  idx++;
+  renderCard();
+}
+
+function showResult() {
+  document.getElementById('quiz-card').style.display = 'none';
+  const rs = document.getElementById('result-screen');
+  rs.style.display = 'block';
+  const total = correct + wrong;
+  const pct = total > 0 ? Math.round(correct / total * 100) : 0;
+  document.getElementById('final-score').textContent = pct + '%';
+  document.getElementById('progress').style.width = '100%';
+  const msgs = [
+    [90, '🏆 Perfektní! Jsi připraven na zkoušku.'],
+    [70, '💪 Dobrá práce! Pár věcí ještě doladit.'],
+    [50, '📚 Střed. Projdi si průvodce znovu.'],
+    [0, '🔄 Nevadí, zkus to znovu!'],
+  ];
+  document.getElementById('final-msg').textContent = msgs.find(m => pct >= m[0])[1];
+}
+
+function restart() {
+  shuffle(cards);
+  idx = 0; correct = 0; wrong = 0; revealed = false;
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('quiz-card').style.display = 'block';
+  renderCard();
+}
+
+shuffle(cards);
+renderFilters();
+renderCard();
+
+document.getElementById('answer-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.ctrlKey) checkAnswer();
+});
+</script>
+</body>
+</html>
