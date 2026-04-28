@@ -274,6 +274,112 @@ Ukazuje tok řízení -- jaké kroky proběhnou a kde dochází k větvení. Jin
 Podmínky jsou v hranatých závorkách \texttt{[ano]}, \texttt{[ne]} -- standardní UML notace pro guardy (hlídače).
 
 %% ── 5. Jak modely navazují ───────────────────────────────────────────────────
+
+%% ── 2b. Pojmy z prezentací které nejsou v projektu ─────────────────────────
+\section{Další důležité pojmy z přednášek}
+
+\subsection{Tři základní charakteristiky OO přístupu}
+
+Podle přednášek mají objekty čtyři základní charakteristiky:
+\begin{itemize}
+  \item \textbf{Identita} -- každý objekt má svou vlastní identitu. Dva objekty jsou rozdílné přesto, že hodnoty jejich atributů jsou identické. Například dva rezistory 10k ohm jsou dva různé objekty -- každý leží jinde, má jiné ID.
+  \item \textbf{Klasifikace} -- objekty se stejnými atributy a chováním jsou seskupeny do tříd. Třída zohledňuje vlastnosti podstatné pro aplikaci a ostatní ignoruje.
+  \item \textbf{Polymorfismus} -- stejná operace se může chovat odlišně v různých třídách.
+  \item \textbf{Dědičnost} -- sdílení atributů a operací mezi třídami na hierarchickém principu.
+\end{itemize}
+
+\subsection{Tři modely UML a jejich vztah}
+
+Podle přednášek jsou potřebné vždy všechny tři modely:
+
+\begin{itemize}
+  \item \textbf{Objektový model (OM)} -- statická struktura objektů a jejich vztahů. Je nejdůležitější -- musíme popsat CO se mění, dříve než KDY a JAK. Diagram tříd: objekty jsou uzly, vztahy jsou souvislosti.
+  \item \textbf{Stavový (dynamický) model (DM)} -- změna aspektů systému během času. Stavový diagram: stavy jsou uzly, události jsou souvislosti. Souhrn stavových diagramů všech objektů.
+  \item \textbf{Model interakcí (IM)} -- spolupráce objektů v systému. Diagramy: Use Case, Sekvenční, Aktivit. Říká jak na sebe objekty navzájem působí.
+\end{itemize}
+
+Zobecnění (vztah NEBO) a agregace (vztah A) se vyskytují ve všech třech modelech.
+
+\subsection{Zapouzdření}
+
+Zapouzdření odděluje vnější hlediska objektu od implementačních detailů. Uživatel objektu vidí jen jeho rozhraní (co umí), ne jak to interně dělá. To umožňuje měnit vnitřní implementaci bez ovlivnění ostatních objektů.
+
+\subsection{Názvy rolí}
+
+Role je jeden konec vazby. Binární vazba má dvě role, každá může být pojmenována. Názvy rolí jsou nutné zejména pro vazbu dvou objektů stejné třídy -- například vazba OSOBA zaměstnává OSOBA potřebuje role ``zaměstnanec'' a ``zaměstnavatel'' aby bylo jasné kdo je kdo.
+
+\subsection{Uspořádání (ordered)}
+
+Objekty na straně vazby ``mnoho'' obvykle nemají explicitní uspořádání -- tvoří množinu. Ale někdy mají explicitní uspořádání. Například okna na obrazovce jsou uspořádána -- pouze vrchní je viditelné. Uspořádání je vlastností vazby a vyznačuje se příznakem \texttt{\{ordered\}}.
+
+\subsection{Druhy událostí}
+
+Podle přednášek rozlišujeme tři druhy událostí:
+
+\begin{itemize}
+  \item \textbf{Signálová událost} -- explicitní jednosměrný přenos informace z jednoho objektu na druhý. Má jedinečný výskyt ale sdružujeme je do tříd. Například ``Pohyb odeslán'' je signálová událost -- skladník odešle pohyb do systému.
+  \item \textbf{Změnová událost} -- nastane když se hodnota booleovského výrazu změní z FALSE na TRUE. Notace: \texttt{when(podmínka)}. Například \texttt{when(mnozstvi < minimalniStav)} -- nastane jakmile klesne množství pod minimum.
+  \item \textbf{Časová událost} -- nastane dosažením absolutního času nebo vypršením intervalu. Notace: \texttt{when(datum=24.12.2025)} nebo \texttt{after(10 sekund)}.
+\end{itemize}
+
+\subsection{Stav vs událost -- dualita}
+
+Podle přednášek jsou události a stavy v duálním vztahu: událost odděluje dva stavy a stav odděluje dvě události.
+
+Události představují okamžiky v čase, stavy představují časové intervaly. Například: poté co zvedneme sluchátko a než vytočíme první číslici, linka je ve stavu ``Volací tón''. Zvednutí sluchátka bylo událost, vytočení číslice bude další událost.
+
+\subsection{Pořadí aktivit ve stavu}
+
+Podle přednášek se aktivity ve stavu provádějí v tomto pořadí:
+\begin{enumerate}
+  \item Aktivity na vstupním přechodu
+  \item Vstupní aktivity (\texttt{entry/})
+  \item Do-aktivity (\texttt{do/})
+  \item Výstupní aktivity (\texttt{exit/})
+  \item Aktivity na výstupním přechodu
+\end{enumerate}
+
+Když je do-aktivita přerušena vnější událostí, výstupní aktivita se ještě provede.
+
+\subsection{Vnořené stavové diagramy}
+
+Stavové diagramy lze strukturovat -- stav může být rozložen do vlastního ``substroje'' (vnořeného stavového diagramu). Notací je \texttt{název stavu : název substroje}. Používá se pro složité stavy kde by bylo nepřehledné mít vše v jednom diagramu.
+
+\subsection{Diskriminátor v generalizaci}
+
+Název uvedený vedle trojúhelníku generalizace je diskriminátor -- určuje která vlastnost objektu je předmětem abstrakce. V každém okamžiku lze zobecnit pouze podle jedné vlastnosti. Například třídu ``Vozidlo'' lze zobecnit podle druhu pohonu (elektrické/spalovací) nebo podle prostředí (pozemní/vodní/vzdušné) -- ale ne podle obou najednou.
+
+\subsection{Datový slovník}
+
+Podle přednášek datový slovník přesně popisuje každou třídu objektů odstavcem textu -- uvádí rozsah třídy v aplikaci, předpoklady a omezení. Popisuje také vazby, atributy a operace. Je to první krok při tvorbě objektového modelu.
+
+\subsection{Identifikace tříd}
+
+Podle přednášek třídy často odpovídají podstatným jménům ve formulaci problému, vazby odpovídají slovesům. Při identifikaci vyloučíme:
+\begin{itemize}
+  \item \textbf{Redundantní třídy} -- pokud dvě třídy mají stejný obsah, zachováme názornější
+  \item \textbf{Irelevantní třídy} -- málo společného s problémem
+  \item \textbf{Neurčité třídy} -- příliš obecné (``systém'', ``zabezpečení'')
+  \item \textbf{Atributy} -- věci které popisují vlastnost objektu, ne objekt samotný
+  \item \textbf{Role} -- název třídy musí vystihovat povahu objektu, ne roli ve vazbě
+\end{itemize}
+
+\subsection{Diagram aktivit -- štěpení a spojování}
+
+Podle přednášek diagram aktivit může modelovat i konkurenční (paralelní) toky řízení pomocí \textbf{tlusté příčky}:
+\begin{itemize}
+  \item \textbf{Štěpení (fork)} -- rozdělení do paralelních větví. Všechny větve běží současně.
+  \item \textbf{Spojování (join)} -- sloučení paralelních větví. Než dojde ke sdružení, musí být dokončeny všechny vstupy.
+\end{itemize}
+
+Podmínky v hranatých závorkách se testují po dokončení aktivity. Vhodné použít i podmínku \texttt{[else]} aby bylo zaručeno pokračování.
+
+\subsection{Scénáře}
+
+Scénář je posloupnost událostí mezi množinou interagujících objektů. Pro každý use case připravíme alespoň jeden normální scénář (bez chyb) a dále scénáře pro zvláštní a chybové případy.
+
+Logická správnost závisí na posloupnosti (pořadí) interakcí a nikoliv na přesném časování.
+
 \section{Jak modely na sebe navazují}
 
 Toto je klíčová otázka u zkoušky. Máme tři modely (podle přednášek: objektový, dynamický, interakcí) které se navzájem doplňují:
