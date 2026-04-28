@@ -37,7 +37,7 @@ else [data jsou platná]
         activate Soucastka
         Soucastka --> Pohyb : ok
         deactivate Soucastka
-        Pohyb -> Lokace : zmenLokaci(zdrojLokaceId, cilLokaceId)
+        Pohyb -> Lokace : zmenLokaci()
         activate Lokace
         Lokace --> Pohyb : ok
         deactivate Lokace
