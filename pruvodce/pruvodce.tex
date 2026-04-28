@@ -9,7 +9,6 @@
 \usepackage{enumitem}
 \usepackage{hyperref}
 \usepackage{fancyhdr}
-\usepackage{titlesec}
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -33,336 +32,288 @@
 %% ── 1. O čem projekt je ──────────────────────────────────────────────────────
 \section{O čem projekt je}
 
-Navrhujeme informační systém pro sklad elektronických součástek. Sklad obsahuje různé součástky jako rezistory, kondenzátory nebo integrované obvody. Tyto součástky jsou fyzicky uloženy na konkrétních místech v regálech -- říkáme jim lokace. Součástky se naskladňují od dodavatelů, vydávají se na projekty a někdy se přesouvají mezi lokacemi.
+Navrhujeme informační systém pro sklad elektronických součástek. Sklad obsahuje různé součástky -- rezistory, kondenzátory, integrované obvody. Tyto součástky jsou fyzicky uloženy na konkrétních místech v regálech (lokacích). Součástky se naskladňují od dodavatelů, vydávají se na projekty a někdy se přesouvají mezi lokacemi.
 
-Navíc lze součástky přiřazovat k projektům -- třeba projekt ``Robotická ruka'' potřebuje 50 kusů rezistoru a 10 kusů kondenzátoru. Systém hlídá kolik kusů je volných a kolik je rezervováno pro projekty.
+Navíc lze součástky přiřazovat k projektům -- projekt ``Robotická ruka'' potřebuje 50 kusů rezistoru a 10 kusů kondenzátoru. Systém hlídá kolik kusů je volných a kolik je rezervováno.
 
-Celý projekt je analytický návrh -- nekódujeme, ale kreslíme UML diagramy které přesně popisují jak by systém fungoval. Výsledkem jsou tři modely: objektový (class diagram), stavový (stavové diagramy) a model interakcí (use case, scénáře, sekvenční diagram, diagram aktivit).
+Celý projekt je analytický návrh -- nekódujeme, ale kreslíme UML diagramy které přesně popisují jak by systém fungoval. Podle přednášek platí: analýza musí určit CO se má udělat, bez omezení JAK se to udělá.
 
 %% ── 2. Základní pojmy ────────────────────────────────────────────────────────
 \section{Základní pojmy}
 
-\subsection{Třída a objekt}
+\subsection{Objekt a třída}
 
-Třída je šablona nebo vzor -- popisuje jak má objekt vypadat a co umí. Třída objektů popisuje skupinu objektů s podobnými vlastnostmi (atributy), společným chováním (operace) a stejnými vztahy k jiným objektům.
+Objekt je předmět našeho zájmu v systému. Každý objekt má svou vlastní identitu -- dva objekty jsou rozdílné přesto, že hodnoty jejich atributů jsou identické.
 
-Jeden konkrétní objekt je \textbf{instance} třídy. Každá instance má své vlastní hodnoty atributů, ale sdílí společnou strukturu s ostatními instancemi té třídy.
+Třída popisuje skupinu objektů se stejnými vlastnostmi (atributy), společným chováním (operace) a stejnými vztahy k jiným objektům. Třída je šablona -- konkrétní součástka ``Rezistor 10k ohm, 50 kusů'' je instance (výskyt) třídy Soucastka.
 
-Příklad: Třída \textbf{Soucastka} je šablona. Konkrétní ``Rezistor 10k ohm, 50 kusů, Dostupna'' je instance -- jeden konkrétní objekt vzniklý podle té šablony. Jiná instance je ``Kondenzátor 100uF, 20 kusů, Dostupna''.
-
-\textbf{Důležité:} Dva objekty jsou různé přesto, že hodnoty jejich atributů mohou být identické -- každý objekt má vlastní identitu.
+Každá instance třídy má své vlastní hodnoty atributů, ale sdílí společnou strukturu s ostatními instancemi. V našem projektu: každá součástka má své vlastní množství a název, ale všechny sdílejí stejné atributy a metody.
 
 \subsection{Atribut}
 
-Atribut popisuje datovou vlastnost objektu -- něco co objekt ``zná'' nebo ``má uložené''. Každý atribut má název a datový typ.
+Atribut popisuje datovou vlastnost objektu. Každý atribut může být následován typem (oddělen dvojtečkou) a počáteční hodnotou.
 
-Datové typy:
+Datové typy v našem projektu:
 \begin{itemize}
-  \item \texttt{int} -- celé číslo. Například \texttt{mnozstvi: int} = počet kusů (50, 0, 200)
-  \item \texttt{String} -- text. Například \texttt{nazev: String} = název součástky (``Rezistor 10k'')
-  \item \texttt{boolean} -- pravda nebo nepravda (true/false)
-  \item \texttt{Date} -- datum. Například \texttt{datum: Date} = kdy byl pohyb vytvořen
+  \item \texttt{int} -- celé číslo: \texttt{mnozstvi: int} = počet kusů na skladě (50, 0, 200)
+  \item \texttt{String} -- text: \texttt{nazev: String} = název součástky (``Rezistor 10k'')
+  \item \texttt{boolean} -- pravda/nepravda: \texttt{overDostupnost(): boolean} vrátí true pokud je součástka dostupná
+  \item \texttt{Date} -- datum: \texttt{datum: Date} = kdy byl pohyb vytvořen
 \end{itemize}
 
-Třída \textbf{Soucastka} má atributy: \texttt{id: int}, \texttt{nazev: String}, \texttt{mnozstvi: int}, \texttt{rezervovaneMnozstvi: int}, \texttt{stav: String (Dostupna | Vydana | Odepsana)}.
+\subsection{Operace a metoda}
 
-\subsection{Metoda (operace)}
+Operace je funkce nebo transformace prováděná objektem. Všechny objekty v třídě sdílejí stejné operace. Metoda je konkrétní implementace operace pro danou třídu.
 
-Metoda je implementace operace na třídu -- akce kterou objekt umí provést. Všechny objekty v třídě sdílejí stejné operace. Každá operace má cílový objekt jako implicitní argument a může mít další argumenty.
+Díky polymorfismu stejná operace může platit pro různé třídy s různými podobami -- \texttt{provestPohyb()} se chová jinak pro příjem, výdej a přesun.
 
-Příklady z projektu:
+Metody v naší třídě Soucastka:
 \begin{itemize}
-  \item \texttt{zvysMnozstvi(pocet)} -- zvýší množství součástky na skladě o zadaný počet kusů. Volá se při příjmu zboží.
+  \item \texttt{zvysMnozstvi(pocet)} -- zvýší množství o daný počet kusů. Volá se při příjmu.
   \item \texttt{snizMnozstvi(pocet)} -- sníží množství. Volá se při výdeji.
-  \item \texttt{rezervovat(pocet)} -- zablokuje kusy pro projekt. Součástka stále fyzicky je na skladě, ale systém ví že je rezervovaná.
-  \item \texttt{zrusitRezervaci(pocet)} -- uvolní rezervaci. Kusy jsou opět volné.
-  \item \texttt{overDostupnost(): boolean} -- zkontroluje zda je aspoň jeden kus volný (\texttt{mnozstvi - rezervovaneMnozstvi > 0}). Vrátí true nebo false.
+  \item \texttt{rezervovat(pocet)} -- zablokuje kusy pro projekt. Součástka zůstane na skladě ale systém ví že je rezervovaná.
+  \item \texttt{zrusitRezervaci(pocet)} -- uvolní rezervaci.
+  \item \texttt{overDostupnost()} -- vrátí true pokud je aspoň jeden kus volný (\texttt{mnozstvi - rezervovaneMnozstvi > 0}).
 \end{itemize}
 
-Díky \textbf{polymorfismu} stejná operace může platit pro různé třídy a mít různé podoby. Operace \texttt{provestPohyb()} se chová jinak pro PrijemPohyb, VydejPohyb a PresunutiPohyb.
+\subsection{Vazba (asociace) a spojení}
 
-\subsection{Spojení a vazba (asociace)}
+Vazba (asociace) je vztah mezi třídami -- říká že objekty spolu spolupracují. Spojení je konkrétní instance vazby mezi konkrétními objekty.
 
-\textbf{Spojení} je fyzická nebo konceptuální souvislost mezi konkrétními objekty. Například: ``Skladník Jan Novák vytvořil příjem č. 42''.
+V přednáškách: objekty a třídy se vyskytují jako podstatná jména, operace jako slovesa v popisu problému. Vazby se rovněž hledají jako vztahy mezi podstatnými jmény.
 
-\textbf{Vazba} (asociace) popisuje skupinu spojení se stejnou strukturou -- je to vztah mezi třídami. V diagramu ji vidíte jako čáru s popiskem. Vazba je svou podstatou dvousměrná.
-
-Příklady z projektu:
+V našem projektu:
 \begin{itemize}
-  \item \textbf{Uzivatel vytváří SkladovyPohyb} -- každý pohyb má svého autora. Bez uživatele by pohyb nevznikl.
-  \item \textbf{SkladovyPohyb je součástí Soucastka} -- každý pohyb se týká konkrétní součástky.
-  \item \textbf{SkladovyPohyb mění stav Sklad} -- pohyb změní stav skladu (zvýší nebo sníží zásoby).
-  \item \textbf{Projekt přiřazuje Soucastka} -- projekt využívá určité součástky.
+  \item \textbf{Uzivatel vytváří SkladovyPohyb} -- bez uživatele by pohyb nevznikl
+  \item \textbf{SkladovyPohyb je součástí Soucastka} -- každý pohyb se týká konkrétní součástky
+  \item \textbf{SkladovyPohyb mění stav Sklad} -- po příjmu je v skladu více kusů
+  \item \textbf{Projekt přiřazuje Soucastka} -- projekt využívá součástky
 \end{itemize}
 
-\subsection{Kardinalita (multiplicita)}
+\subsection{Kardinalita (násobnost)}
 
-Kardinalita říká kolik objektů může být na každé straně vztahu. Píše se na konec čáry asociace.
+Kardinalita říká kolik objektů může být na každé straně vazby.
 
 \begin{itemize}
-  \item \texttt{1} -- přesně jeden objekt
-  \item \texttt{*} -- nula nebo více (libovolný počet)
+  \item \texttt{1} -- přesně jeden objekt (musí existovat)
+  \item \texttt{*} -- nula nebo více objektů
   \item \texttt{0..1} -- žádný nebo jeden (volitelné)
   \item \texttt{1..*} -- jeden nebo více
 \end{itemize}
 
-V úvodních fázích nejdříve určíme objekty, třídy a vazby -- a až potom rozhodujeme o kardinalitě. Kardinalita není neměnná, upřesňuje se v průběhu analýzy.
-
 Příklady z projektu:
 \begin{itemize}
-  \item \texttt{Uzivatel "1" --> "*" SkladovyPohyb} -- jeden uživatel může vytvořit libovolný počet pohybů. Jeden pohyb ale patří přesně jednomu uživateli.
-  \item \texttt{Sklad "1" *-- "*" Lokace} -- jeden sklad má mnoho lokací. Jedna lokace patří přesně jednomu skladu.
-  \item \texttt{Lokace "1" o-- "*" Soucastka} -- v jedné lokaci může být více součástek.
+  \item \texttt{Uzivatel "1" -- "*" SkladovyPohyb} -- jeden uživatel vytvoří libovolný počet pohybů. Jeden pohyb ale vždy patří přesně jednomu uživateli -- nemůže existovat pohyb bez uživatele.
+  \item \texttt{Sklad "1" -- "*" Lokace} -- jeden sklad má mnoho lokací. Jedna lokace patří přesně jednomu skladu.
 \end{itemize}
 
-\subsection{Generalizace (dědičnost)}
+\subsection{Kvalifikace}
 
-Generalizace je vztah ``je speciálním typem''. Je to sdílení atributů a operací mezi třídami na hierarchickém principu. Nadtřída obsahuje obecnou informaci, kterou podtřídy upřesňují. Každá podtřída dědí všechny vlastnosti nadtřídy a přidává své vlastní.
+Podle přednášek: kvalifikovaná vazba dává do vztahu dvě třídy objektů a kvalifikátor. Kvalifikátor je zvláštní atribut, který účinně zmenšuje násobnost vazby z 1:mnoho na 1:1. Kvalifikátor se kreslí jako rámeček na tom konci vazby, který kvalifikuje.
 
-V diagramu ho poznáte podle \textbf{prázdného trojúhelníku} na šipce směřující k nadřazené třídě.
-
-V našem projektu: \texttt{SkladovyPohyb} je abstraktní nadtřída. Tři podtřídy:
-\begin{itemize}
-  \item \texttt{PrijemPohyb} -- dědí vše + přidává \texttt{dodavatel: String}
-  \item \texttt{VydejPohyb} -- dědí vše + přidává \texttt{duvod: String}
-  \item \texttt{PresunutiPohyb} -- dědí vše + přidává \texttt{zdrojLokaceId: int} a \texttt{cilLokaceId: int}
-\end{itemize}
-
-\textbf{Abstraktní třída} je třída ze které nelze vytvořit instanci. \texttt{SkladovyPohyb} je abstraktní -- v reálu nikdy nevznikne ``obecný pohyb'', vždy je to konkrétně příjem, výdej nebo přesun.
-
-\textbf{Proč generalizaci používáme?} Příjem, výdej i přesun sdílejí atributy \texttt{id}, \texttt{datum}, \texttt{stav}, \texttt{mnozstvi} a metody \texttt{vytvoritPohyb()}, \texttt{overitData()}, \texttt{provestPohyb()}. Bez dědičnosti bychom je museli opisovat třikrát. Generalizace je jednou ze základních výhod objektového přístupu -- velmi zmenšuje opakování v návrhu.
-
-\subsection{Agregace -- části přežijí bez celku}
-
-Agregace je zvláštní typ vazby -- vztah ``součást-celek''. Část může existovat i bez nadřazeného celku. Symbolem agregace je \textbf{prázdný kosočtverec} (diamant) na straně celku. Agregace je tranzitivní a antisymetrická.
-
-V našem projektu: \texttt{Lokace o-- Soucastka} -- lokace ukládá součástky, ale součástka může existovat bez lokace. Například: přijde zásilka rezistorů, jsou zaevidovány v systému, ale skladník je ještě fyzicky neodnesl na místo v regálu. Součástka existuje, lokaci nemá -- a to je v pořádku.
-
-\textbf{Co se stane když lokace zanikne?} Součástky přijdou o přiřazení k lokaci, ale stále existují v systému.
-
-\subsection{Kompozice -- části zaniknou s celkem}
-
-Kompozice je zvláštní případ agregace pro který platí dvě omezení: součást může patřit pouze jednomu celku a zánikem celku zaniká i součást. Symbolem je \textbf{plný (vyplněný) kosočtverec}.
-
-V našem projektu: \texttt{Sklad *-- Lokace} -- sklad se skládá z lokací. Lokace ``Regál A, Police 3'' nedává smysl bez konkrétního skladu. Pokud by sklad zanikl, zaniknou i všechny jeho lokace.
-
-\textbf{Rozdíl agregace vs kompozice:} U agregace části přežijí (součástka bez lokace). U kompozice části zaniknou (lokace bez skladu).
-
-\subsection{Kvalifikovaná vazba}
-
-Kvalifikovaná vazba dává do vztahu dvě třídy a \textbf{kvalifikátor} -- zvláštní atribut, který účinně zmenšuje násobnost vazby z 1:N na 1:1. Kvalifikátor rozlišuje mezi objekty na konci ``mnoho'' vazby. Kreslí se jako \textbf{rámeček} na tom konci vazby, který kvalifikuje.
-
-V našem projektu: \texttt{Sklad "[id: int]" --> Soucastka} -- sklad přistupuje ke konkrétní součástce pomocí jejího ID. Metoda \texttt{najdiSoucastku(id): Soucastka} vrátí přesně tu jednu součástku se zadaným ID. Bez kvalifikátoru bychom přistupovali k celé kolekci součástek najednou.
+V našem projektu: \texttt{Sklad "[id: int]" -- Soucastka}. Adresář + jméno souboru určují soubor -- podobně Sklad + ID určují konkrétní součástku. Bez kvalifikátoru bychom prohledávali celý sklad. S kvalifikátorem metoda \texttt{najdiSoucastku(id): Soucastka} vrátí přesně jednu součástku.
 
 Kvalifikace zlepšuje sémantickou přesnost a názornost vazby.
 
-\subsection{Vazební (asociační) třída}
+\subsection{Agregace}
 
-Vazební třída je vazbou a současně třídou -- je to třída která patří vazbě, ne jednomu z propojených objektů. Atribut spojení je vlastností vazby, ne objektu. Má opodstatnění hlavně ve vazbách mnoho-mnoho. V diagramu je napojena \textbf{čárkovanou linkou} přímo na čáru asociace.
+Podle přednášek: agregace je zvláštní typ vazby, vztah objektů typu ``součást-celek''. Symbolem je čára s diamantem na straně celku. Agregace je tranzitivní a antisymetrická -- vlastnosti se šíří z celku na součást a ne obráceně.
 
-V našem projektu: \texttt{ProjektSoucastka} s atributem \texttt{mnozstvi: int}. Projekt ``Robotická ruka'' potřebuje 50 kusů rezistoru R1. Jiný projekt potřebuje 10 kusů stejného rezistoru. Toto množství nepatří ani Projektu (ten má více součástek) ani Součástce (ta je ve více projektech) -- patří konkrétní kombinaci projekt + součástka.
+V našem projektu: \texttt{Lokace o-- Soucastka} -- lokace obsahuje součástky, ale součástka může existovat i bez lokace. Například při příjmu zásilky jsou součástky zaevidovány v systému, ale než je skladník fyzicky přenese na místo, nemají lokaci. To je v pořádku -- součástka přežije i bez lokace.
 
-\textbf{Může vazební třída existovat bez obou propojených objektů?} Ne. Vznikne jen tehdy když existuje konkrétní projekt a konkrétní součástka a jsou svázány. Zanikne-li projekt nebo součástka, zanikne i příslušný záznam.
+\subsection{Kompozice}
+
+Kompozice je silnější forma agregace -- části nemohou existovat bez celku. V diagramu plný (vybarvený) diamant.
+
+V našem projektu: \texttt{Sklad *-- Lokace}. Lokace ``Regál A, Police 3'' nedává smysl bez skladu ke kterému patří. Pokud sklad zanikne, zaniknou i všechny jeho lokace.
+
+Rozdíl: u agregace části přežijí bez celku, u kompozice zaniknou spolu s ním.
+
+\subsection{Zobecnění (generalizace, dědičnost)}
+
+Podle přednášek: sdílení atributů a operací mezi třídami na hierarchickém principu. Nadtřída obsahuje obecnou informaci, podtřídy ji upřesňují. Každá podtřída přebírá (dědí) všechny vlastnosti nadtřídy a přidává své vlastní. Tento princip velmi zmenšuje opakování v návrhu.
+
+V našem projektu: \texttt{SkladovyPohyb} je abstraktní nadtřída. Podtřídy:
+\begin{itemize}
+  \item \texttt{PrijemPohyb} -- dědí vše + přidává \texttt{dodavatel}
+  \item \texttt{VydejPohyb} -- dědí vše + přidává \texttt{duvod}
+  \item \texttt{PresunutiPohyb} -- dědí vše + přidává \texttt{zdrojLokaceId} a \texttt{cilLokaceId}
+\end{itemize}
+
+Atributy \texttt{id}, \texttt{datum}, \texttt{stav}, \texttt{mnozstvi} a metody \texttt{vytvoritPohyb()}, \texttt{overitData()}, \texttt{provestPohyb()} jsou napsány jednou v nadtřídě -- podtřídy je dědí automaticky.
+
+Abstraktní třída je třída ze které nelze vytvořit instanci. V reálu nikdy nevznikne ``obecný pohyb'' -- vždy je to konkrétně příjem, výdej nebo přesun.
 
 \subsection{Polymorfismus}
 
-Polymorfismus znamená že stejná operace se může chovat odlišně v různých třídách. Specifická implementace operace určitou třídou se nazývá metoda. Operace může být implementována více než jednou metodou.
+Podle přednášek: stejná operace se může chovat odlišně v různých třídách. Specifická implementace operace určitou třídou se nazývá metoda. Operace může být implementována více než jednou metodou.
 
-V našem projektu: voláme \texttt{provestPohyb()} na pohybu:
+V našem projektu: \texttt{provestPohyb()} se chová jinak podle podtřídy:
 \begin{itemize}
   \item \texttt{PrijemPohyb.provestPohyb()} -- zavolá \texttt{zvysMnozstvi()} a zvýší množství
   \item \texttt{VydejPohyb.provestPohyb()} -- zavolá \texttt{snizMnozstvi()} a sníží množství
   \item \texttt{PresunutiPohyb.provestPohyb()} -- zavolá \texttt{zmenLokaci()} a přesune součástku
 \end{itemize}
 
-Stejné volání, tři různé výsledky. Kód který pohyb volá nemusí vědět o jaký typ jde.
+\subsection{Asociační třída (vazební třída)}
 
-%% ── 3. Stavové diagramy ──────────────────────────────────────────────────────
-\section{Stavové diagramy -- Dynamický model}
+Asociační třída je třída která patří vazbě mezi dvěma třídami -- ne jedné z nich. Vznikne jen tehdy když existuje konkrétní vazba mezi dvěma objekty. V diagramu je napojena čárkovanou linkou na čáru asociace.
 
-Stavový diagram ukazuje vztah událostí a stavů. Když nastane událost, další stav závisí na této události a současném stavu. Stavový diagram popisuje chování jediné třídy objektů.
+V našem projektu: \texttt{ProjektSoucastka} s atributem \texttt{mnozstvi}. Projekt ``Robotická ruka'' potřebuje 50 kusů rezistoru, projekt ``LED displej'' potřebuje 10 kusů stejného rezistoru. Tato informace nepatří ani Projektu (ten má více součástek) ani Součástce (ta je ve více projektech). Patří konkrétní kombinaci projekt + součástka.
 
-\textbf{Notace:}
+Zanikne-li projekt nebo součástka, zanikne i záznam v asociační třídě -- nemůže existovat samostatně.
+
+\subsection{Může objekt existovat bez druhého?}
+
+Toto je klíčová otázka při návrhu. Odpověď určuje jaký typ vztahu použijeme:
+
 \begin{itemize}
-  \item Stav: zaoblený obdélník s názvem
-  \item Přechod: šipka, nápis je název události
-  \item Výchozí stav: plný kroužek
-  \item Koncový stav: plný kroužek v kroužku (``volské oko'')
+  \item \textbf{Kardinalita 1} -- objekt musí mít protějšek. Pohyb musí mít součástku (kardinalita 1).
+  \item \textbf{Kardinalita *} -- objekt může existovat bez protějšku. Uživatel může mít nula pohybů.
+  \item \textbf{Agregace} -- části přežijí bez celku. Součástka existuje bez lokace.
+  \item \textbf{Kompozice} -- části zaniknou spolu s celkem. Lokace zanikne se skladem.
+  \item \textbf{Generalizace} -- podtřída je definována prostřednictvím nadtřídy, nelze oddělit.
+  \item \textbf{Asociační třída} -- existuje jen když existuje konkrétní vazba.
 \end{itemize}
 
-\subsection{Události}
+%% ── 3. Dynamický model ───────────────────────────────────────────────────────
+\section{Dynamický model -- stavové diagramy}
 
-Událost je něco co se stane v časovém \textbf{okamžiku}. Událost nemá žádné časové trvání. Například ``Pohyb odeslán'', ``Chyba ověření'', ``Vydána ze skladu''.
+Podle přednášek: stav je soubor hodnot atributů a spojení objektu v daném okamžiku. Událost je podnět od jednoho objektu k druhému. Odezva objektu na událost závisí od jeho stavu. Stavový diagram popisuje chování jedné třídy objektů.
 
-Typy událostí:
+\subsection{Událost vs podmínka}
+
+Událost je něco co se stane v časovém okamžiku a nemá žádné trvání. Například ``Pohyb odeslán'' nebo ``Chyba ověření''.
+
+Podmínka je booleovský výraz který platí v časovém intervalu -- na rozdíl od události která nemá trvání. Podmínka se zobrazuje jako booleovský výraz v závorce za názvem události. Přechod se odpálí pouze pokud je podmínka splněna v okamžiku příchodu události.
+
+V našem projektu: událost ``Pohyb schválen'' + podmínka \texttt{[typ == příjem]} -- přechod do stavu Proveden nastane jen pokud přijde tato událost A zároveň platí podmínka.
+
+\subsection{Aktivity, entry, do, exit}
+
+Podle přednášek: aktivity jsou provedeny na přechodu nebo na začátku, konci či uvnitř stavu jako odezva na události.
+
 \begin{itemize}
-  \item \textbf{Signálová událost} -- explicitní přenos informace od jednoho objektu k druhému. Například ``Pohyb odeslán'' je signál od uživatele k systému.
-  \item \textbf{Změnová událost} -- nastane když se hodnota booleovského výrazu změní z false na true. Například \texttt{when(mnozstvi < minimum)}.
-  \item \textbf{Časová událost} -- nastane po uplynutí časového intervalu. Například \texttt{after(10 sekund)}.
+  \item \textbf{entry/} -- akce při vstupu do stavu. V našem projektu: při vstupu do stavu Validovan se okamžitě zavolá \texttt{overitData()}.
+  \item \textbf{do/} -- do-aktivita je operace která má časové trvání. Trvá po celou dobu pobytu ve stavu. Může ji přerušit událost. V přednášce příklad: tiskárna se zamuchlá papír -- \texttt{do/blikání varovného indikátoru}. V projektu: stav Vytvoren má \texttt{do/čekat na odeslání} -- pohyb čeká dokud ho uživatel neodešle.
+  \item \textbf{exit/} -- akce při odchodu ze stavu. Provede se před přechodem do dalšího stavu.
 \end{itemize}
 
-\subsection{Podmínky}
-
-Podmínka je booleovský výraz hodnot objektu. Na rozdíl od události (která nemá trvání) podmínka platí v \textbf{časovém intervalu}. Podmínky se používají jako hlídače na přechodech -- píší se v hranatých závorkách za názvem události.
-
-Přechod se odpálí pouze pokud je podmínka splněna \textit{v okamžiku příchodu události}. Pokud je podmínka splněna až později, přechod se neodpálí.
-
-Příklady z projektu: \texttt{[typ == příjem]}, \texttt{[mnozstvi > 0]}, \texttt{[neplatná data]}.
-
-\subsection{Aktivity -- entry, do, exit}
-
-Popis chování objektu musí určit co objekt dělá jako odezvu na událost. Aktivity se provádějí na přechodu nebo na začátku, konci či uvnitř stavu. Notace: ``/ jméno aktivity'' za názvem události.
-
-Pořadí aktivit ve stavu:
-\begin{enumerate}
-  \item Aktivity na vstupním přechodu
-  \item \textbf{entry/} -- vstupní aktivity (provedou se při vstupu do stavu)
-  \item \textbf{do/} -- do-aktivity (probíhají po celou dobu pobytu ve stavu)
-  \item \textbf{exit/} -- výstupní aktivity (provedou se při odchodu ze stavu)
-  \item Aktivity na výstupním přechodu
-\end{enumerate}
-
-\textbf{Do-aktivita} je operace která má \textit{časové trvání}. Obsahuje spojité operace (trvají bez omezení) nebo sekvenční operace (po době samovolně skončí). Do-aktivitu může přerušit událost přijatá v průběhu jejího provádění -- ale výstupní aktivita se ještě provede.
-
-\textbf{Důležité:} Okamžité akce (bez trvání) jako \texttt{zvysMnozstvi()} nepatří do \texttt{do/} -- patří do \texttt{entry/} nebo jako vnitřní přechod.
-
-Příklad z projektu (stav Validovan):
-\begin{itemize}
-  \item \texttt{entry / overitData()} -- při vstupu se hned ověří data
-  \item \texttt{do / kontrolovat data} -- průběžně probíhá kontrola
-  \item \texttt{exit / potvrdit výsledek} -- před odchodem se potvrdí výsledek
-\end{itemize}
+Důležité: \texttt{zvysMnozstvi()} je okamžitá akce bez trvání -- nesmí být v \texttt{do/}. Patří jako vnitřní přechod nebo do \texttt{entry/}.
 
 \subsection{Vnitřní přechod}
 
-Vnitřní přechod je reakce na událost která \textbf{nezmění stav} -- objekt zůstane ve stejném stavu ale provede okamžitou akci. Zapisuje se ve tvaru ``událost / aktivita'' uvnitř symbolu stavu.
+Reakce na událost která nezmění stav objektu -- objekt zůstane ve stejném stavu ale provede okamžitou akci.
 
-Příklad z projektu (stav Dostupna součástky):
-\begin{itemize}
-  \item \texttt{naskladněno / zvysMnozstvi(pocet)} -- přijde zásilka, zvýší se množství, ale součástka zůstane Dostupna
-  \item \texttt{rezervace přijata / rezervovat(pocet)} -- část kusů se zablokuje pro projekt, stav se nemění
-  \item \texttt{rezervace zrušena / zrusitRezervaci(pocet)} -- rezervace se uvolní, stav se nemění
-\end{itemize}
+V našem projektu: součástka je ve stavu Dostupna. Přijde událost ``naskladněno'' a zavolá se \texttt{zvysMnozstvi()} -- ale součástka zůstane stále Dostupna. Naskladnění nezmění stav součástky.
 
 \subsection{Zakončovací přechod}
 
-Zakončovací přechod se odpálí automaticky po skončení do-aktivity stavu -- bez čekání na událost. Přechod \textbf{nemá název události}. Pokud není splněna podmínka na zakončovacím přechodu, nastane ``zamrznutí'' ve stavu.
+Přechod do dalšího stavu který se spustí automaticky bez čekání na událost. Stav provede své akce a automaticky skončí. V diagramu nemá popisek události.
 
-Příklad z projektu: stav \texttt{Proveden} provede \texttt{entry/provestPohyb()}, průběžné akce a \texttt{exit/uložit záznam} -- a pak automaticky přejde do koncového stavu bez čekání.
+V projektu: stavy Proveden a Zamitnut jen provedou akce a automaticky přejdou do koncového stavu. Nečekají na žádnou vnější událost.
 
 %% ── 4. Model interakcí ───────────────────────────────────────────────────────
 \section{Model interakcí}
 
-Model interakcí říká jak na sebe objekty navzájem působí -- je to celostní pohled přes mnoho objektů. Stavový model popisuje chování objektů jednotlivě, model interakcí popisuje jejich spolupráci. K úplnému popisu chování potřebujeme oba modely.
+Podle přednášek: model interakcí říká jak na sebe objekty navzájem působí. Je to celostní pohled přes mnoho objektů -- zatímco stavový model popisuje chování objektů jednotlivě. K úplnému popisu chování potřebujeme jak stavový model tak model interakcí.
 
-Interakce modelujeme na třech úrovních abstrakce:
+Tři úrovně abstrakce:
 \begin{itemize}
   \item \textbf{Use Case} -- vrcholová úroveň, interakce systému s okolím
   \item \textbf{Sekvenční diagram} -- výměna zpráv v čase v rámci množiny objektů
-  \item \textbf{Diagram aktivit} -- tok řízení mezi výpočetními kroky (nejdetailnější)
+  \item \textbf{Diagram aktivit} -- tok řízení mezi výpočetními kroky
 \end{itemize}
 
 \subsection{Use Case}
 
-Aktor je vnější uživatel systému, který se systémem přímo komunikuje ale není součástí systému. Aktor má jediný a dobře definovaný účel. Aktor nemusí být pouze osoba -- může to být i jiný systém nebo zařízení.
+Podle přednášek: aktor je vnější uživatel systému, který se systémem přímo komunikuje ale není součástí systému. Use Case je ucelená část funkčnosti, kterou systém poskytuje při komunikaci s aktorem. Spojení aktora s UC je plná čára (bez šipky).
 
-Use Case je ucelená část funkčnosti, kterou systém poskytuje při komunikaci s aktorem. Každý use case musí poskytovat uživatelům určitou souhrnnou službu -- nesmí být definován příliš úzce.
+V projektu: Vedoucí skladu a Skladník jsou aktéři. Každý má jiné use cases protože mají jiný účel -- Vedoucí spravuje, Skladník fyzicky provádí operace.
 
-\textbf{Vztahy v Use Case:}
+Vztahy mezi UC:
 \begin{itemize}
-  \item \textbf{Include} -- jeden use case zahrnuje jiný use case. Zahrnutí je \textit{povinné} -- bez zahrnutého UC nemůže původní existovat. Notace: přerušovaná šipka \texttt{<<include>>}. Příklad: Vytvořit pohyb vždy zahrnuje Ověřit data pohybu.
-  \item \textbf{Extend} -- přidá use case další \textit{volitelnou} funkčnost. Původní UC dává smysl i bez přidaného. Notace: přerušovaná šipka \texttt{<<extend>>}.
-  \item \textbf{Generalizace} -- vyjadřuje specifické varianty use case. Rodičovský UC je obvykle abstraktní. Notace: prázdný trojúhelník (stejná jako v class diagramu).
+  \item \textbf{include} -- povinné zahrnutí. ``Vytvořit pohyb'' vždy zahrnuje ``Ověřit data pohybu''.
+  \item \textbf{extend} -- volitelné rozšíření. Základní UC dává smysl i bez rozšíření.
+  \item \textbf{generalizace} -- specializace. Příjem/výdej/přesun jsou specializace pohybu, ne volitelná rozšíření -- proto generalizace a ne extend. Tím ladíme Use Case s class diagramem.
 \end{itemize}
-
-\textbf{Proč v našem projektu generalizace místo extend?} Příjem, výdej a přesun jsou specializace pohybu -- ne volitelná rozšíření. Zavolání ``Vytvořit pohyb'' bez konkrétního typu nedává smysl. Generalizace navíc ladí s class diagramem kde stejný vztah používáme mezi \texttt{SkladovyPohyb} a podtřídami.
 
 \subsection{Sekvenční diagram}
 
-Sekvenční diagram ukazuje účastníky interakce a zprávy mezi nimi. Každý aktor je reprezentován svislou čarou (čára života) a každá zpráva je horizontální šipka od odesilatele k příjemci. Čas postupuje shora dolů.
+Ukazuje konkrétní volání metod při vytvoření pohybu. Účastníci jsou \texttt{:SkladovyPohyb}, \texttt{:Soucastka} a \texttt{:Lokace} -- přesně třídy z class diagramu.
 
-\textbf{Typy šipek:}
+Typy šipek:
 \begin{itemize}
-  \item \textbf{Plná šipka} (\texttt{->}) -- synchronní zpráva. Odesílatel čeká na odpověď.
-  \item \textbf{Přerušovaná šipka} (\texttt{-->}) -- odpověď nebo návratová hodnota.
+  \item \textbf{Plná šipka} (\texttt{->}) -- synchronní zpráva, odesílatel čeká na odpověď
+  \item \textbf{Přerušovaná šipka} (\texttt{-->}) -- odpověď nebo návratová hodnota
 \end{itemize}
 
-\textbf{Activation boxy} (obdélníky na čárách života) ukazují kdy je objekt aktivní -- kdy zpracovává zprávu.
+Activation boxy (šedé obdélníky na čarách života) ukazují kdy je objekt aktivní. \texttt{:SkladovyPohyb} je aktivní po celou dobu, \texttt{:Soucastka} jen při volání konkrétní metody.
 
-\textbf{Alt blok} zobrazuje alternativní toky. Podmínka v hranatých závorkách určuje která větev se provede.
-
-Pro každý use case je vhodné udělat alespoň jeden sekvenční diagram -- pro hlavní tok a pro každý chybový případ.
+Blok \texttt{alt} ukazuje alternativní toky -- data platná nebo neplatná. Podmínky v hranatých závorkách.
 
 \subsection{Diagram aktivit}
 
-Diagram aktivit ukazuje tok řízení -- kroky, větvení a slučování. Je podobný vývojovému diagramu, ale navíc může modelovat i konkurenční toky.
+Ukazuje tok řízení -- jaké kroky proběhnou a kde dochází k větvení. Jiný pohled na stejnou operaci jako sekvenční diagram.
 
-\textbf{Notace:}
-\begin{itemize}
-  \item Aktivita: zaoblený obdélník s názvem
-  \item Rozhodovací uzel: diamant (kosočtverec)
-  \item Podmínka: v hranatých závorkách \texttt{[ano]}, \texttt{[ne]}
-  \item Začátek: plné kolečko
-  \item Konec: plné kolečko v kroužku
-\end{itemize}
-
-Podmínky se testují po dokončení aktivity. Je vhodné používat podmínku \texttt{[else]} aby bylo zaručeno pokračování.
+Podmínky jsou v hranatých závorkách \texttt{[ano]}, \texttt{[ne]} -- standardní UML notace pro guardy (hlídače).
 
 %% ── 5. Jak modely navazují ───────────────────────────────────────────────────
 \section{Jak modely na sebe navazují}
 
-Toto je klíčová otázka u zkoušky. Všechny tři modely jsou potřebné -- poskytují pohled na systém ze tří různých hledisek:
+Toto je klíčová otázka u zkoušky. Máme tři modely (podle přednášek: objektový, dynamický, interakcí) které se navzájem doplňují:
 
 \begin{itemize}
-  \item \textbf{Objektový model (class diagram)} -- statická struktura. Definuje třídy, vazby a zobecnění. Je to základ -- všechny ostatní diagramy z něj vycházejí. Metody které vidíme ve stavových a sekvenčních diagramech jsou přesně ty metody definované v class diagramu.
-  \item \textbf{Stavový model} -- změny vlastností objektů v čase. Stavové diagramy pro \texttt{SkladovyPohyb} a \texttt{Soucastka} ukazují životní cykly těchto tříd z class diagramu.
-  \item \textbf{Model interakcí} -- spolupráce objektů. Use Case ukazuje co systém umí. Sekvenční diagram a diagram aktivit popisují stejnou operaci (vytvoření pohybu) z různých pohledů -- sekvenční zdůrazňuje kdo s kým komunikuje, aktivit zdůrazňuje tok řízení.
+  \item \textbf{Class diagram} (objektový model) -- definuje třídy, atributy, metody, vztahy. Je základ -- všechny ostatní diagramy z něj vycházejí.
+  \item \textbf{Stavové diagramy} (dynamický model) -- popisují životní cykly tříd SkladovyPohyb a Soucastka. Metody ve stavových diagramech (\texttt{vytvoritPohyb()}, \texttt{overitData()}, \texttt{provestPohyb()}) jsou přesně ty metody definované v class diagramu.
+  \item \textbf{Use Case diagram} -- ukazuje co systém umí z pohledu uživatelů. Generalizace v UC odpovídá generalizaci v class diagramu (obě říkají: příjem je speciální typ pohybu).
+  \item \textbf{Sekvenční diagram} -- ukazuje konkrétní volání metod. Stejné objekty a metody jako v class diagramu.
+  \item \textbf{Diagram aktivit} -- tok řízení. Metody odpovídají metodám class diagramu, větvení odpovídá scénářům.
 \end{itemize}
-
-Generalizace je vztah ``NEBO'' -- vyskytuje se ve všech třech modelech. Všechny superklasifikátory jsou abstraktní, listové klasifikátory jsou konkrétní.
-
-Agregace je vztah ``A'' s vlastností tranzitivity a antisymetrie. Má dvě podoby: obecnou agregaci (složky mohou existovat nezávisle na celku) a kompozici (složka náleží jednomu celku a má stejnou dobu existence).
 
 %% ── 6. Typické otázky u zkoušky ──────────────────────────────────────────────
 \section{Typické otázky u zkoušky}
 
 \textbf{„Jak spolu vaše diagramy souvisí?"}\\
-Objektový model definuje třídy -- ty se pak objevují ve stavových diagramech (životní cykly), sekvenčním diagramu (volání metod) i diagramu aktivit. Use Case generalizace ladí s generalizací v class diagramu. Scénáře a diagramy popisují stejné operace z různých pohledů.
+Třídy z class diagramu se objevují ve stavových diagramech, sekvenčním diagramu i diagramu aktivit. Máme tři modely -- objektový (class diagram), dynamický (stavové diagramy) a model interakcí (UC, sekvenční, aktivit). Každý popisuje systém z jiného pohledu a navzájem na sebe odkazují.
+
+\textbf{„Co je vazební (asociační) třída a kdy ji použijeme?"}\\
+Když samotná vazba potřebuje vlastní atributy. ProjektSoucastka má atribut \texttt{mnozstvi} protože různé projekty potřebují různé množství stejné součástky. Tento atribut nepatří ani jedné ze spojených tříd -- patří vazbě samotné.
+
+\textbf{„Může vazební třída existovat bez propojených objektů?"}\\
+Ne. ProjektSoucastka vznikne jen když existuje projekt A součástka A jsou svázány. Zanikne-li projekt nebo součástka, zanikne i záznam vazební třídy.
+
+\textbf{„Co je událost a jak se liší od podmínky?"}\\
+Událost nastane v časovém okamžiku a nemá trvání (``Pohyb odeslán''). Podmínka platí v časovém intervalu -- je to booleovský výraz v závorce. Přechod se odpálí jen pokud přijde událost A zároveň je podmínka splněna.
+
+\textbf{„Co je do-aktivita a proč nesmí obsahovat okamžité akce?"}\\
+Do-aktivita má časové trvání -- trvá po celou dobu co je objekt ve stavu. Okamžité akce jako \texttt{zvysMnozstvi()} trvání nemají -- patří do \texttt{entry/} nebo jako vnitřní přechod. Do \texttt{do/} patří jen věci co trvají, jako ``čekat na odeslání''.
+
+\textbf{„Co je kvalifikátor a proč ho používáte?"}\\
+Kvalifikátor je zvláštní atribut na vazbě který snižuje násobnost z 1:N na 1:1. Sklad + ID součástky určuje konkrétní součástku -- jako primární klíč v databázi. Bez kvalifikátoru bychom prohledávali celou kolekci.
 
 \textbf{„Proč je SkladovyPohyb abstraktní?"}\\
-Protože obecný pohyb v reálu neexistuje -- vždy je to příjem, výdej nebo přesun. Abstraktní třída sdílí společné atributy a deklaruje metody které každá podtřída musí implementovat po svém. Z abstraktní třídy nelze vytvořit instanci.
-
-\textbf{„Co je kvalifikovaná vazba a proč ji máte?"}\\
-Kvalifikátor je zvláštní atribut který zmenšuje násobnost vazby z 1:N na 1:1. Sklad přistupuje ke konkrétní součástce pomocí jejího ID -- přímý přístup místo prohledávání celé kolekce. Kreslí se jako rámeček na konci vazby.
-
-\textbf{„Proč máte vazební třídu ProjektSoucastka?"}\\
-Atribut \texttt{mnozstvi} nepatří ani Projektu ani Součástce -- patří konkrétní vazbě mezi nimi. Projekt ``Robotická ruka'' potřebuje 50 kusů rezistoru, jiný projekt potřebuje 10 kusů stejného rezistoru. Takový atribut je vlastností spojení a nelze ho přiřadit k žádnému z objektů.
-
-\textbf{„Jaký je rozdíl mezi agregací a kompozicí?"}\\
-Agregace -- části mohou existovat bez celku (součástka může být bez lokace při příjmu). Kompozice -- části zaniknou spolu s celkem (lokace bez skladu nedává smysl). Oba jsou vztahy celek-část, liší se mírou závislosti.
+Protože v reálu nikdy nevznikne ``obecný pohyb'' -- vždy je to příjem, výdej nebo přesun. Abstraktní třída slouží jako společný základ, definuje sdílené atributy a deklaruje metody které podtřídy musí implementovat.
 
 \textbf{„Co je polymorfismus?"}\\
-Stejná operace \texttt{provestPohyb()} se chová různě podle podtřídy -- příjem zvýší množství, výdej sníží, přesun změní lokaci. Polymorfismus nahrazuje větvení dle typu -- kód nemusí vědět o jaký typ pohybu jde.
+Stejná operace se chová odlišně v různých třídách. \texttt{provestPohyb()} zavolá různé akce podle toho jestli jde o příjem, výdej nebo přesun. Kód volající metodu nemusí vědět o jaký typ pohybu jde.
 
-\textbf{„Co znamená entry/do/exit?"}\\
-Entry se provede při vstupu do stavu. Do probíhá po celou dobu pobytu (musí mít časové trvání). Exit se provede při odchodu. Pořadí: vstupní přechod, entry, do, exit, výstupní přechod.
-
-\textbf{„Proč zakončovací přechody bez názvu?"}\\
-Stavy Proveden a Zamitnut jen provedou akce a automaticky skončí -- nečekají na žádnou událost. Zakončovací přechod se odpálí automaticky po skončení do-aktivity.
-
-\textbf{„Co je vnitřní přechod a kdy ho použijeme?"}\\
-Reakce na událost která nezmění stav. Součástka zůstane Dostupna ale při události ``naskladněno'' se zavolá \texttt{zvysMnozstvi()} a zvýší se množství. Vnitřní přechod se používá pro okamžité akce bez trvání, které nemění stav objektu.
+\textbf{„Jaký je rozdíl mezi agregací a kompozicí?"}\\
+Agregace -- části přežijí bez celku (součástka existuje bez lokace). Kompozice -- části zaniknou spolu s celkem (lokace zanikne se skladem).
 
 \textbf{„Proč generalizace v Use Case místo extend?"}\\
-Include je povinné zahrnutí, extend je volitelné rozšíření. Příjem/výdej/přesun jsou specializace pohybu -- ne volitelná rozšíření. Rodičovský UC ``Vytvořit pohyb'' by bez nich nedával smysl. Generalizace navíc ladí s class diagramem.
+Extend je pro volitelná rozšíření -- základní UC dává smysl bez nich. Příjem/výdej/přesun jsou specializace pohybu, ne volitelná rozšíření. Navíc to ladí s class diagramem kde stejný vztah používáme mezi SkladovyPohyb a podtřídami.
+
+\textbf{„Proč zakončovací přechody bez názvu?"}\\
+Stavy Proveden a Zamitnut jen provedou akce a automaticky skončí -- nečekají na vnější událost. Proto přechod nemá název.
 
 \textbf{„Jaký je rozdíl mezi sekvenčním diagramem a diagramem aktivit?"}\\
-Sekvenční diagram -- kdo s kým komunikuje (objekty a zprávy mezi nimi). Diagram aktivit -- tok řízení (kroky a větvení). Oba popisují vytvoření pohybu, ale z různých pohledů. Pro každý use case je vhodný alespoň jeden sekvenční diagram -- pro hlavní tok a pro každou chybu.
+Sekvenční diagram ukazuje kdo s kým komunikuje -- objekty a zprávy. Diagram aktivit ukazuje tok řízení -- kroky a větvení. Oba popisují stejnou operaci z různých pohledů.
 
-\textbf{„Co je událost a liší se od podmínky?"}\\
-Událost nastane v okamžiku a nemá trvání (``Pohyb odeslán''). Podmínka platí v časovém intervalu -- testuje se jednou v okamžiku příchodu události. Podmínka se píše v hranatých závorkách za názvem události.
+\textbf{„Co je vnitřní přechod?"}\\
+Reakce na událost která nezmění stav. Součástka zůstane Dostupna ale při události ``naskladněno'' se zvýší množství. Stav se nezmění, jen proběhne akce.
 
-\textbf{„Proč nesmíte dát do-aktivitu pro okamžitou akci jako zvysMnozstvi()?"}\\
-Do-aktivita musí mít časové trvání -- probíhá po celou dobu pobytu ve stavu. Akce \texttt{zvysMnozstvi()} je okamžitá -- proběhne a je hotová. Taková akce patří do \texttt{entry/} nebo jako vnitřní přechod. Pokud bychom ji dali do \texttt{do/}, systém by ji prováděl opakovaně po celou dobu pobytu ve stavu -- což nedává smysl.
+\textbf{„Proč máte v datovém slovníku různé hodnoty pro stav Soucastka a SkladovyPohyb?"}\\
+Protože jsou to různé třídy s různým životním cyklem. Soucastka má stavy Dostupna, Vydana, Odepsana -- popisují fyzický stav součástky. SkladovyPohyb má stavy Vytvoren, Validovan, Proveden, Zamitnut -- popisují průběh zpracování pohybu v systému.
 
 \end{document}
