@@ -4,11 +4,11 @@ skinparam sequenceArrowThickness 1.5
 skinparam sequenceParticipantBorderThickness 1.5
 skinparam sequenceGroupBorderThickness 1.5
 
-' ->    plná čára, plná šipka    = synchronní zpráva (odesílatel čeká)
-' -->   přerušovaná čára         = odpověď / návratová hodnota
+' Sekvenční diagram ukazuje příjem jako příklad scénáře
+' SkladovyPohyb je abstraktní – konkrétní chování zajistí podtřída
 
 actor ":Uživatel" as Uzivatel
-participant ":PrijemPohyb" as Pohyb
+participant ":SkladovyPohyb" as Pohyb
 participant ":Soucastka" as Soucastka
 participant ":Lokace" as Lokace
 
@@ -22,30 +22,15 @@ alt [data nejsou platná]
 
 else [data jsou platná]
     Pohyb -> Pohyb : provestPohyb()
+    activate Pohyb
 
-    alt [typ == příjem]
-        Pohyb -> Soucastka : zvysMnozstvi(pocet)
-        activate Soucastka
-        Soucastka --> Pohyb : ok
-        deactivate Soucastka
+    ' příklad scénáře příjmu – konkrétní podtřída PrijemPohyb
+    Pohyb -> Soucastka : zvysMnozstvi(pocet)
+    activate Soucastka
+    Soucastka --> Pohyb : ok
+    deactivate Soucastka
 
-    else [typ == výdej]
-        Pohyb -> Soucastka : snizMnozstvi(pocet)
-        activate Soucastka
-        Soucastka --> Pohyb : ok
-        deactivate Soucastka
-
-    else [typ == přesun]
-        Pohyb -> Soucastka : overDostupnost()
-        activate Soucastka
-        Soucastka --> Pohyb : ok
-        deactivate Soucastka
-        Pohyb -> Lokace : zmenLokaci(zdrojLokaceId, cilLokaceId)
-        activate Lokace
-        Lokace --> Pohyb : ok
-        deactivate Lokace
-    end
-
+    deactivate Pohyb
     Pohyb --> Uzivatel : pohyb potvrzen
 end
 
