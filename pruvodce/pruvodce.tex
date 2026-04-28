@@ -155,6 +155,66 @@ V našem projektu: \textbf{ProjektSoucastka} s atributem \texttt{mnozstvi}.
 
 Projekt ``Robotická ruka'' potřebuje 50 kusů rezistoru. Projekt ``LED displej'' potřebuje 10 kusů stejného rezistoru. Kolik kusů potřebuje který projekt? Tato informace nepatří ani Projektu (ten má více součástek) ani Součástce (ta může být ve více projektech). Patří konkrétní kombinaci projekt + součástka. Proto existuje asociační třída \texttt{ProjektSoucastka} s atributem \texttt{mnozstvi}.
 
+
+%% ── 2.5 Mohou objekty existovat bez sebe navzájem? ──────────────────────────
+\subsection{Mohou objekty existovat bez sebe navzájem?}
+
+Toto je klíčová otázka při návrhu. Odpověď na ni určuje jaký typ vztahu použijeme.
+
+\textbf{Kardinalita -- kolik jich musí být?}
+
+Kardinalita říká zda objekt \textit{musí} mít protějšek nebo ne.
+\begin{itemize}
+  \item \texttt{Uzivatel "1" --> "*" SkladovyPohyb} -- pohyb musí mít přesně jednoho uživatele. Nemůže existovat pohyb bez uživatele -- kdo by ho vytvořil?
+  \item \texttt{Lokace "1" o-- "*" Soucastka} -- součástka \textit{může} být bez lokace (kardinalita na straně Lokace je 1, ale součástka nemusí být přiřazena -- viz agregace níže). Lokace ale musí patřit přesně jednomu skladu.
+\end{itemize}
+
+\textbf{Asociace -- objekty existují nezávisle, jen spolu spolupracují}
+
+U běžné asociace oba objekty existují samostatně a jen spolu komunikují.
+
+Příklad: \texttt{SkladovyPohyb} a \texttt{Soucastka}. Pohyb se týká součástky -- ale součástka existuje i bez pohybů (prostě leží na skladě). A pohyb... bez součástky by nedával smysl, proto je kardinalita 1 (pohyb musí mít součástku).
+
+\textbf{Agregace -- části existují i bez celku}
+
+U agregace (prázdný kosočtverec) části \textit{mohou} existovat bez nadřazeného objektu.
+
+Příklad v projektu: \texttt{Lokace o-- Soucastka}. Součástka může existovat bez lokace -- třeba právě přišla zásilka rezistorů, jsou zaevidovány v systému, ale skladník je ještě fyzicky neodnesl na místo v regálu. Součástka existuje, lokaci nemá.
+
+Co se stane když lokace zanikne? Součástky přijdou o přiřazení k lokaci, ale stále existují v systému.
+
+\textbf{Kompozice -- části bez celku neexistují}
+
+U kompozice (plný kosočtverec) části \textit{nemohou} existovat bez nadřazeného objektu.
+
+Příklad v projektu: \texttt{Sklad *-- Lokace}. Lokace ``Regál A, Police 3'' nedává smysl bez konkrétního skladu. Kde by ta police byla? Jaký regál? Lokace je definována tím že patří do skladu.
+
+Co se stane když sklad zanikne? Zaniknou i všechny jeho lokace -- nemají kde být.
+
+\textbf{Generalizace -- podtřída nemůže existovat bez nadtřídy}
+
+U generalizace (dědičnosti) podtřída vždy \textit{je} nadtřídou -- nelze je oddělit.
+
+Příklad v projektu: \texttt{PrijemPohyb} je vždy zároveň \texttt{SkladovyPohyb}. Příjem ``zdědí'' všechny atributy a metody obecného pohybu -- \texttt{id}, \texttt{datum}, \texttt{mnozstvi}, \texttt{overitData()}, \texttt{provestPohyb()}. Bez nadtřídy by podtřída neměla tyto věci a nemohla by fungovat.
+
+Je to jiný typ závislosti než u kompozice -- nejde o fyzickou existenci, ale o to že podtřída \textit{je definována} prostřednictvím nadtřídy.
+
+\textbf{Asociační třída -- existuje jen díky vazbě}
+
+\texttt{ProjektSoucastka} nemůže existovat sama o sobě. Vznikne jen tehdy když existuje konkrétní projekt A a konkrétní součástka B a jsou spolu svázány. Zrušíte-li projekt nebo součástku, zanikne i příslušný záznam v asociační třídě.
+
+\textbf{Shrnutí}
+
+\begin{itemize}
+  \item \textbf{Asociace} -- objekty existují nezávisle, jen spolu spolupracují
+  \item \textbf{Agregace} -- části přežijí i bez celku (součástka bez lokace)
+  \item \textbf{Kompozice} -- části zaniknou spolu s celkem (lokace bez skladu)
+  \item \textbf{Generalizace} -- podtřída je definována nadtřídou, nelze oddělit
+  \item \textbf{Asociační třída} -- existuje jen když existuje vazba mezi dvěma objekty
+  \item \textbf{Kardinalita 1} -- objekt \textit{musí} mít protějšek (pohyb musí mít součástku)
+  \item \textbf{Kardinalita *} -- objekt \textit{může} mít nula nebo více protějšků
+\end{itemize}
+
 \subsection{Polymorfismus}
 
 Polymorfismus znamená že stejné volání metody se chová různě podle toho jaký konkrétní objekt ho provádí.
