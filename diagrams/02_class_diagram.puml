@@ -56,7 +56,7 @@ class ProjektSoucastka {
 class Sklad {
   id: int
   nazev: String
-  najdiSoucastku(id)
+  najdiSoucastku(id): Soucastka
 }
 
 class Lokace {
@@ -74,7 +74,7 @@ class Soucastka {
   snizMnozstvi(pocet)
   rezervovat(pocet)
   zrusitRezervaci(pocet)
-  overDostupnost()
+  overDostupnost(): boolean
 }
 
 ' ── Generalizace ──────────────────────────────────────────────────────────────
