@@ -22,6 +22,7 @@ Zamitnut : exit / notifikovat uživatele
 
 ' Proveden – polymorfně spustí provestPohyb() konkrétní podtřídy
 Proveden : entry / provestPohyb()
+Proveden : do / overDostupnost() [VydejPohyb | PresunutiPohyb]
 Proveden : do / aktualizovat zásoby
 Proveden : exit / uložit záznam
 

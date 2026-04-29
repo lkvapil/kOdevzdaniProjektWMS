@@ -81,6 +81,7 @@ class Soucastka {
   rezervovat(pocet)
   zrusitRezervaci(pocet)
   overDostupnost(): boolean
+  odepsat()
 }
 
 ' -- Generalizace: -down-|> = child ABOVE parent
