@@ -38,15 +38,13 @@ rectangle "WMS – Elektronické součástky" {
 Vedouci -- UC_PROJEKT
 Vedouci -- UC_PRIRADIT
 Vedouci -- UC_ODEBRAT
-Vedouci -- UC_ADD
-Vedouci -- UC_EDIT
-Vedouci -- UC_ZASOBY
-Vedouci -- UC_POHYB
 
+Skladnik -- UC_ADD
+Skladnik -- UC_EDIT
+Skladnik -- UC_ZASOBY
 Skladnik -- UC_PRIJEM
 Skladnik -- UC_VYDEJ
 Skladnik -- UC_PRESUN
-Skladnik -- UC_ZASOBY
 Skladnik -- UC_POHYB
 
 ' include
