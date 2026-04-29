@@ -230,9 +230,9 @@ Stav součástky je řízen těmito metodami:
 \begin{enumerate}
   \item Skladník zvolí typ pohybu přesun a zadá součástku, množství, zdrojovou a cílovou lokaci.
   \item Systém volá overitData() -- ověří existenci součástky, dostatečné množství ve zdrojové lokaci a platnost cílové lokace.
-  \item Pokud data OK $\rightarrow$ systém volá provestPohyb() a poté PresunutiPohyb.zmenLokaci().
+  \item Pokud data OK $\rightarrow$ systém volá provestPohyb(), který interně ověří dostupnost voláním Soucastka.overDostupnost() a poté zavolá PresunutiPohyb.zmenLokaci().
   \item Pohyb je potvrzen; součástka je evidována v~cílové lokaci.
-  \item \textbf{Alternativní tok:} zdrojová nebo cílová lokace je neplatná $\rightarrow$ systém vrátí chybovou hlášku a pohyb je zamítnut.
+  \item \textbf{Alternativní tok:} zdrojová nebo cílová lokace je neplatná, nebo součástka není dostupná $\rightarrow$ systém vrátí chybovou hlášku a pohyb je zamítnut.
 \end{enumerate}
 
 \subsection{Scénář: Přiřazení součástky k~projektu}
@@ -260,7 +260,7 @@ Pohyb ověří data voláním overitData() -- pokud nejsou platná, je zamítnut
 \begin{itemize}
   \item PrijemPohyb -- zavolá Soucastka.zvysMnozstvi(pocet) a zvýší množství na skladě.
   \item VydejPohyb -- zavolá Soucastka.snizMnozstvi(pocet) a sníží množství na skladě.
-  \item PresunutiPohyb -- ověří dostupnost voláním Soucastka.overDostupnost() a přemístí součástku voláním Lokace.zmenLokaci().
+  \item PresunutiPohyb -- ověří dostupnost voláním Soucastka.overDostupnost(); pokud součástka není dostupná, pohyb je zamítnut. Jinak přemístí součástku voláním Lokace.zmenLokaci().
 \end{itemize}
 Po úspěšném dokončení systém vrátí Skladníkovi potvrzení pohybu.
 
@@ -279,7 +279,7 @@ Pohyb prochází třemi fázemi řízenými metodami třídy SkladovyPohyb:
 \begin{itemize}
   \item vytvoritPohyb(soucastka, mnozstvi) -- uživatel zadá typ pohybu, ID součástky a množství; systém nejprve vyhledá součástku voláním Sklad.najdiSoucastku(id) a získaný objekt předá metodě vytvoritPohyb(), která inicializuje pohyb, přiřadí ID a datum vzniku.
   \item overitData() -- ověří platnost zadaných dat: existenci součástky, dostatečné množství na skladě a platnost lokací u~přesunu.
-  \item provestPohyb() -- fyzicky provede pohyb podle typu: příjem zavolá zvysMnozstvi(pocet), výdej snizMnozstvi(pocet), přesun zmenLokaci(). Pokud data nejsou platná, pohyb je zamítnut.
+  \item provestPohyb() -- fyzicky provede pohyb podle typu: příjem zavolá zvysMnozstvi(pocet), výdej snizMnozstvi(pocet), přesun nejprve ověří dostupnost voláním overDostupnost() -- pokud součástka není dostupná, pohyb je zamítnut -- jinak zavolá zmenLokaci(). Pokud data nejsou platná, pohyb je zamítnut.
 \end{itemize}
 
 \begin{figure}[H]

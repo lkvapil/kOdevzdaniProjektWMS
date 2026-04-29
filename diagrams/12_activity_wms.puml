@@ -24,7 +24,11 @@ if (Data platná?) then ([ano])
       :Snížit množství na skladě\n(Soucastka.snizMnozstvi(pocet));
     else ([ne – přesun])
       :Ověřit dostupnost\n(Soucastka.overDostupnost());
-      :Změnit lokaci součástky\n(PresunutiPohyb.zmenLokaci());
+      if (Dostupná?) then ([ano])
+        :Změnit lokaci součástky\n(PresunutiPohyb.zmenLokaci());
+      else ([ne])
+        :Zamítnout pohyb;
+      endif
     endif
   endif
 
