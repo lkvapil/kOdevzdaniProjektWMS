@@ -99,8 +99,6 @@ Class diagram ukazuje hlavní třídy systému WMS a jejich vztahy.
 Součástky jsou fyzicky uloženy v~lokacích a mohou být přiřazeny k~projektům.
 Nové pohyby vznikají přes SkladovyPohyb.vytvoritPohyb() a součástky se k~projektům přiřazují přes Projekt.priradSoucastku().
 
-Diagram využívá následující UML koncepty:
-
 \textbf{Generalizace (zobecnění):} Abstraktní třída SkladovyPohyb je základem pro tři konkrétní podtřídy --
 PrijemPohyb (naskladnění), VydejPohyb (vyskladnění) a PresunutiPohyb (přesun mezi lokacemi),
 které dědí společné atributy a přidávají vlastní specifické atributy.
@@ -115,10 +113,10 @@ nebo Uzivatel vytváří SkladovyPohyb.
 ($* \rightarrow 1$), jeden uživatel může vytvořit libovolný počet pohybů ($1 \rightarrow *$).
 
 \textbf{Kvalifikovaná vazba:} Vazba mezi Sklad a Soucastka je kvalifikovaná -- sklad přistupuje
-ke konkrétní součástce prostřednictvím kvalifikátoru \texttt{id: int}.
+ke konkrétní součástce prostřednictvím kvalifikátoru id: int.
 
 \textbf{Vazební třída a atribut spojení:} Vztah mezi Projekt a Soucastka je realizován
-pomocí vazební třídy, která nese atribut spojení \texttt{pocet: int} --
+pomocí vazební třídy, která nese atribut spojení pocet: int --
 tedy kolik kusů dané součástky je přiřazeno k~projektu.
 
 Třída SkladovyPohyb deklaruje abstraktní metodu vytvoritPohyb(), kterou každá podtřída implementuje po svém:
@@ -134,11 +132,6 @@ Třída SkladovyPohyb zaznamenává každou změnu stavu zásob v~systému. Konk
   \item VydejPohyb -- výdej součástek ze skladu na projekt; snižuje množství dané součástky.
   \item PresunutiPohyb -- přemístnění součástek mezi lokacemi ve skladu; mění přiřazenou lokaci součástky.
 \end{itemize}
-Každý pohyb se váže na konkrétní součástku (vazba je součástí, multiplicita $* \rightarrow 1$)
-a mění stav jednoho skladu (vazba mění stav, multiplicita $* \rightarrow 1$).
-Jeden uživatel může vytvořit libovolný počet pohybů (vazba vytváří, multiplicita $1 \rightarrow *$).
-Pohyb nemění fyzickou lokaci součástky -- ta je pevně dána vazbou Lokace $\rightarrow$ Soucastka.
-
 \begin{figure}[H]
   \centering
   \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth]{02_class_diagram.png}}
