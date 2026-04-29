@@ -6,8 +6,8 @@ skinparam defaultFontSize 13
 skinparam classFontSize 14
 skinparam classFontStyle bold
 skinparam ArrowFontSize 12
-skinparam nodesep 50
-skinparam ranksep 60
+skinparam nodesep 60
+skinparam ranksep 70
 
 abstract class Uzivatel {
   id: int
@@ -92,7 +92,7 @@ VedouciSkladu  --|> Uzivatel
 
 ' ── Atribut spojení ───────────────────────────────────────────────────────────
 (Projekt, Soucastka) .. ProjektSoucastka
-Projekt -[hidden]left- ProjektSoucastka
+Projekt -[hidden]right- ProjektSoucastka
 
 ' ── Kvalifikovaná vazba ───────────────────────────────────────────────────────
 Sklad "[id: int]" --> "1" Soucastka : najdiSoucastku
@@ -106,8 +106,11 @@ Skladnik      "1" --> "*" SkladovyPohyb : vytváří
 VedouciSkladu "1" --> "*" Projekt       : spravuje
 
 ' ── Layout ────────────────────────────────────────────────────────────────────
-Skladnik    -[hidden]right- PrijemPohyb
-PrijemPohyb -[hidden]right- VydejPohyb
-VydejPohyb  -[hidden]right- PresunutiPohyb
+Uzivatel      -[hidden]right- SkladovyPohyb
+SkladovyPohyb -[hidden]right- Soucastka
+Soucastka     -[hidden]right- Sklad
+Skladnik      -[hidden]right- PrijemPohyb
+PrijemPohyb   -[hidden]right- VydejPohyb
+VydejPohyb    -[hidden]right- PresunutiPohyb
 
 @enduml

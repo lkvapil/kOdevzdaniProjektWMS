@@ -19,8 +19,6 @@ rectangle "WMS – Elektronické součástky" {
   }
 
   package "Součástky" {
-    usecase "Přidat součástku" as UC_ADD
-    usecase "Editovat součástku" as UC_EDIT
     usecase "Zobrazit zásoby" as UC_ZASOBY
     usecase "Ověřit dostupnost" as UC_DOSTUPNOST
   }
