@@ -17,6 +17,7 @@ Dostupna --> Odepsana : odepsána [poškozena / zastaralá] / odepsat()
 Vydana : entry / snizMnozstvi(pocet)
 Vydana --> [*]
 
+Odepsana : entry / snizMnozstvi(pocet)
 Odepsana --> [*]
 
 @enduml

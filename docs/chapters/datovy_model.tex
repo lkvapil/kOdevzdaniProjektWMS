@@ -183,7 +183,7 @@ Stav součástky je řízen těmito metodami:
   \item rezervovat(pocet) -- zablokuje část kusů pro projekt; zvýší rezervovaneMnozstvi, stav se nemění.
   \item zrusitRezervaci(pocet) -- uvolní rezervaci; sníží rezervovaneMnozstvi.
   \item snizMnozstvi(pocet) -- zavolá se při výdeji ze skladu (přechod do stavu Vydana).
-  \item odepsat() -- zavolá se při vyřazení součástky (přechod do stavu Odepsana); interně volá snizMnozstvi() a nastaví stav na Odepsana.
+  \item odepsat() -- zavolá se při vyřazení součástky (přechod do stavu Odepsana); nastaví stav na Odepsana a interně spustí snizMnozstvi() pro odečtení množství ze skladu.
 \end{itemize}
 \begin{figure}[H]
   \centering
