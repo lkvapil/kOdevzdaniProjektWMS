@@ -198,7 +198,7 @@ Stav součástky je řízen těmito metodami:
 
 \section{Use Case diagram}
 
-\textbf{Vedoucí skladu} má na starosti správu součástek a projektů a zadává skladové pohyby. \textbf{Skladník} fyzicky provádí příjem, výdej a přesun součástek a kontroluje stav zásob.
+\textbf{Vedoucí skladu} přidává a upravuje součástky a spravuje projekty -- přiřazuje součástky k~projektům a odebírá je. \textbf{Skladník} provádí příjem, výdej a přesun součástek a kontroluje stav zásob.
 
 \begin{figure}[H]
   \centering
@@ -248,7 +248,7 @@ Stav součástky je řízen těmito metodami:
 
 \subsection{Scénář: Vyhledání součástky ve skladu}
 \begin{enumerate}
-  \item Skladník nebo vedoucí skladu zadá ID hledané součástky.
+  \item Skladník zadá ID hledané součástky.
   \item Systém volá Sklad.najdiSoucastku(id) -- vyhledá součástku podle zadaného ID.
   \item Pokud součástka existuje $\rightarrow$ systém zobrazí její detail: název, aktuální množství, rezervované množství a lokaci.
   \item \textbf{Alternativní tok:} součástka s daným ID neexistuje $\rightarrow$ systém vrátí hlášku, že součástka nebyla nalezena.
@@ -256,7 +256,7 @@ Stav součástky je řízen těmito metodami:
 
 \section{Sekvenční diagram -- Vytvoření pohybu}
 
-Skladník nebo Vedoucí skladu spustí vytvoření pohybu voláním vytvoritPohyb() na instanci konkrétní podtřídy (PrijemPohyb, VydejPohyb nebo PresunutiPohyb). Ta nejprve ověří platnost dat -- pokud data nesedí, vrátí zamítnutí. Při úspěšném ověření se zavolá provestPohyb(), které polymorfně provede akci příslušnou dané podtřídě: zvysMnozstvi(), snizMnozstvi() nebo overDostupnost() a zmenLokaci(). Po úspěšném dokončení přijde potvrzení pohybu.
+Skladník spustí vytvoření pohybu voláním vytvoritPohyb() na instanci konkrétní podtřídy (PrijemPohyb, VydejPohyb nebo PresunutiPohyb). Ta nejprve ověří platnost dat -- pokud data nesedí, vrátí zamítnutí. Při úspěšném ověření se zavolá provestPohyb(), které polymorfně provede akci příslušnou dané podtřídě: zvysMnozstvi(), snizMnozstvi() nebo overDostupnost() a zmenLokaci(). Po úspěšném dokončení přijde potvrzení pohybu.
 
 \begin{figure}[H]
   \centering
