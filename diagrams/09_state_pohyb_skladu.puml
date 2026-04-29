@@ -25,6 +25,9 @@ Proveden : entry / provestPohyb()
 Proveden : do / aktualizovat zásoby
 Proveden : exit / uložit záznam
 
+' overDostupnost() muze selhat u VydejPohyb a PresunutiPohyb
+Proveden --> Zamitnut : součástka nedostupná [overDostupnost() = false]
+
 ' zakončovací přechody bez názvu události
 Proveden --> [*]
 Zamitnut --> [*]

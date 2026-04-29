@@ -10,7 +10,7 @@ top to bottom direction
 Dostupna : naskladněno / zvysMnozstvi(pocet)
 Dostupna : rezervace přijata / rezervovat(pocet)
 Dostupna : rezervace zrušena / zrusitRezervaci(pocet)
-Dostupna --> Vydana   : Vydána ze skladu [mnozstvi > 0]
+Dostupna --> Vydana   : Vydána ze skladu [overDostupnost()]
 Dostupna --> Odepsana : Odepsána [poškozena / zastaralá]
 
 Vydana : entry / snizMnozstvi(pocet)

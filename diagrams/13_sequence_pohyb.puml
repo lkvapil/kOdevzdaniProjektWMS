@@ -29,11 +29,21 @@ else [data jsou platná]
         Pohyb --> Uzivatel : pohyb potvrzen
 
     else [VydejPohyb]
-        Pohyb -> Soucastka : snizMnozstvi(pocet)
+        Pohyb -> Soucastka : overDostupnost()
         activate Soucastka
-        Soucastka --> Pohyb : ok
-        deactivate Soucastka
-        Pohyb --> Uzivatel : pohyb potvrzen
+        alt [součástka nedostupná]
+            Soucastka --> Pohyb : chyba
+            deactivate Soucastka
+            Pohyb --> Uzivatel : pohyb zamítnut
+        else [ok]
+            Soucastka --> Pohyb : ok
+            deactivate Soucastka
+            Pohyb -> Soucastka : snizMnozstvi(pocet)
+            activate Soucastka
+            Soucastka --> Pohyb : ok
+            deactivate Soucastka
+            Pohyb --> Uzivatel : pohyb potvrzen
+        end
 
     else [PresunutiPohyb]
         Pohyb -> Soucastka : overDostupnost()

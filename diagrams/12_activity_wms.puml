@@ -21,7 +21,12 @@ if (Data platná?) then ([ano])
     :Zvýšit množství na skladě\n(Soucastka.zvysMnozstvi(pocet));
   else ([ne])
     if (typ == výdej?) then ([ano])
-      :Snížit množství na skladě\n(Soucastka.snizMnozstvi(pocet));
+      :Ověřit dostupnost\n(Soucastka.overDostupnost());
+      if (Dostupná?) then ([ano])
+        :Snížit množství na skladě\n(Soucastka.snizMnozstvi(pocet));
+      else ([ne])
+        :Zamítnout pohyb;
+      endif
     else ([ne – přesun])
       :Ověřit dostupnost\n(Soucastka.overDostupnost());
       if (Dostupná?) then ([ano])
