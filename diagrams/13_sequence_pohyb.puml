@@ -5,7 +5,7 @@ skinparam sequenceParticipantBorderThickness 1.5
 skinparam sequenceGroupBorderThickness 1.5
 
 actor ":Uživatel" as Uzivatel
-participant ":SkladovyPohyb" as Pohyb
+participant ":PrijemPohyb\n(konkrétní podtřída\nSkladovyPohyb)" as Pohyb
 participant ":Soucastka" as Soucastka
 participant ":Lokace" as Lokace
 
