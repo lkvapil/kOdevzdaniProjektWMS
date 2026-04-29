@@ -2,12 +2,12 @@
 top to bottom direction
 skinparam CircledCharacterRadius 0
 skinparam CircledCharacterFontSize 0
-skinparam defaultFontSize 13
-skinparam classFontSize 14
+skinparam defaultFontSize 12
+skinparam classFontSize 13
 skinparam classFontStyle bold
-skinparam ArrowFontSize 12
-skinparam nodesep 60
-skinparam ranksep 70
+skinparam ArrowFontSize 14
+skinparam nodesep 80
+skinparam ranksep 80
 
 abstract class Uzivatel {
   id: int
@@ -83,34 +83,26 @@ class Soucastka {
   overDostupnost(): boolean
 }
 
-' ── Generalizace ──────────────────────────────────────────────────────────────
-PrijemPohyb    --|> SkladovyPohyb
-VydejPohyb     --|> SkladovyPohyb
-PresunutiPohyb --|> SkladovyPohyb
-Skladnik       --|> Uzivatel
-VedouciSkladu  --|> Uzivatel
+' -- Generalizace: -down-|> = child ABOVE parent
+PrijemPohyb    -down-|> SkladovyPohyb
+VydejPohyb     -down-|> SkladovyPohyb
+PresunutiPohyb -down-|> SkladovyPohyb
+Skladnik       -down-|> Uzivatel
+VedouciSkladu  -down-|> Uzivatel
 
-' ── Atribut spojení ───────────────────────────────────────────────────────────
-(Projekt, Soucastka) .. ProjektSoucastka
-Projekt -[hidden]right- ProjektSoucastka
+' -- ProjektSoucastka (association class)
+Projekt        "1"  --  ProjektSoucastka
+ProjektSoucastka    ..> "1" Soucastka
 
-' ── Kvalifikovaná vazba ───────────────────────────────────────────────────────
-Sklad "[id: int]" --> "1" Soucastka : najdiSoucastku
+' -- Kvalifikovana vazba
+Sklad "[id: int]" -right-> "1" Soucastka : \nnajdiSoucastku
 
-' ── Asociace ──────────────────────────────────────────────────────────────────
-SkladovyPohyb "*" --> "1" Soucastka     : je součástí
-Sklad         "1" *-- "*" Lokace        : obsahuje
-Lokace        "1" o-- "*" Soucastka     : ukládá
-SkladovyPohyb "*" --> "1" Sklad         : mění stav
-Skladnik      "1" --> "*" SkladovyPohyb : vytváří
-VedouciSkladu "1" --> "*" Projekt       : spravuje
-
-' ── Layout ────────────────────────────────────────────────────────────────────
-Uzivatel      -[hidden]right- SkladovyPohyb
-SkladovyPohyb -[hidden]right- Soucastka
-Soucastka     -[hidden]right- Sklad
-Skladnik      -[hidden]right- PrijemPohyb
-PrijemPohyb   -[hidden]right- VydejPohyb
-VydejPohyb    -[hidden]right- PresunutiPohyb
+' -- Asociace
+VedouciSkladu "1" -right-> "*" Projekt       : \nspravuje
+Skladnik      "1" -right-> "*" SkladovyPohyb : \nvytváří
+SkladovyPohyb "*"  -->     "1" Sklad         : \nmění stav
+SkladovyPohyb "*"  -->     "1" Soucastka     : \nje součástí
+Sklad         "1" *--      "*" Lokace        : \nobsahuje
+Lokace        "1" o-right- "*" Soucastka     : \nukládá
 
 @enduml
