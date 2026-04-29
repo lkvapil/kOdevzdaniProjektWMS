@@ -256,7 +256,7 @@ Stav součástky je řízen těmito metodami:
 
 Skladník zadá ID součástky a množství -- systém vyhledá součástku voláním Sklad.najdiSoucastku(id) a spustí vytvoření pohybu voláním vytvoritPohyb(soucastka, mnozstvi) na instanci konkrétní podtřídy (PrijemPohyb, VydejPohyb nebo PresunutiPohyb).
 
-Pohyb nejprve ověří platnost zadaných dat voláním overitData(). Pokud data nejsou platná, vrátí se zamítnutí a pohyb se neprovede. Pokud jsou data platná, zavolá se provestPohyb(), které polymorfně provede akci příslušnou dané podtřídě:
+Pohyb ověří data voláním overitData() -- pokud nejsou platná, je zamítnut. Jinak se zavolá provestPohyb(), které polymorfně provede:
 \begin{itemize}
   \item PrijemPohyb -- zavolá Soucastka.zvysMnozstvi(pocet) a zvýší množství na skladě.
   \item VydejPohyb -- zavolá Soucastka.snizMnozstvi(pocet) a sníží množství na skladě.
