@@ -19,6 +19,8 @@ participant "FastAPI\nbackend" as API
 participant "StockService" as SVC
 database "PostgreSQL" as DB
 participant "NotifService" as NOTIF
+participant ":PrijemPohyb" as Pohyb
+note over Pohyb : konkrétní podtřída\nSkladovyPohyb
 
 == Přihlášení a otevření formuláře příjmu ==
 
@@ -76,7 +78,10 @@ loop Pro každou položku
     SVC -> DB : UPDATE stock SET quantity = quantity + :qty,\nunit_price = weighted_avg_price\nWHERE id = :stock_id
   end
   
-  SVC -> DB : INSERT INTO stock_movements\n(RECEIPT, component_id, to_location_id, qty, ...)
+  SVC -> Pohyb : vytvoritPohyb(soucastka, mnozstvi)
+  activate Pohyb
+  Pohyb -> DB : INSERT INTO stock_movements\n(RECEIPT, component_id, to_location_id, qty, ...)
+  deactivate Pohyb
   
   alt Příjem navazuje na objednávku
     SVC -> DB : UPDATE order_items SET quantity_received = quantity_received + :qty

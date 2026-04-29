@@ -19,6 +19,8 @@ participant "FastAPI\nbackend" as API
 participant "StockService" as SVC
 database "PostgreSQL" as DB
 participant "NotifService" as NOTIF
+participant ":VydejPohyb" as Pohyb
+note over Pohyb : konkrétní podtřída\nSkladovyPohyb
 
 == Vyhledání projektu ==
 
@@ -67,7 +69,10 @@ loop Pro každou položku
   alt quantity >= requested_qty
     SVC -> DB : UPDATE stock\nSET quantity = quantity - :qty\nWHERE id = :stock_id
     
-    SVC -> DB : INSERT INTO stock_movements\n(ISSUE, component_id, from_location_id=Y,\n project_id, qty, user_id, ...)
+    SVC -> Pohyb : vytvoritPohyb(soucastka, mnozstvi)
+    activate Pohyb
+    Pohyb -> DB : INSERT INTO stock_movements\n(ISSUE, component_id, from_location_id=Y,\n project_id, qty, user_id, ...)
+    deactivate Pohyb
   else Nedostatečné zásoby (race condition)
     SVC -> DB : ROLLBACK
     SVC --> API : InsufficientStockError
