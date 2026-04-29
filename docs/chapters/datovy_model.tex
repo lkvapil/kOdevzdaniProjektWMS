@@ -240,7 +240,7 @@ Stav součástky je řízen těmito metodami:
 
 \section{Sekvenční diagram -- Vytvoření pohybu}
 
-Skladník nebo Vedoucí skladu spustí vytvoření pohybu voláním vytvoritPohyb() na instanci konkrétní podtřídy (např. :PrijemPohyb). Ta nejprve ověří platnost dat -- pokud data nesedí, vrátí zamítnutí. Při úspěšném ověření se zavolá provestPohyb(), které polymorfně provede akci příslušnou dané podtřídě: zvysMnozstvi(), snizMnozstvi() nebo overDostupnost() a zmenLokaci(). Po úspěšném dokončení přijde potvrzení pohybu.
+Skladník nebo Vedoucí skladu spustí vytvoření pohybu voláním vytvoritPohyb() na instanci konkrétní podtřídy (PrijemPohyb, VydejPohyb nebo PresunutiPohyb). Ta nejprve ověří platnost dat -- pokud data nesedí, vrátí zamítnutí. Při úspěšném ověření se zavolá provestPohyb(), které polymorfně provede akci příslušnou dané podtřídě: zvysMnozstvi(), snizMnozstvi() nebo overDostupnost() a zmenLokaci(). Po úspěšném dokončení přijde potvrzení pohybu.
 
 \begin{figure}[H]
   \centering
