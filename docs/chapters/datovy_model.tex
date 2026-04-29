@@ -87,7 +87,7 @@ Konkrétní místo v~skladu identifikované označením (např. A-01-03).
 Systém rozlišuje dvě role:
 \begin{itemize}[noitemsep,topsep=2pt]
   \item \textbf{Skladnik} -- provádí příjem, výdej a přesun součástek a kontroluje stav zásob.
-  \item \textbf{VedouciSkladu} -- přidává a upravuje součástky, přiřazuje součástky k~projektům a odebírá je z~projektů.
+  \item \textbf{VedouciSkladu} -- spravuje projekty, přiřazuje součástky k~projektům a odebírá je z~projektů.
 \end{itemize}
 
 \textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item id: int\item jmeno: String\item email: String\item role: String (Skladnik $|$ VedouciSkladu)\end{itemize}
@@ -105,12 +105,12 @@ které dědí společné atributy a přidávají vlastní specifické atributy.
 
 \textbf{Asociace:} Třídy jsou propojeny asociacemi vyjadřujícími vztahy mezi objekty --
 například SkladovyPohyb je vázán na Soucastka (pohyb se týká konkrétní součástky)
-nebo Uzivatel vytváří SkladovyPohyb.
+nebo Skladnik vytváří SkladovyPohyb a VedouciSkladu spravuje Projekt.
 
 \textbf{Agregace:} Sklad sdružuje Lokace -- lokace jsou součástí skladu, ale mohou existovat i samostatně.
 
 \textbf{Kardinalita:} Každá vazba je označena multiplicitou: pohyb se vždy týká právě jedné součástky
-($* \rightarrow 1$), jeden uživatel může vytvořit libovolný počet pohybů ($1 \rightarrow *$).
+($* \rightarrow 1$), jeden skladník může vytvořit libovolný počet pohybů ($1 \rightarrow *$).
 
 \textbf{Kvalifikovaná vazba:} Vazba mezi Sklad a Soucastka je kvalifikovaná -- sklad přistupuje
 ke konkrétní součástce prostřednictvím kvalifikátoru id: int.
@@ -134,7 +134,7 @@ Třída SkladovyPohyb zaznamenává každou změnu stavu zásob v~systému. Konk
 \end{itemize}
 Každý pohyb se váže na konkrétní součástku (vazba je součástí, multiplicita $* \rightarrow 1$)
 a mění stav jednoho skladu (vazba mění stav, multiplicita $* \rightarrow 1$).
-Jeden uživatel může vytvořit libovolný počet pohybů (vazba vytváří, multiplicita $1 \rightarrow *$).
+Jeden skladník může vytvořit libovolný počet pohybů (vazba vytváří, multiplicita $1 \rightarrow *$).
 Pohyb nemění fyzickou lokaci součástky -- ta je pevně dána vazbou Lokace $\rightarrow$ Soucastka.
 
 \begin{figure}[H]
@@ -196,7 +196,7 @@ Stav součástky je řízen těmito metodami:
 
 \section{Use Case diagram}
 
-\textbf{Vedoucí skladu} přidává a upravuje součástky a spravuje projekty -- přiřazuje součástky k~projektům a odebírá je. \textbf{Skladník} provádí příjem, výdej a přesun součástek a kontroluje stav zásob.
+\textbf{Vedoucí skladu} spravuje projekty -- přiřazuje součástky k~projektům a odebírá je. \textbf{Skladník} provádí příjem, výdej a přesun součástek a kontroluje stav zásob.
 
 \begin{figure}[H]
   \centering

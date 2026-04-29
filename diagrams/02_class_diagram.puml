@@ -103,7 +103,6 @@ Sklad         "1" *-- "*" Lokace        : obsahuje
 Lokace        "1" o-- "*" Soucastka     : ukládá
 SkladovyPohyb "*" --> "1" Sklad         : mění stav
 Skladnik      "1" --> "*" SkladovyPohyb : vytváří
-VedouciSkladu "1" --> "*" SkladovyPohyb : vytváří
 VedouciSkladu "1" --> "*" Projekt       : spravuje
 
 ' ── Layout ────────────────────────────────────────────────────────────────────
