@@ -5,9 +5,10 @@ skinparam CircledCharacterFontSize 0
 skinparam defaultFontSize 12
 skinparam classFontSize 13
 skinparam classFontStyle bold
-skinparam ArrowFontSize 14
-skinparam nodesep 80
-skinparam ranksep 80
+skinparam nodesep 120
+skinparam ranksep 120
+skinparam Padding 4
+skinparam ArrowFontSize 16
 
 abstract class Uzivatel {
   id: int
@@ -91,19 +92,19 @@ PresunutiPohyb -down-|> SkladovyPohyb
 Skladnik       -down-|> Uzivatel
 VedouciSkladu  -down-|> Uzivatel
 
-' -- ProjektSoucastka (association class)
-Projekt        "1"  --  ProjektSoucastka
-ProjektSoucastka    ..> "1" Soucastka
+' -- ProjektSoucastka jako association class (cara z ProjektSoucastka na vazbu Projekt-Soucastka)
+Projekt "\n1" -- "\n*" Soucastka
+(Projekt, Soucastka) .. ProjektSoucastka
 
 ' -- Kvalifikovana vazba
-Sklad "[id: int]" -right-> "1" Soucastka : \nnajdiSoucastku
+Sklad "[id: int]" -right-> "\n1" Soucastka : \nnajdiSoucastku
 
 ' -- Asociace
-VedouciSkladu "1" -right-> "*" Projekt       : \nspravuje
-Skladnik      "1" -right-> "*" SkladovyPohyb : \nvytváří
-SkladovyPohyb "*"  -->     "1" Sklad         : \nmění stav
-SkladovyPohyb "*"  -->     "1" Soucastka     : \nje součástí
-Sklad         "1" *--      "*" Lokace        : \nobsahuje
-Lokace        "1" o-right- "*" Soucastka     : \nukládá
+VedouciSkladu "\n1" -right-> "\n*" Projekt       : \nspravuje
+Skladnik      "\n1" -right-> "\n*" SkladovyPohyb : \nvytváří
+SkladovyPohyb "\n*"  -->     "\n1" Sklad         : \nmění stav
+SkladovyPohyb "\n*"  -->     "\n1" Soucastka     : \nje součástí
+Sklad         "\n1" *--      "\n*" Lokace        : \nobsahuje
+Lokace        "\n1" o-right- "\n*" Soucastka     : \nukládá
 
 @enduml
