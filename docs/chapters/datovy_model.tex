@@ -83,7 +83,11 @@ Konkrétní místo v~skladu identifikované označením (např. A-01-03).
 
 \section{Uzivatel}
 
-Osoba spravující součástky, pohyby, projekty a sklady v~systému.
+Systém rozlišuje dvě role:
+\begin{itemize}[noitemsep,topsep=2pt]
+  \item \textbf{Skladnik} -- fyzicky provádí příjem, výdej a přesun součástek; kontroluje stav zásob.
+  \item \textbf{VedouciSkladu} -- spravuje součástky a projekty, přiřazuje součástky k~projektům a zadává skladové pohyby.
+\end{itemize}
 
 \textbf{Atributy:}\begin{itemize}[noitemsep,topsep=2pt]\item id: int\item jmeno: String\item email: String\item role: String (Skladnik $|$ VedouciSkladu)\end{itemize}
 
@@ -236,7 +240,7 @@ Stav součástky je řízen těmito metodami:
 
 \section{Sekvenční diagram -- Vytvoření pohybu}
 
-Skladník nebo Vedoucí skladu spustí vytvoření pohybu voláním vytvoritPohyb() na :SkladovyPohyb. Ten nejprve ověří platnost dat -- pokud data nesedí, vrátí zamítnutí. Při úspěšném ověření se zavolá provestPohyb(), které podle typu pohybu volá zvysMnozstvi(), snizMnozstvi() nebo overDostupnost() a zmenLokaci(). Po úspěšném dokončení přijde potvrzení pohybu.
+Skladník nebo Vedoucí skladu spustí vytvoření pohybu voláním vytvoritPohyb() na instanci konkrétní podtřídy (např. :PrijemPohyb). Ta nejprve ověří platnost dat -- pokud data nesedí, vrátí zamítnutí. Při úspěšném ověření se zavolá provestPohyb(), které polymorfně provede akci příslušnou dané podtřídě: zvysMnozstvi(), snizMnozstvi() nebo overDostupnost() a zmenLokaci(). Po úspěšném dokončení přijde potvrzení pohybu.
 
 \begin{figure}[H]
   \centering
