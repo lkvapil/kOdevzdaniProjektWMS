@@ -1,5 +1,4 @@
 @startuml
-scale 0.8
 skinparam defaultFontSize 10
 skinparam sequenceArrowThickness 1.5
 skinparam sequenceParticipantBorderThickness 1.5

@@ -9,11 +9,16 @@ skinparam ArrowFontSize 12
 skinparam nodesep 50
 skinparam ranksep 60
 
-class Uzivatel {
+abstract class Uzivatel {
   id: int
   jmeno: String
   email: String
-  role: String
+}
+
+class Skladnik {
+}
+
+class VedouciSkladu {
 }
 
 class PrijemPohyb {
@@ -82,6 +87,8 @@ class Soucastka {
 PrijemPohyb    --|> SkladovyPohyb
 VydejPohyb     --|> SkladovyPohyb
 PresunutiPohyb --|> SkladovyPohyb
+Skladnik       --|> Uzivatel
+VedouciSkladu  --|> Uzivatel
 
 ' ── Atribut spojení ───────────────────────────────────────────────────────────
 (Projekt, Soucastka) .. ProjektSoucastka
@@ -95,11 +102,12 @@ SkladovyPohyb "*" --> "1" Soucastka     : je součástí
 Sklad         "1" *-- "*" Lokace        : obsahuje
 Lokace        "1" o-- "*" Soucastka     : ukládá
 SkladovyPohyb "*" --> "1" Sklad         : mění stav
-Uzivatel      "1" --> "*" SkladovyPohyb : vytváří
-Uzivatel      "1" --> "*" Projekt       : spravuje
+Skladnik      "1" --> "*" SkladovyPohyb : vytváří
+VedouciSkladu "1" --> "*" SkladovyPohyb : vytváří
+VedouciSkladu "1" --> "*" Projekt       : spravuje
 
 ' ── Layout ────────────────────────────────────────────────────────────────────
-Uzivatel    -[hidden]right- PrijemPohyb
+Skladnik    -[hidden]right- PrijemPohyb
 PrijemPohyb -[hidden]right- VydejPohyb
 VydejPohyb  -[hidden]right- PresunutiPohyb
 
