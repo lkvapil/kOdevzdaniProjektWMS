@@ -254,7 +254,17 @@ Stav součástky je řízen těmito metodami:
 
 \section{Sekvenční diagram -- Vytvoření pohybu}
 
-Skladník spustí vytvoření pohybu voláním vytvoritPohyb() na instanci konkrétní podtřídy (PrijemPohyb, VydejPohyb nebo PresunutiPohyb). Ta nejprve ověří platnost dat -- pokud data nesedí, vrátí zamítnutí. Při úspěšném ověření se zavolá provestPohyb(), které polymorfně provede akci příslušnou dané podtřídě: zvysMnozstvi(), snizMnozstvi() nebo overDostupnost() a zmenLokaci(). Po úspěšném dokončení přijde potvrzení pohybu.
+Diagram zachycuje průběh vytvoření skladového pohybu mezi třemi účastníky: Skladníkem, instancí třídy SkladovyPohyb a třídou Soucastka (resp. Lokace u přesunu).
+
+Skladník zadá ID součástky a množství -- systém vyhledá součástku voláním Sklad.najdiSoucastku(id) a spustí vytvoření pohybu voláním vytvoritPohyb(soucastka, mnozstvi) na instanci konkrétní podtřídy (PrijemPohyb, VydejPohyb nebo PresunutiPohyb).
+
+Pohyb nejprve ověří platnost zadaných dat voláním overitData(). Pokud data nejsou platná, vrátí se zamítnutí a pohyb se neprovede. Pokud jsou data platná, zavolá se provestPohyb(), které polymorfně provede akci příslušnou dané podtřídě:
+\begin{itemize}
+  \item PrijemPohyb -- zavolá Soucastka.zvysMnozstvi(pocet) a zvýší množství na skladě.
+  \item VydejPohyb -- zavolá Soucastka.snizMnozstvi(pocet) a sníží množství na skladě.
+  \item PresunutiPohyb -- ověří dostupnost voláním Soucastka.overDostupnost() a přemístí součástku voláním Lokace.zmenLokaci().
+\end{itemize}
+Po úspěšném dokončení systém vrátí Skladníkovi potvrzení pohybu.
 
 \begin{figure}[H]
   \centering

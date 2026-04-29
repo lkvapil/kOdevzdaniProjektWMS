@@ -21,19 +21,19 @@ alt [data nejsou platná]
 else [data jsou platná]
     Pohyb -> Pohyb : provestPohyb()
 
-    alt [pohyb instanceof PrijemPohyb]
+    alt [PrijemPohyb]
         Pohyb -> Soucastka : zvysMnozstvi(pocet)
         activate Soucastka
         Soucastka --> Pohyb : ok
         deactivate Soucastka
 
-    else [pohyb instanceof VydejPohyb]
+    else [VydejPohyb]
         Pohyb -> Soucastka : snizMnozstvi(pocet)
         activate Soucastka
         Soucastka --> Pohyb : ok
         deactivate Soucastka
 
-    else [pohyb instanceof PresunutiPohyb]
+    else [PresunutiPohyb]
         Pohyb -> Soucastka : overDostupnost()
         activate Soucastka
         Soucastka --> Pohyb : ok
