@@ -20,7 +20,6 @@ participant "StockService" as SVC
 database "PostgreSQL" as DB
 participant "NotifService" as NOTIF
 participant ":PrijemPohyb" as Pohyb
-note over Pohyb : konkrétní podtřída\nSkladovyPohyb
 
 == Přihlášení a otevření formuláře příjmu ==
 

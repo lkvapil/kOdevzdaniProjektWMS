@@ -4,9 +4,9 @@ skinparam sequenceArrowThickness 1.5
 skinparam sequenceParticipantBorderThickness 1.5
 skinparam sequenceGroupBorderThickness 1.5
 
-actor ":Uživatel" as Uzivatel
-participant "pohyb:PrijemPohyb" as Pohyb
-note over Pohyb : konkrétní podtřída\n(PrijemPohyb, VydejPohyb\nnebo PresunutiPohyb)
+actor "Skladník" as Uzivatel
+participant "pohyb:SkladovyPohyb" as Pohyb
+note over Pohyb : za běhu konkrétní podtřída:\nPrijemPohyb | VydejPohyb | PresunutiPohyb
 participant ":Soucastka" as Soucastka
 participant ":Lokace" as Lokace
 
@@ -21,19 +21,19 @@ alt [data nejsou platná]
 else [data jsou platná]
     Pohyb -> Pohyb : provestPohyb()
 
-    alt [typ == příjem]
+    alt [pohyb instanceof PrijemPohyb]
         Pohyb -> Soucastka : zvysMnozstvi(pocet)
         activate Soucastka
         Soucastka --> Pohyb : ok
         deactivate Soucastka
 
-    else [typ == výdej]
+    else [pohyb instanceof VydejPohyb]
         Pohyb -> Soucastka : snizMnozstvi(pocet)
         activate Soucastka
         Soucastka --> Pohyb : ok
         deactivate Soucastka
 
-    else [typ == přesun]
+    else [pohyb instanceof PresunutiPohyb]
         Pohyb -> Soucastka : overDostupnost()
         activate Soucastka
         Soucastka --> Pohyb : ok
