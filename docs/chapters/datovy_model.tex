@@ -98,9 +98,27 @@ Class diagram ukazuje hlavní třídy systému WMS a jejich vztahy.
 Součástky jsou fyzicky uloženy v~lokacích a mohou být přiřazeny k~projektům.
 Nové pohyby vznikají přes SkladovyPohyb.vytvoritPohyb() a součástky se k~projektům přiřazují přes Projekt.priradSoucastku().
 
-Diagram využívá \textbf{generalizaci}: abstraktní třída SkladovyPohyb je základem pro tři konkrétní podtřídy
+Diagram využívá následující UML koncepty:
+
+\textbf{Generalizace (zobecnění):} Abstraktní třída SkladovyPohyb je základem pro tři konkrétní podtřídy --
 PrijemPohyb (naskladnění), VydejPohyb (vyskladnění) a PresunutiPohyb (přesun mezi lokacemi),
 které dědí společné atributy a přidávají vlastní specifické atributy.
+
+\textbf{Asociace:} Třídy jsou propojeny asociacemi vyjadřujícími vztahy mezi objekty --
+například SkladovyPohyb je vázán na Soucastka (pohyb se týká konkrétní součástky)
+nebo Uzivatel vytváří SkladovyPohyb.
+
+\textbf{Agregace:} Sklad sdružuje Lokace -- lokace jsou součástí skladu, ale mohou existovat i samostatně.
+
+\textbf{Kardinalita:} Každá vazba je označena multiplicitou: pohyb se vždy týká právě jedné součástky
+($* \rightarrow 1$), jeden uživatel může vytvořit libovolný počet pohybů ($1 \rightarrow *$).
+
+\textbf{Kvalifikovaná vazba:} Vazba mezi Sklad a Soucastka je kvalifikovaná -- sklad přistupuje
+ke konkrétní součástce prostřednictvím kvalifikátoru \texttt{id: int}.
+
+\textbf{Vazební třída a atribut spojení:} Vztah mezi Projekt a Soucastka je realizován
+pomocí vazební třídy, která nese atribut spojení \texttt{pocet: int} --
+tedy kolik kusů dané součástky je přiřazeno k~projektu.
 
 Třída SkladovyPohyb deklaruje abstraktní metodu vytvoritPohyb(), kterou každá podtřída implementuje po svém:
 \begin{itemize}
@@ -119,9 +137,6 @@ Každý pohyb se váže na konkrétní součástku (vazba je součástí, multip
 a mění stav jednoho skladu (vazba mění stav, multiplicita $* \rightarrow 1$).
 Jeden uživatel může vytvořit libovolný počet pohybů (vazba vytváří, multiplicita $1 \rightarrow *$).
 Pohyb nemění fyzickou lokaci součástky -- ta je pevně dána vazbou Lokace $\rightarrow$ Soucastka.
-
-Vazba mezi Sklad a Soucastka je \textbf{kvalifikovaná} -- sklad přistupuje ke konkrétní
-součástce prostřednictvím kvalifikátoru id: int.
 
 \begin{figure}[H]
   \centering
@@ -167,7 +182,7 @@ Stav součástky je řízen těmito metodami:
 \begin{itemize}
   \item zvysMnozstvi(pocet) -- zavolá se při naskladnění; zvýší atribut mnozstvi, součástka zůstává ve stavu Dostupna.
   \item rezervovat(pocet) -- zablokuje část kusů pro projekt; zvýší rezervovaneMnozstvi, stav se nemění.
-  \item zrusitRezervaci(pocet) -- uvolní rezervaci; sníží rezervovaneMnozstvi, stav se nemění.
+  \item zrusitRezervaci(pocet) -- uvolní rezervaci; sníží rezervovaneMnozstvi.
   \item snizMnozstvi(pocet) -- zavolá se při výdeji ze skladu (Vydana) nebo odpisu (Odepsana); oba jsou terminální stavy.
 \end{itemize}
 \begin{figure}[H]
@@ -230,12 +245,12 @@ Stav součástky je řízen těmito metodami:
   \item \textbf{Alternativní tok:} nedostatečný počet volných kusů $\rightarrow$ systém vrátí chybovou hlášku a přiřazení je zamítnuto.
 \end{enumerate}
 
-\subsection{Scénář: Správa součástek}
+\subsection{Scénář: Vyhledání součástky ve skladu}
 \begin{enumerate}
-  \item Vedoucí skladu přidá novou součástku nebo upraví existující.
-  \item Systém ověří validitu zadaných dat (název, počáteční množství, lokace).
-  \item Pokud data OK $\rightarrow$ součástka je uložena; zásoby jsou aktualizovány.
-  \item \textbf{Alternativní tok:} neplatná data $\rightarrow$ systém vrátí chybovou hlášku, součástka není uložena.
+  \item Skladník nebo vedoucí skladu zadá ID hledané součástky.
+  \item Systém volá Sklad.najdiSoucastku(id) -- vyhledá součástku podle zadaného ID.
+  \item Pokud součástka existuje $\rightarrow$ systém zobrazí její detail: název, aktuální množství, rezervované množství a lokaci.
+  \item \textbf{Alternativní tok:} součástka s daným ID neexistuje $\rightarrow$ systém vrátí hlášku, že součástka nebyla nalezena.
 \end{enumerate}
 
 \section{Sekvenční diagram -- Vytvoření pohybu}
@@ -255,7 +270,7 @@ Skladník nebo Vedoucí skladu spustí vytvoření pohybu voláním vytvoritPohy
 Diagram zachycuje průběh vytvoření skladového pohybu v~systému.
 Pohyb prochází třemi fázemi řízenými metodami třídy SkladovyPohyb:
 \begin{itemize}
-  \item vytvoritPohyb(soucastka, mnozstvi) -- uživatel zadá typ pohybu, součástku a množství; metoda inicializuje pohyb, přiřadí ID a datum vzniku.
+  \item vytvoritPohyb(soucastka, mnozstvi) -- uživatel zadá typ pohybu, ID součástky a množství; systém nejprve vyhledá součástku voláním Sklad.najdiSoucastku(id) a získaný objekt předá metodě vytvoritPohyb(), která inicializuje pohyb, přiřadí ID a datum vzniku.
   \item overitData() -- ověří platnost zadaných dat: existenci součástky, dostatečné množství na skladě a platnost lokací u~přesunu.
   \item provestPohyb() -- fyzicky provede pohyb podle typu: příjem zavolá zvysMnozstvi(pocet), výdej snizMnozstvi(pocet), přesun zmenLokaci(). Pokud data nejsou platná, pohyb je zamítnut.
 \end{itemize}

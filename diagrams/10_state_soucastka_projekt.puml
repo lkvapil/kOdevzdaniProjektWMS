@@ -6,9 +6,6 @@ top to bottom direction
 
 [*] --> Dostupna : Přidána do systému
 
-Dostupna : entry / přidat do evidence
-Dostupna : do / sledovat stav zásob
-Dostupna : exit / uložit změnu stavu
 ' vnitřní přechody – jednorázové akce jako reakce na událost
 Dostupna : naskladněno / zvysMnozstvi(pocet)
 Dostupna : rezervace přijata / rezervovat(pocet)
@@ -17,13 +14,9 @@ Dostupna --> Vydana   : Vydána ze skladu [mnozstvi > 0]
 Dostupna --> Odepsana : Odepsána [poškozena / zastaralá]
 
 Vydana : entry / snizMnozstvi(pocet)
-Vydana : entry / evidovat spotřebu na projekt
-Vydana : exit / uložit záznam výdeje
 Vydana --> [*]
 
 Odepsana : entry / snizMnozstvi(pocet)
-Odepsana : entry / vyřadit z evidence
-Odepsana : exit / uložit záznam odpisu
 Odepsana --> [*]
 
 @enduml

@@ -6,9 +6,7 @@ top to bottom direction
 
 [*] --> Vytvoren
 
-Vytvoren : entry / vytvoritPohyb()
-Vytvoren : do / čekat na odeslání
-Vytvoren : exit / uložit pohyb
+Vytvoren : entry / vytvoritPohyb(soucastka, mnozstvi)
 Vytvoren --> Validovan : Pohyb odeslán
 
 Validovan : entry / overitData()
