@@ -132,6 +132,11 @@ Třída SkladovyPohyb zaznamenává každou změnu stavu zásob v~systému. Konk
   \item VydejPohyb -- výdej součástek ze skladu na projekt; snižuje množství dané součástky.
   \item PresunutiPohyb -- přemístnění součástek mezi lokacemi ve skladu; mění přiřazenou lokaci součástky.
 \end{itemize}
+Každý pohyb se váže na konkrétní součástku (vazba je součástí, multiplicita $* \rightarrow 1$)
+a mění stav jednoho skladu (vazba mění stav, multiplicita $* \rightarrow 1$).
+Jeden uživatel může vytvořit libovolný počet pohybů (vazba vytváří, multiplicita $1 \rightarrow *$).
+Pohyb nemění fyzickou lokaci součástky -- ta je pevně dána vazbou Lokace $\rightarrow$ Soucastka.
+
 \begin{figure}[H]
   \centering
   \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth]{02_class_diagram.png}}
