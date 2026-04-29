@@ -1,9 +1,9 @@
 <map id="13_sequence_pohyb_map" name="13_sequence_pohyb_map">
-<area shape="rect" id="id1" href="ok" title="ok" alt="" coords="35,583,47,595"/>
-<area shape="rect" id="id2" href="data" title="data" alt="" coords="15,230,72,241"/>
-<area shape="rect" id="id3" href="VydejPohyb" title="VydejPohyb" alt="" coords="25,380,85,392"/>
-<area shape="rect" id="id4" href="součástka" title="součástka" alt="" coords="103,519,163,531"/>
-<area shape="rect" id="id5" href="PrijemPohyb" title="PrijemPohyb" alt="" coords="93,290,157,302"/>
-<area shape="rect" id="id6" href="data" title="data" alt="" coords="83,191,153,203"/>
-<area shape="rect" id="id7" href="PresunutiPohyb" title="PresunutiPohyb" alt="" coords="25,471,105,483"/>
+<area shape="rect" id="id1" href="ok" title="ok" alt="" coords="28,466,38,476"/>
+<area shape="rect" id="id2" href="data" title="data" alt="" coords="12,184,57,193"/>
+<area shape="rect" id="id3" href="VydejPohyb" title="VydejPohyb" alt="" coords="20,304,68,313"/>
+<area shape="rect" id="id4" href="součástka" title="součástka" alt="" coords="82,415,131,424"/>
+<area shape="rect" id="id5" href="PrijemPohyb" title="PrijemPohyb" alt="" coords="74,232,126,241"/>
+<area shape="rect" id="id6" href="data" title="data" alt="" coords="66,153,122,162"/>
+<area shape="rect" id="id7" href="PresunutiPohyb" title="PresunutiPohyb" alt="" coords="20,377,84,386"/>
 </map>
