@@ -1,4 +1,3 @@
-docs/images/*.png
 docs/*.aux
 docs/*.log
 docs/*.out
@@ -8,4 +7,6 @@ docs/*.blg
 docs/*.bbl
 docs/*.fls
 docs/*.fdb_latexmk
+docs/*_run.xml
+mk
 docs/*_run.xml
